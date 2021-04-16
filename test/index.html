@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Open Web Excel | ✍️ An Excel Used on the Browser Side.</title>
+    <script src="../dist/open-web-excel.js"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        div#owe {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .github {
+            position: fixed;
+            transform: rotate(45deg);
+            top: 60px;
+            line-height: 1.6em;
+            right: -60px;
+            background-color: #9e9695;
+            outline: 4px solid #9e9695;
+            transform-origin: 150px 23px;
+            border: 2px dashed #faf6f5;
+            width: 300px;
+            text-align: center;
+            color: #f7f3f2;
+            z-index: 2;
+            font-family: sans-serif;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="https://github.com/hai2007/Open-Web-Excel" class='github' target="_blank">Fork me on Github</a>
+
+    <div id="owe">
+        温馨提示：开发中，敬请期待！
+    </div>
+
+    <script>
+        window.owe = new OpenWebExcel({
+
+            // excel挂载点
+            el: document.getElementById('owe')
+
+        });
+
+        console.log(owe);
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+{
+  "name": "open-web-excel",
+  "version": "0.1.0-alpha.0",
+  "description": "✍️ An Excel Used on the Browser Side.",
+  "main": "dist/open-web-excel.min.js",
+  "scripts": {
+    "start": "npm install && npm run build",
+    "build": "hai2007_nodejs --config hai2007_nodejs.config.js init && hai2007_nodejs --config hai2007_nodejs.config.js bundle && hai2007_nodejs --config hai2007_nodejs.config.js babel && hai2007_nodejs --config hai2007_nodejs.config.js uglifyjs && hai2007_nodejs --config hai2007_nodejs.config.js end"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hai2007/Open-Web-Excel.git"
+  },
+  "keywords": [
+    "web",
+    "excel"
+  ],
+  "author": "你好2007",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hai2007/Open-Web-Excel/issues"
+  },
+  "homepage": "https://github.com/hai2007/Open-Web-Excel#readme",
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@hai2007/nodejs": "^1.0.0",
+    "@rollup/plugin-commonjs": "^11.1.0",
+    "@rollup/plugin-node-resolve": "^7.1.3",
+    "rollup": "^1.17.0",
+    "uglify-js": "^3.5.6"
+  },
+  "dependencies": {
+    "@hai2007/tool": "^0.6.4"
+  }
+}
