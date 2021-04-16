@@ -49,6 +49,14 @@ var owe = new OpenWebExcel({
 });
 ```
 
+返回的owe里面挂载着后续可控方法：
+
+- 获取当前Excel内容
+
+```js
+owe.valueOf();
+```
+
 开源协议
 ---------------------------------------
 [MIT](https://github.com/hai2007/Open-Web-Excel/blob/master/LICENSE)

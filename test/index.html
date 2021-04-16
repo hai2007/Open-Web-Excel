@@ -41,15 +41,38 @@
 
     <a href="https://github.com/hai2007/Open-Web-Excel" class='github' target="_blank">Fork me on Github</a>
 
-    <div id="owe">
-        温馨提示：开发中，敬请期待！
-    </div>
+    <div id="owe"></div>
 
     <script>
         window.owe = new OpenWebExcel({
 
             // excel挂载点
-            el: document.getElementById('owe')
+            el: document.getElementById('owe'),
+
+            // 初始化内容
+            content: [
+                [
+                    { content: "主要开发人", colspan: "1", rowspan: "2" },
+                    { content: '组件', colspan: "1", rowspan: "2" },
+                    { content: "进度", colspan: "2", rowspan: "1" },
+                    "null",
+                    { content: "多端测试", colspan: "4", rowspan: "1" },
+                    { content: "备注", colspan: "1", rowspan: "2" },
+                    "null",
+                    "null",
+                    "null"
+                ],
+                [
+                    "null",
+                    "null",
+                    { content: "组件", colspan: "1", rowspan: "1" },
+                    { content: "文档", colspan: "1", rowspan: "1" },
+                    { content: "H5", colspan: "1", rowspan: "1" },
+                    { content: "微信小程序", colspan: "1", rowspan: "1" },
+                    { content: "安卓", colspan: "1", rowspan: "1" },
+                    { content: "IOS", colspan: "1", rowspan: "1" }
+                ]
+            ]
 
         });
 
