@@ -44,7 +44,10 @@ import OpenWebExcel from 'open-web-excel';
 var owe = new OpenWebExcel({
 
     // 编辑器挂载点(必选)
-    el: document.getElementById('owe')
+    el: document.getElementById('owe'),
+
+     // 初始化文本（可选）
+    content: Array
 
 });
 ```

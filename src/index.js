@@ -3,7 +3,7 @@ import { isElement } from '@hai2007/tool/type';
 // 核心方法和工具方法
 
 import { initDom, initView } from './excel-view/init';
-import { formatContent } from './excel-view/tool';
+import { formatContent, calcColName } from './excel-view/tool';
 
 let owe = function (options) {
 
@@ -41,6 +41,7 @@ let owe = function (options) {
 // 挂载辅助方法
 
 owe.prototype.$$formatContent = formatContent;
+owe.prototype.$$calcColName = calcColName;
 
 // 挂载核心方法
 

@@ -9,7 +9,7 @@
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Fri Apr 16 2021 16:07:12 GMT+0800 (GMT+08:00)
+* Date:Fri Apr 16 2021 17:31:01 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -330,29 +330,48 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
   function initDom() {
     this._el.innerHTML = "";
+    xhtml.setStyles(this._el, {
+      "background-color": "#f7f7f7"
+    });
   } // 初始化视图
 
 
   function initView() {
-    var tableTemplate = ""; // 行
+    var tableTemplate = ""; // 顶部的
+
+    tableTemplate += "<tr><th style='width:50px;border: 1px solid #d6cccb;border-right:none;background-color:white;'></th>";
+
+    for (var k = 0; k < this._contentArray[0].length; k++) {
+      tableTemplate += "<th style='border: 1px solid #d6cccb;border-bottom:none;color:gray;'>" + this.$$calcColName(k) + "</th>";
+    }
+
+    tableTemplate += '</tr>'; // 行
 
     for (var i = 0; i < this._contentArray.length; i++) {
-      tableTemplate += "<tr>"; //  列
+      tableTemplate += "<tr><th style='width:50px;border: 1px solid #d6cccb;border-right:none;color:gray;'>" + (i + 1) + "</th>"; //  列
 
       for (var j = 0; j < this._contentArray[i].length; j++) {
         if (this._contentArray[i][j] != 'null') {
-          tableTemplate += '<th style="border:1px solid #000000;" index="' + i + '-' + j + '" row-number="' + i + '" col-number="' + j + '" colspan="' + this._contentArray[i][j].colspan + '"  rowspan="' + this._contentArray[i][j].rowspan + '">' + this._contentArray[i][j].content + '</th>';
+          tableTemplate += '<th style="border:1px solid #000000;background-color:white;" index="' + i + '-' + j + '" row-number="' + i + '" col-number="' + j + '" colspan="' + this._contentArray[i][j].colspan + '"  rowspan="' + this._contentArray[i][j].rowspan + '">' + this._contentArray[i][j].content + '</th>';
         }
       }
 
       tableTemplate += "</tr>";
     }
 
-    this._contentDom = xhtml.append(this._el, "<table style='border-collapse: collapse;width: 100%;'>" + tableTemplate + "</table>");
+    this._contentDom = xhtml.append(this._el, "<table>" + tableTemplate + "</table>");
+    xhtml.setStyles(this._contentDom, {
+      "border-collapse": "collapse",
+      "width": "100%"
+    });
   }
 
   function formatContent(content) {
     return content;
+  }
+
+  function calcColName(index) {
+    return ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'][index];
   }
 
   var owe = function owe(options) {
@@ -383,7 +402,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   }; // 挂载辅助方法
 
 
-  owe.prototype.$$formatContent = formatContent; // 挂载核心方法
+  owe.prototype.$$formatContent = formatContent;
+  owe.prototype.$$calcColName = calcColName; // 挂载核心方法
 
   owe.prototype.$$initDom = initDom;
   owe.prototype.$$initView = initView;
