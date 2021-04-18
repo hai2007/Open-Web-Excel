@@ -5,6 +5,10 @@ import { isElement } from '@hai2007/tool/type';
 import { initDom, initView } from './excel-view/init';
 import { formatContent, calcColName } from './excel-view/tool';
 
+// 挂载顶部菜单
+
+import menu from './menu/index';
+
 let owe = function (options) {
 
     if (!(this instanceof owe)) {
@@ -28,6 +32,9 @@ let owe = function (options) {
     // 先初始化DOM
     this.$$initDom();
 
+    // 挂载菜单
+    this.$$createdMenu();
+
     // 初始化视图
     this.$$initView();
 
@@ -47,6 +54,8 @@ owe.prototype.$$calcColName = calcColName;
 
 owe.prototype.$$initDom = initDom;
 owe.prototype.$$initView = initView;
+
+owe.prototype.$$createdMenu = menu;
 
 if (typeof module === "object" && typeof module.exports === "object") {
     module.exports = owe;

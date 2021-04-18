@@ -33,16 +33,23 @@ export function initView() {
         for (let j = 0; j < this._contentArray[i].length; j++) {
             if (this._contentArray[i][j] != 'null') {
 
-                tableTemplate += '<th style="border:1px solid #000000;background-color:white;" index="' + i + '-' + j + '" row-number="' + i + '" col-number="' + j + '" colspan="' + this._contentArray[i][j].colspan + '"  rowspan="' + this._contentArray[i][j].rowspan + '">' + this._contentArray[i][j].content + '</th>';
+                tableTemplate += '<th style="padding:5px;white-space: nowrap;border:1px solid #000000;background-color:white;" index="' + i + '-' + j + '" row-number="' + i + '" col-number="' + j + '" colspan="' + this._contentArray[i][j].colspan + '"  rowspan="' + this._contentArray[i][j].rowspan + '">' + this._contentArray[i][j].content + '</th>';
 
             }
         }
-
-        tableTemplate += "</tr>";
+        tableTemplate += '</tr>';
 
     }
 
-    this._contentDom = xhtml.append(this._el, "<table>" + tableTemplate + "</table>");
+    let tableFrame = xhtml.append(this._el, "<div></div>");
+
+    xhtml.setStyles(tableFrame, {
+        "width": "100%",
+        "height": "calc(100% - 100px)",
+        "overflow": "auto"
+    });
+
+    this._contentDom = xhtml.append(tableFrame, "<table>" + tableTemplate + "</table>");
 
     xhtml.setStyles(this._contentDom, {
         "border-collapse": "collapse",

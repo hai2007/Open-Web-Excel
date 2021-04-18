@@ -9,7 +9,7 @@
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Fri Apr 16 2021 17:31:01 GMT+0800 (GMT+08:00)
+* Date:Sun Apr 18 2021 16:22:32 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -352,14 +352,20 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       for (var j = 0; j < this._contentArray[i].length; j++) {
         if (this._contentArray[i][j] != 'null') {
-          tableTemplate += '<th style="border:1px solid #000000;background-color:white;" index="' + i + '-' + j + '" row-number="' + i + '" col-number="' + j + '" colspan="' + this._contentArray[i][j].colspan + '"  rowspan="' + this._contentArray[i][j].rowspan + '">' + this._contentArray[i][j].content + '</th>';
+          tableTemplate += '<th style="padding:5px;white-space: nowrap;border:1px solid #000000;background-color:white;" index="' + i + '-' + j + '" row-number="' + i + '" col-number="' + j + '" colspan="' + this._contentArray[i][j].colspan + '"  rowspan="' + this._contentArray[i][j].rowspan + '">' + this._contentArray[i][j].content + '</th>';
         }
       }
 
-      tableTemplate += "</tr>";
+      tableTemplate += '</tr>';
     }
 
-    this._contentDom = xhtml.append(this._el, "<table>" + tableTemplate + "</table>");
+    var tableFrame = xhtml.append(this._el, "<div></div>");
+    xhtml.setStyles(tableFrame, {
+      "width": "100%",
+      "height": "calc(100% - 100px)",
+      "overflow": "auto"
+    });
+    this._contentDom = xhtml.append(tableFrame, "<table>" + tableTemplate + "</table>");
     xhtml.setStyles(this._contentDom, {
       "border-collapse": "collapse",
       "width": "100%"
@@ -371,7 +377,33 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   }
 
   function calcColName(index) {
-    return ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'][index];
+    var codes = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    var result = "";
+
+    while (true) {
+      var _index = index % 26;
+
+      if (_index == 0) {
+        result = 'A' + result;
+      } else {
+        result = codes[_index] + result;
+      }
+
+      index = Math.floor(index / 26);
+      if (index == 0) break;
+      index -= 1;
+    }
+
+    return result;
+  }
+
+  function menu() {
+    this._menuDom = xhtml.append(this._el, "<div></div>");
+    xhtml.setStyles(this._menuDom, {
+      "width": "100%",
+      "height": "100px",
+      "overflow": "auto"
+    });
   }
 
   var owe = function owe(options) {
@@ -392,7 +424,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     } // 先初始化DOM
 
 
-    this.$$initDom(); // 初始化视图
+    this.$$initDom(); // 挂载菜单
+
+    this.$$createdMenu(); // 初始化视图
 
     this.$$initView(); // 获取当前Excel内容
 
@@ -407,6 +441,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
   owe.prototype.$$initDom = initDom;
   owe.prototype.$$initView = initView;
+  owe.prototype.$$createdMenu = menu;
 
   if ((typeof module === "undefined" ? "undefined" : _typeof(module)) === "object" && _typeof(module.exports) === "object") {
     module.exports = owe;
