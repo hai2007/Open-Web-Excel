@@ -9,7 +9,7 @@
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Mon Apr 19 2021 11:46:33 GMT+0800 (GMT+08:00)
+* Date:Mon Apr 19 2021 15:25:49 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -364,7 +364,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var tableFrame = xhtml.append(this._el, "<div></div>");
     xhtml.setStyles(tableFrame, {
       "width": "100%",
-      "height": "calc(100% - 100px)",
+      "height": "calc(100% - 62px)",
       "overflow": "auto"
     });
     this._contentDom = xhtml.append(tableFrame, "<table>" + tableTemplate + "</table>");
@@ -421,12 +421,34 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   }
 
   function menu() {
-    this._menuDom = xhtml.append(this._el, "<div></div>");
-    xhtml.setStyles(this._menuDom, {
+    // 顶部操作栏
+    var topDom = xhtml.append(this._el, "<div></div>");
+    xhtml.setStyles(topDom, {
       "width": "100%",
-      "height": "100px",
+      "height": "62px",
+      // 26 + 36
       "overflow": "auto"
+    }); // 菜单
+
+    this._menuDom = xhtml.append(topDom, "<div>\n        <span>\u7F16\u8F91</span>\n        <span>\u63D2\u5165</span>\n        <span>\u683C\u5F0F</span>\n        <span>\u516C\u5F0F</span>\n        <span>\u6570\u636E</span>\n        <span>\u5E2E\u52A9</span>\n    </div>");
+    xhtml.setStyles(this._menuDom, {
+      "border-bottom": "1px solid #d6cccb",
+      'padding': "0 20px"
     });
+    var menuItems = xhtml.find(this._menuDom, function () {
+      return true;
+    }, 'span');
+
+    for (var i = 0; i < menuItems.length; i++) {
+      xhtml.setStyles(menuItems[i], {
+        'display': "inline-block",
+        'line-height': '26px',
+        'padding': "0 10px",
+        'font-size': '12px',
+        'cursor': 'pointer',
+        'color': "#555555"
+      });
+    }
   }
 
   var owe = function owe(options) {

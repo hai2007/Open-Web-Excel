@@ -47,7 +47,7 @@ export function initView() {
 
     xhtml.setStyles(tableFrame, {
         "width": "100%",
-        "height": "calc(100% - 100px)",
+        "height": "calc(100% - 62px)",
         "overflow": "auto"
     });
 
