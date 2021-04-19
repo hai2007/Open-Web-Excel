@@ -40,7 +40,11 @@ let owe = function (options) {
 
     // 获取当前Excel内容
     this.valueOf = () => {
-        return this._contentArray;
+        return {
+            version: "0.1.0",
+            filename: "Open-Web-Excel",
+            content: this._contentArray
+        };
     };
 
 };

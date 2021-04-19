@@ -9,7 +9,7 @@
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Sun Apr 18 2021 16:22:32 GMT+0800 (GMT+08:00)
+* Date:Mon Apr 19 2021 11:46:33 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -352,7 +352,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       for (var j = 0; j < this._contentArray[i].length; j++) {
         if (this._contentArray[i][j] != 'null') {
-          tableTemplate += '<th style="padding:5px;white-space: nowrap;border:1px solid #000000;background-color:white;" index="' + i + '-' + j + '" row-number="' + i + '" col-number="' + j + '" colspan="' + this._contentArray[i][j].colspan + '"  rowspan="' + this._contentArray[i][j].rowspan + '">' + this._contentArray[i][j].content + '</th>';
+          // contenteditable="true" 可编辑状态，则可点击获取焦点，同时内容也是可以编辑的
+          // tabindex="0" 点击获取焦点，内容是不可编辑的
+          tableTemplate += '<th contenteditable="true" style="vertical-align:top;min-width:50px;padding:5px;white-space: nowrap;outline:1px solid #555555;background-color:white;" index="' + i + '-' + j + '" row-number="' + i + '" col-number="' + j + '" colspan="' + this._contentArray[i][j].colspan + '"  rowspan="' + this._contentArray[i][j].rowspan + '">' + this._contentArray[i][j].value + '</th>';
         }
       }
 
@@ -372,8 +374,31 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     });
   }
 
-  function formatContent(content) {
-    return content;
+  function formatContent(file) {
+    // 如果传递了内容
+    if (file && 'version' in file && file.filename == 'Open-Web-Excel') {
+      // 后续如果格式进行了升级，可以格式兼容转换成最新版本
+      return file.content;
+    } // 否则，自动初始化
+    else {
+        var content = [];
+
+        for (var i = 0; i < 100; i++) {
+          var rowArray = [];
+
+          for (var j = 0; j < 30; j++) {
+            rowArray.push({
+              value: "",
+              colspan: "1",
+              rowspan: "1"
+            });
+          }
+
+          content.push(rowArray);
+        }
+
+        return content;
+      }
   }
 
   function calcColName(index) {
@@ -381,13 +406,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var result = "";
 
     while (true) {
-      var _index = index % 26;
+      // 求解当前坐标
+      var _index = index % 26; // 拼接
 
-      if (_index == 0) {
-        result = 'A' + result;
-      } else {
-        result = codes[_index] + result;
-      }
+
+      result = codes[_index] + result; // 求解余下的数
 
       index = Math.floor(index / 26);
       if (index == 0) break;
@@ -431,7 +454,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.$$initView(); // 获取当前Excel内容
 
     this.valueOf = function () {
-      return _this._contentArray;
+      return {
+        version: "0.1.0",
+        filename: "Open-Web-Excel",
+        content: _this._contentArray
+      };
     };
   }; // 挂载辅助方法
 

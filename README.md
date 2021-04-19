@@ -46,8 +46,9 @@ var owe = new OpenWebExcel({
     // 编辑器挂载点(必选)
     el: document.getElementById('owe'),
 
-     // 初始化文本（可选）
-    content: Array
+    // 初始化文本（可选）
+    // 此内容一般由程序生成，初始化的时候不传递即可
+    file: json
 
 });
 ```

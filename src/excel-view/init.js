@@ -33,7 +33,9 @@ export function initView() {
         for (let j = 0; j < this._contentArray[i].length; j++) {
             if (this._contentArray[i][j] != 'null') {
 
-                tableTemplate += '<th style="padding:5px;white-space: nowrap;border:1px solid #000000;background-color:white;" index="' + i + '-' + j + '" row-number="' + i + '" col-number="' + j + '" colspan="' + this._contentArray[i][j].colspan + '"  rowspan="' + this._contentArray[i][j].rowspan + '">' + this._contentArray[i][j].content + '</th>';
+                // contenteditable="true" 可编辑状态，则可点击获取焦点，同时内容也是可以编辑的
+                // tabindex="0" 点击获取焦点，内容是不可编辑的
+                tableTemplate += '<th contenteditable="true" style="vertical-align:top;min-width:50px;padding:5px;white-space: nowrap;outline:1px solid #555555;background-color:white;" index="' + i + '-' + j + '" row-number="' + i + '" col-number="' + j + '" colspan="' + this._contentArray[i][j].colspan + '"  rowspan="' + this._contentArray[i][j].rowspan + '">' + this._contentArray[i][j].value + '</th>';
 
             }
         }
