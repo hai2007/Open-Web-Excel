@@ -43,7 +43,7 @@ let owe = function (options) {
         return {
             version: "0.1.0",
             filename: "Open-Web-Excel",
-            content: this._contentArray
+            contents: this._contentArray
         };
     };
 

@@ -9,7 +9,7 @@
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Mon Apr 19 2021 15:25:49 GMT+0800 (GMT+08:00)
+* Date:Mon Apr 19 2021 17:53:49 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -337,48 +337,119 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
   function initView() {
-    var tableTemplate = ""; // 顶部的
+    var _this = this;
 
-    tableTemplate += "<tr><th style='width:50px;border: 1px solid #d6cccb;border-right:none;background-color:white;'></th>";
-
-    for (var k = 0; k < this._contentArray[0].length; k++) {
-      tableTemplate += "<th style='border: 1px solid #d6cccb;border-bottom:none;color:gray;'>" + this.$$calcColName(k) + "</th>";
-    }
-
-    tableTemplate += '</tr>'; // 行
-
-    for (var i = 0; i < this._contentArray.length; i++) {
-      tableTemplate += "<tr><th style='width:50px;border: 1px solid #d6cccb;border-right:none;color:gray;'>" + (i + 1) + "</th>"; //  列
-
-      for (var j = 0; j < this._contentArray[i].length; j++) {
-        if (this._contentArray[i][j] != 'null') {
-          // contenteditable="true" 可编辑状态，则可点击获取焦点，同时内容也是可以编辑的
-          // tabindex="0" 点击获取焦点，内容是不可编辑的
-          tableTemplate += '<th contenteditable="true" style="vertical-align:top;min-width:50px;padding:5px;white-space: nowrap;outline:1px solid #555555;background-color:white;" index="' + i + '-' + j + '" row-number="' + i + '" col-number="' + j + '" colspan="' + this._contentArray[i][j].colspan + '"  rowspan="' + this._contentArray[i][j].rowspan + '">' + this._contentArray[i][j].value + '</th>';
-        }
-      }
-
-      tableTemplate += '</tr>';
-    }
-
+    this._contentDom = [];
     var tableFrame = xhtml.append(this._el, "<div></div>");
     xhtml.setStyles(tableFrame, {
       "width": "100%",
-      "height": "calc(100% - 62px)",
+      "height": "calc(100% - 92px)",
       "overflow": "auto"
     });
-    this._contentDom = xhtml.append(tableFrame, "<table>" + tableTemplate + "</table>");
-    xhtml.setStyles(this._contentDom, {
-      "border-collapse": "collapse",
-      "width": "100%"
+
+    for (var index = 0; index < this._contentArray.length; index++) {
+      var tableTemplate = ""; // 顶部的
+
+      tableTemplate += "<tr><th style='width:50px;border: 1px solid #d6cccb;border-right:none;background-color:white;'></th>";
+
+      for (var k = 0; k < this._contentArray[index].content[0].length; k++) {
+        tableTemplate += "<th style='border: 1px solid #d6cccb;border-bottom:none;color:gray;'>" + this.$$calcColName(k) + "</th>";
+      }
+
+      tableTemplate += '</tr>'; // 行
+
+      for (var i = 0; i < this._contentArray[index].content.length; i++) {
+        tableTemplate += "<tr><th style='width:50px;border: 1px solid #d6cccb;border-right:none;color:gray;'>" + (i + 1) + "</th>"; //  列
+
+        for (var j = 0; j < this._contentArray[index].content[i].length; j++) {
+          if (this._contentArray[index].content[i][j] != 'null') {
+            // contenteditable="true" 可编辑状态，则可点击获取焦点，同时内容也是可以编辑的
+            // tabindex="0" 点击获取焦点，内容是不可编辑的
+            tableTemplate += '<th contenteditable="true" style="vertical-align:top;min-width:50px;padding:5px;white-space: nowrap;outline:0.5px solid #555555;background-color:white;" index="' + i + '-' + j + '" row-number="' + i + '" col-number="' + j + '" colspan="' + this._contentArray[index].content[i][j].colspan + '"  rowspan="' + this._contentArray[index].content[i][j].rowspan + '">' + this._contentArray[index].content[i][j].value + '</th>';
+          }
+        }
+
+        tableTemplate += '</tr>';
+      }
+
+      this._contentDom[index] = xhtml.append(tableFrame, "<table>" + tableTemplate + "</table>");
+      xhtml.setStyles(this._contentDom[index], {
+        "border-collapse": "collapse",
+        "width": "100%",
+        "display": index == 0 ? 'table' : "none"
+      });
+    } // 添加底部控制选择显示表格按钮
+
+
+    var bottomBtns = xhtml.append(this._el, "<div></div>");
+    xhtml.setStyles(bottomBtns, {
+      "width": "100%",
+      "height": "30px",
+      "overflow": "auto",
+      "border-top": "1px solid #d6cccb",
+      'box-sizing': 'border-box'
     });
+    var addBtn = xhtml.append(bottomBtns, "<span>+</span>");
+    xhtml.setStyles(addBtn, {
+      "line-height": "30px",
+      "width": "30px",
+      "text-align": "center",
+      "font-size": "18px",
+      'box-sizing': 'border-box',
+      'vertical-align': "top",
+      'display': 'inline-block',
+      'cursor': 'pointer'
+    });
+    xhtml.bind(addBtn, 'click', function () {});
+    this._btnDom = [];
+
+    var _loop = function _loop(_index2) {
+      var bottomBtn = xhtml.append(bottomBtns, "<span>" + _this._contentArray[_index2].name + "</span>");
+      xhtml.setStyles(bottomBtn, {
+        "line-height": "30px",
+        "font-size": "12px",
+        'box-sizing': 'border-box',
+        "padding": "0 10px",
+        'vertical-align': "top",
+        'display': 'inline-block',
+        'cursor': 'pointer'
+      });
+      xhtml.bind(bottomBtn, 'click', function () {
+        for (var _i = 0; _i < _this._contentDom.length; _i++) {
+          if (_i == _index2) {
+            xhtml.setStyles(_this._contentDom[_i], {
+              'display': 'table'
+            });
+            xhtml.setStyles(_this._btnDom[_i], {
+              "background-color": "white"
+            });
+          } else {
+            xhtml.setStyles(_this._contentDom[_i], {
+              'display': 'none'
+            });
+            xhtml.setStyles(_this._btnDom[_i], {
+              "background-color": "transparent"
+            });
+          }
+        }
+      });
+
+      _this._btnDom.push(bottomBtn);
+    };
+
+    for (var _index2 = 0; _index2 < this._contentArray.length; _index2++) {
+      _loop(_index2);
+    } // 初始化点击第一个
+
+
+    this._btnDom[0].click();
   }
 
   function formatContent(file) {
     // 如果传递了内容
     if (file && 'version' in file && file.filename == 'Open-Web-Excel') {
       // 后续如果格式进行了升级，可以格式兼容转换成最新版本
-      return file.content;
+      return file.contents;
     } // 否则，自动初始化
     else {
         var content = [];
@@ -397,7 +468,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           content.push(rowArray);
         }
 
-        return content;
+        return [{
+          name: "未命名",
+          content: content
+        }];
       }
   }
 
@@ -433,7 +507,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this._menuDom = xhtml.append(topDom, "<div>\n        <span>\u7F16\u8F91</span>\n        <span>\u63D2\u5165</span>\n        <span>\u683C\u5F0F</span>\n        <span>\u516C\u5F0F</span>\n        <span>\u6570\u636E</span>\n        <span>\u5E2E\u52A9</span>\n    </div>");
     xhtml.setStyles(this._menuDom, {
       "border-bottom": "1px solid #d6cccb",
-      'padding': "0 20px"
+      'padding': "0 20px",
+      'box-sizing': 'border-box'
     });
     var menuItems = xhtml.find(this._menuDom, function () {
       return true;
@@ -452,7 +527,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   }
 
   var owe = function owe(options) {
-    var _this = this;
+    var _this2 = this;
 
     if (!(this instanceof owe)) {
       throw new Error('Open-Web-Excel is a constructor and should be called with the `new` keyword');
@@ -479,7 +554,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return {
         version: "0.1.0",
         filename: "Open-Web-Excel",
-        content: _this._contentArray
+        contents: _this2._contentArray
       };
     };
   }; // 挂载辅助方法

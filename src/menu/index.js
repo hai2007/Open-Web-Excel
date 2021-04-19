@@ -23,7 +23,8 @@ export default function () {
 
     xhtml.setStyles(this._menuDom, {
         "border-bottom": "1px solid #d6cccb",
-        'padding': "0 20px"
+        'padding': "0 20px",
+        'box-sizing': 'border-box'
     });
 
     let menuItems = xhtml.find(this._menuDom, () => true, 'span');

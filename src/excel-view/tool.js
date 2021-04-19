@@ -4,7 +4,7 @@ export function formatContent(file) {
     if (file && 'version' in file && file.filename == 'Open-Web-Excel') {
 
         // 后续如果格式进行了升级，可以格式兼容转换成最新版本
-        return file.content;
+        return file.contents;
     }
 
     // 否则，自动初始化
@@ -20,7 +20,10 @@ export function formatContent(file) {
             }
             content.push(rowArray);
         }
-        return content;
+        return [{
+            name: "未命名",
+            content
+        }];
     }
 
 };
