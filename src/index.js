@@ -3,7 +3,7 @@ import { isElement } from '@hai2007/tool/type';
 // 核心方法和工具方法
 
 import { initDom, initView, initTableView } from './excel-view/init';
-import { formatContent, calcColName } from './excel-view/tool';
+import { formatContent, calcColName, styleToString } from './excel-view/tool';
 import style from './tool/style';
 
 // 键盘交互总控
@@ -61,6 +61,7 @@ let owe = function (options) {
 owe.prototype.$$formatContent = formatContent;
 owe.prototype.$$calcColName = calcColName;
 owe.prototype.$$addStyle = style();
+owe.prototype.$$styleToString = styleToString;
 
 // 挂载核心方法
 

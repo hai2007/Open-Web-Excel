@@ -14,7 +14,7 @@ export function initDom() {
 
 // 初始化视图
 
-export function initTableView(itemTable, index) {
+export function initTableView(itemTable, index, styleToString) {
 
     let tableTemplate = "";
 
@@ -37,10 +37,13 @@ export function initTableView(itemTable, index) {
                 // contenteditable="true" 可编辑状态，则可点击获取焦点，同时内容也是可以编辑的
                 // tabindex="0" 点击获取焦点，内容是不可编辑的
                 tableTemplate += `<th
+                  row='${i + 1}'
+                  col='${j + 1}'
                   contenteditable="true"
                   class="item"
                   colspan="${itemTable.content[i][j].colspan}"
                   rowspan="${itemTable.content[i][j].rowspan}"
+                  style="${styleToString(itemTable.content[i][j].style)}"
                 open-web-excel>${itemTable.content[i][j].value}</th>`;
 
             }
@@ -82,7 +85,7 @@ export function initView() {
 
     for (let index = 0; index < this._contentArray.length; index++) {
 
-        this.$$initTableView(this._contentArray[index], index);
+        this.$$initTableView(this._contentArray[index], index, this.$$styleToString);
 
         xhtml.setStyles(this._contentDom[index], {
             "display": index == 0 ? 'table' : "none"
@@ -139,7 +142,7 @@ export function initView() {
 
         // 然后添加table
 
-        this.$$initTableView(this._contentArray[index], index);
+        this.$$initTableView(this._contentArray[index], index, this.$$styleToString);
 
         // 添加底部按钮
         let bottomBtn = xhtml.append(bottomBtns, "<span class='name item' open-web-excel>" + this._contentArray[index].name + "</span>");

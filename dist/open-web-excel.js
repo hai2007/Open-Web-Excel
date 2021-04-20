@@ -4,12 +4,12 @@
 *
 * author 你好2007
 *
-* version 0.1.0-alpha.0
+* version 0.1.0-alpha.1
 *
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Tue Apr 20 2021 16:10:34 GMT+0800 (GMT+08:00)
+* Date:Tue Apr 20 2021 17:49:58 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -337,7 +337,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   } // 初始化视图
 
 
-  function initTableView(itemTable, index) {
+  function initTableView(itemTable, index, styleToString) {
     var tableTemplate = ""; // 顶部的
 
     tableTemplate += "<tr><th class='top-left' open-web-excel></th>";
@@ -355,7 +355,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         if (itemTable.content[i][j] != 'null') {
           // contenteditable="true" 可编辑状态，则可点击获取焦点，同时内容也是可以编辑的
           // tabindex="0" 点击获取焦点，内容是不可编辑的
-          tableTemplate += "<th\n                  contenteditable=\"true\"\n                  class=\"item\"\n                  colspan=\"".concat(itemTable.content[i][j].colspan, "\"\n                  rowspan=\"").concat(itemTable.content[i][j].rowspan, "\"\n                open-web-excel>").concat(itemTable.content[i][j].value, "</th>");
+          tableTemplate += "<th\n                  row='".concat(i + 1, "'\n                  col='").concat(j + 1, "'\n                  contenteditable=\"true\"\n                  class=\"item\"\n                  colspan=\"").concat(itemTable.content[i][j].colspan, "\"\n                  rowspan=\"").concat(itemTable.content[i][j].rowspan, "\"\n                  style=\"").concat(styleToString(itemTable.content[i][j].style), "\"\n                open-web-excel>").concat(itemTable.content[i][j].value, "</th>");
         }
       }
 
@@ -393,7 +393,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     });
 
     for (var index = 0; index < this._contentArray.length; index++) {
-      this.$$initTableView(this._contentArray[index], index);
+      this.$$initTableView(this._contentArray[index], index, this.$$styleToString);
       xhtml.setStyles(this._contentDom[index], {
         "display": index == 0 ? 'table' : "none"
       });
@@ -409,7 +409,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       var index = _this._contentArray.length - 1; // 然后添加table
 
-      _this.$$initTableView(_this._contentArray[index], index); // 添加底部按钮
+      _this.$$initTableView(_this._contentArray[index], index, _this.$$styleToString); // 添加底部按钮
 
 
       var bottomBtn = xhtml.append(bottomBtns, "<span class='name item' open-web-excel>" + _this._contentArray[index].name + "</span>");
@@ -448,6 +448,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this._btnDom[0].click();
   }
 
+  function styleToString(style) {
+    var styleString = "";
+
+    for (var key in style) {
+      styleString += key + ":" + style[key] + ';';
+    }
+
+    return styleString;
+  }
+
   function formatContent(file) {
     // 如果传递了内容
     if (file && 'version' in file && file.filename == 'Open-Web-Excel') {
@@ -464,7 +474,18 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             rowArray.push({
               value: "",
               colspan: "1",
-              rowspan: "1"
+              rowspan: "1",
+              style: {
+                color: 'black',
+                background: 'white',
+                'text-align': 'left',
+                'font-weight': "normal",
+                // bold粗体
+                'font-style': 'normal',
+                // italic斜体
+                'text-decoration': 'none' // line-through中划线 underline下划线
+
+              }
             });
           }
 
@@ -735,11 +756,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var topDom = xhtml.append(this._el, "<div class='top-dom' open-web-excel>\n\n    </div>");
     this.$$addStyle('top-dom', "\n\n       .top-dom{\n            width: 100%;\n            height: 62px;\n            overflow: auto;\n       }\n\n    "); // 菜单
 
-    this._menuDom = xhtml.append(topDom, "<div class='menu' open-web-excel>\n        <span open-web-excel>\n            \u683C\u5F0F\n            <div open-web-excel>\n                <span class='item' open-web-excel>\u7C97\u4F53</span>\n                <span class='item' open-web-excel>\u659C\u4F53</span>\n                <span class='item' open-web-excel>\u4E0B\u5212\u7EBF</span>\n                <span class='item' open-web-excel>\u4E2D\u5212\u7EBF</span>\n                <span class='line' open-web-excel></span>\n                <span class='item more' open-web-excel>\n                    \u5408\u5E76\u5355\u5143\u683C\n                    <div open-web-excel>\n                        <span class='item' open-web-excel>\u5168\u90E8\u5408\u5E76</span>\n                        <span class='item' open-web-excel>\u6C34\u5E73\u5408\u5E76</span>\n                        <span class='item' open-web-excel>\u5782\u76F4\u5408\u5E76</span>\n                        <span class='item' open-web-excel>\u53D6\u6D88\u5408\u5E76</span>\n                    </div>\n                </span>\n                <span class='item more' open-web-excel>\n                    \u6C34\u5E73\u5BF9\u9F50\n                    <div open-web-excel>\n                        <span class='item' open-web-excel>\u5DE6\u5BF9\u9F50</span>\n                        <span class='item' open-web-excel>\u5C45\u4E2D\u5BF9\u9F50</span>\n                        <span class='item' open-web-excel>\u53F3\u5BF9\u9F50</span>\n                    </div>\n                </span>\n            </div>\n        </span>\n        <span open-web-excel>\n            \u5E2E\u52A9\n            <div open-web-excel>\n                <span class='item' open-web-excel>\u5FEB\u6377\u952E</span>\n            </div>\n        </span>\n    </div>");
-    this.$$addStyle('menu', "\n\n        .menu{\n            border-bottom: 1px solid #d6cccb;\n            padding: 0 20px;\n            box-sizing: border-box;\n        }\n\n        .menu>span{\n            display: inline-block;\n            line-height: 26px;\n            padding: 0 10px;\n            font-size: 12px;\n            cursor: pointer;\n            color: #555555;\n        }\n        .menu>span:hover{\n            background: white;\n        }\n\n        .menu>span>div{\n            margin-left: -10px;\n        }\n\n        .menu>span div{\n            position:absolute;\n            background: white;\n            width: 140px;\n            box-shadow: 4px 3px 6px 0 #c9c9e2;\n            display:none;\n        }\n\n        .menu>span div span{\n            display:block;\n            position:relative;\n            padding:10px 20px;\n        }\n\n        .menu>span div span>div{\n            left:140px;\n            top:0px;\n        }\n\n        .menu .line{\n            height:1px;\n            background-color:#d6cccb;\n            padding:0;\n            margin:0 10px;\n        }\n\n        .menu span:hover>div{\n            display:block;\n        }\n\n        .menu span.more:after{\n            content:\">\";\n            position: absolute;\n            right: 12px;\n            font-weight: 800;\n        }\n\n    "); // 快捷菜单
+    this._menuDom = xhtml.append(topDom, "<div class='menu' open-web-excel>\n        <span open-web-excel>\n            \u683C\u5F0F\n            <div open-web-excel>\n                <span class='item' open-web-excel>\u7C97\u4F53</span>\n                <span class='item' open-web-excel>\u659C\u4F53</span>\n                <span class='item' open-web-excel>\u4E0B\u5212\u7EBF</span>\n                <span class='item' open-web-excel>\u4E2D\u5212\u7EBF</span>\n                <span class='line' open-web-excel></span>\n                <span class='item more' open-web-excel>\n                    \u5408\u5E76\u5355\u5143\u683C\n                    <div open-web-excel>\n                        <span class='item' open-web-excel>\u5168\u90E8\u5408\u5E76</span>\n                        <span class='item' open-web-excel>\u6C34\u5E73\u5408\u5E76</span>\n                        <span class='item' open-web-excel>\u5782\u76F4\u5408\u5E76</span>\n                        <span class='item' open-web-excel>\u53D6\u6D88\u5408\u5E76</span>\n                    </div>\n                </span>\n                <span class='item more' open-web-excel>\n                    \u6C34\u5E73\u5BF9\u9F50\n                    <div open-web-excel>\n                        <span class='item' open-web-excel>\u5DE6\u5BF9\u9F50</span>\n                        <span class='item' open-web-excel>\u5C45\u4E2D\u5BF9\u9F50</span>\n                        <span class='item' open-web-excel>\u53F3\u5BF9\u9F50</span>\n                    </div>\n                </span>\n            </div>\n        </span>\n        <span open-web-excel>\n            \u5E2E\u52A9\n            <div open-web-excel>\n                <span class='item' open-web-excel>\n                    <a href='https://github.com/hai2007/Open-Web-Excel/issues' open-web-excel target='_blank'>\u95EE\u9898\u53CD\u9988</a>\n                </span>\n            </div>\n        </span>\n    </div>");
+    this.$$addStyle('menu', "\n\n        .menu{\n            border-bottom: 1px solid #d6cccb;\n            padding: 0 20px;\n            box-sizing: border-box;\n        }\n\n        .menu>span{\n            display: inline-block;\n            line-height: 26px;\n            padding: 0 10px;\n            font-size: 12px;\n            cursor: pointer;\n            color: #555555;\n        }\n        .menu>span:hover{\n            background: white;\n        }\n\n        .menu>span>div{\n            margin-left: -10px;\n        }\n\n        .menu>span div{\n            position:absolute;\n            background: white;\n            width: 140px;\n            box-shadow: 4px 3px 6px 0 #c9c9e2;\n            display:none;\n        }\n\n        .menu>span div span{\n            display:block;\n            position:relative;\n            padding:10px 20px;\n        }\n\n        .menu>span div span>div{\n            left:140px;\n            top:0px;\n        }\n\n        .menu .line{\n            height:1px;\n            background-color:#d6cccb;\n            padding:0;\n            margin:0 10px;\n        }\n\n        .menu span:hover>div{\n            display:block;\n        }\n\n        .menu span.more:after{\n            content:\">\";\n            position: absolute;\n            right: 12px;\n            font-weight: 800;\n        }\n\n        .menu a{\n            text-decoration: none;\n            color: #555555;\n        }\n\n    "); // 快捷菜单
 
-    this._menuQuickDom = xhtml.append(topDom, "<div class='quick-menu' open-web-excel>\n        <span class='item' open-web-excel>\u683C\u5F0F\u5237</span>\n        <span class='line' open-web-excel></span>\n        <span class='item' open-web-excel>\n            \u6587\u5B57\u989C\u8272\uFF1A<i></i>\n        </span>\n        <span class='item' open-web-excel>\n            \u586B\u5145\u8272\uFF1A<i></i>\n        </span>\n        <span class='line' open-web-excel></span>\n        <span class='item' open-web-excel>\n            \u5168\u90E8\u5408\u5E76\n        </span>\n        <span class='item' open-web-excel>\n            \u6C34\u5E73\u5408\u5E76\n        </span>\n        <span class='item' open-web-excel>\n            \u5782\u76F4\u5408\u5E76\n        </span>\n        <span class='item' open-web-excel>\n            \u53D6\u6D88\u5408\u5E76\n        </span>\n        <span class='line' open-web-excel></span>\n        <span class='item' open-web-excel>\n            \u5DE6\u5BF9\u9F50\n        </span>\n        <span class='item' open-web-excel>\n            \u5C45\u4E2D\u5BF9\u9F50\n        </span>\n        <span class='item' open-web-excel>\n            \u53F3\u5BF9\u9F50\n        </span>\n    </div>");
-    this.$$addStyle('quick-menu', "\n\n        .quick-menu{\n            line-height: 36px;\n            font-size: 12px;\n        }\n\n        .quick-menu span{\n            display:inline-block;\n            vertical-align: top;\n        }\n\n        .quick-menu .item{\n            margin:0 10px;\n            cursor: pointer;\n        }\n\n        .quick-menu .line{\n            background-color:#d6cccb;\n            width:1px;\n            height:22px;\n            margin-top:7px;\n        }\n\n        .quick-menu .item:hover{\n            font-weight: 800;\n        }\n\n        .quick-menu .item.active{\n            font-weight: 800;\n            color: red;\n        }\n\n    ");
+    this._menuQuickDom = xhtml.append(topDom, "<div class='quick-menu' open-web-excel>\n        <span class='item' open-web-excel>\u683C\u5F0F\u5237</span>\n        <span class='line' open-web-excel></span>\n        <span class='item' open-web-excel>\n            \u6587\u5B57\u989C\u8272\uFF1A<i class='color' open-web-excel></i>\n        </span>\n        <span class='item' open-web-excel>\n            \u586B\u5145\u8272\uFF1A<i class='color' open-web-excel></i>\n        </span>\n        <span class='line' open-web-excel></span>\n        <span class='item' open-web-excel>\n            \u5168\u90E8\u5408\u5E76\n        </span>\n        <span class='item' open-web-excel>\n            \u6C34\u5E73\u5408\u5E76\n        </span>\n        <span class='item' open-web-excel>\n            \u5782\u76F4\u5408\u5E76\n        </span>\n        <span class='item' open-web-excel>\n            \u53D6\u6D88\u5408\u5E76\n        </span>\n        <span class='line' open-web-excel></span>\n        <span class='item' open-web-excel>\n            \u5DE6\u5BF9\u9F50\n        </span>\n        <span class='item' open-web-excel>\n            \u5C45\u4E2D\u5BF9\u9F50\n        </span>\n        <span class='item' open-web-excel>\n            \u53F3\u5BF9\u9F50\n        </span>\n    </div>");
+    this.$$addStyle('quick-menu', "\n\n        .quick-menu{\n            line-height: 36px;\n            font-size: 12px;\n        }\n\n        .quick-menu span{\n            display:inline-block;\n            vertical-align: top;\n        }\n\n        .quick-menu span>i.color{\n            display: inline-block;\n            height: 14px;\n            width: 20px;\n            border:1px solid #d6cccb;\n            vertical-align: middle;\n        }\n\n        .quick-menu .item{\n            margin:0 10px;\n            cursor: pointer;\n        }\n\n        .quick-menu .line{\n            background-color:#d6cccb;\n            width:1px;\n            height:22px;\n            margin-top:7px;\n        }\n\n        .quick-menu .item:hover{\n            font-weight: 800;\n        }\n\n        .quick-menu .item.active{\n            font-weight: 800;\n            color: red;\n        }\n\n    ");
   }
 
   var owe = function owe(options) {
@@ -781,7 +802,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
   owe.prototype.$$formatContent = formatContent;
   owe.prototype.$$calcColName = calcColName;
-  owe.prototype.$$addStyle = style(); // 挂载核心方法
+  owe.prototype.$$addStyle = style();
+  owe.prototype.$$styleToString = styleToString; // 挂载核心方法
 
   owe.prototype.$$initDom = initDom;
   owe.prototype.$$initView = initView;

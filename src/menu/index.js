@@ -49,7 +49,9 @@ export default function () {
         <span open-web-excel>
             帮助
             <div open-web-excel>
-                <span class='item' open-web-excel>快捷键</span>
+                <span class='item' open-web-excel>
+                    <a href='https://github.com/hai2007/Open-Web-Excel/issues' open-web-excel target='_blank'>问题反馈</a>
+                </span>
             </div>
         </span>
     </div>`);
@@ -115,6 +117,11 @@ export default function () {
             font-weight: 800;
         }
 
+        .menu a{
+            text-decoration: none;
+            color: #555555;
+        }
+
     `);
 
     // 快捷菜单
@@ -122,10 +129,10 @@ export default function () {
         <span class='item' open-web-excel>格式刷</span>
         <span class='line' open-web-excel></span>
         <span class='item' open-web-excel>
-            文字颜色：<i></i>
+            文字颜色：<i class='color' open-web-excel></i>
         </span>
         <span class='item' open-web-excel>
-            填充色：<i></i>
+            填充色：<i class='color' open-web-excel></i>
         </span>
         <span class='line' open-web-excel></span>
         <span class='item' open-web-excel>
@@ -162,6 +169,14 @@ export default function () {
         .quick-menu span{
             display:inline-block;
             vertical-align: top;
+        }
+
+        .quick-menu span>i.color{
+            display: inline-block;
+            height: 14px;
+            width: 20px;
+            border:1px solid #d6cccb;
+            vertical-align: middle;
         }
 
         .quick-menu .item{

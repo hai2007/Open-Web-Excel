@@ -1,3 +1,13 @@
+export function styleToString(style) {
+
+    let styleString = "";
+    for (let key in style) {
+        styleString += key + ":" + style[key] + ';';
+    }
+
+    return styleString;
+};
+
 export function formatContent(file) {
 
     // 如果传递了内容
@@ -15,7 +25,15 @@ export function formatContent(file) {
             let rowArray = []
             for (let j = 0; j < 30; j++) {
                 rowArray.push({
-                    value: "", colspan: "1", rowspan: "1"
+                    value: "", colspan: "1", rowspan: "1",
+                    style: {
+                        color: 'black',
+                        background: 'white',
+                        'text-align': 'left',
+                        'font-weight': "normal",// bold粗体
+                        'font-style': 'normal',// italic斜体
+                        'text-decoration': 'none'// line-through中划线 underline下划线
+                    }
                 });
             }
             content.push(rowArray);
