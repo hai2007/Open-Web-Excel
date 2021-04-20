@@ -9,7 +9,7 @@
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Mon Apr 19 2021 17:53:49 GMT+0800 (GMT+08:00)
+* Date:Tue Apr 20 2021 12:17:53 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -331,116 +331,119 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   function initDom() {
     this._el.innerHTML = "";
     xhtml.setStyles(this._el, {
-      "background-color": "#f7f7f7"
+      "background-color": "#f7f7f7",
+      "user-select": "none"
     });
   } // 初始化视图
 
+
+  function initTableView(itemTable, index) {
+    var tableTemplate = ""; // 顶部的
+
+    tableTemplate += "<tr><th class='top-left' open-web-excel></th>";
+
+    for (var k = 0; k < itemTable.content[0].length; k++) {
+      tableTemplate += "<th class='top-name' open-web-excel>" + this.$$calcColName(k) + "</th>";
+    }
+
+    tableTemplate += '</tr>'; // 行
+
+    for (var i = 0; i < itemTable.content.length; i++) {
+      tableTemplate += "<tr><th class='line-num' open-web-excel>" + (i + 1) + "</th>"; //  列
+
+      for (var j = 0; j < itemTable.content[i].length; j++) {
+        if (itemTable.content[i][j] != 'null') {
+          // contenteditable="true" 可编辑状态，则可点击获取焦点，同时内容也是可以编辑的
+          // tabindex="0" 点击获取焦点，内容是不可编辑的
+          tableTemplate += '<th contenteditable="true" class="item" colspan="' + itemTable.content[i][j].colspan + '"  rowspan="' + itemTable.content[i][j].rowspan + '" open-web-excel>' + itemTable.content[i][j].value + '</th>';
+        }
+      }
+
+      tableTemplate += '</tr>';
+    }
+
+    this._contentDom[index] = xhtml.append(this._tableFrame, "<table style='display:none;' class='excel-view' open-web-excel>" + tableTemplate + "</table>");
+  }
+
+  var bottomClick = function bottomClick(btnDom, contentDom, index) {
+    for (var i = 0; i < contentDom.length; i++) {
+      if (i == index) {
+        xhtml.setStyles(contentDom[i], {
+          'display': 'table'
+        });
+        btnDom[i].setAttribute('active', 'yes');
+      } else {
+        xhtml.setStyles(contentDom[i], {
+          'display': 'none'
+        });
+        btnDom[i].setAttribute('active', 'no');
+      }
+    }
+  };
 
   function initView() {
     var _this = this;
 
     this._contentDom = [];
-    var tableFrame = xhtml.append(this._el, "<div></div>");
-    xhtml.setStyles(tableFrame, {
+    this._tableFrame = xhtml.append(this._el, "<div></div>");
+    xhtml.setStyles(this._tableFrame, {
       "width": "100%",
       "height": "calc(100% - 92px)",
       "overflow": "auto"
     });
 
     for (var index = 0; index < this._contentArray.length; index++) {
-      var tableTemplate = ""; // 顶部的
-
-      tableTemplate += "<tr><th style='width:50px;border: 1px solid #d6cccb;border-right:none;background-color:white;'></th>";
-
-      for (var k = 0; k < this._contentArray[index].content[0].length; k++) {
-        tableTemplate += "<th style='border: 1px solid #d6cccb;border-bottom:none;color:gray;'>" + this.$$calcColName(k) + "</th>";
-      }
-
-      tableTemplate += '</tr>'; // 行
-
-      for (var i = 0; i < this._contentArray[index].content.length; i++) {
-        tableTemplate += "<tr><th style='width:50px;border: 1px solid #d6cccb;border-right:none;color:gray;'>" + (i + 1) + "</th>"; //  列
-
-        for (var j = 0; j < this._contentArray[index].content[i].length; j++) {
-          if (this._contentArray[index].content[i][j] != 'null') {
-            // contenteditable="true" 可编辑状态，则可点击获取焦点，同时内容也是可以编辑的
-            // tabindex="0" 点击获取焦点，内容是不可编辑的
-            tableTemplate += '<th contenteditable="true" style="vertical-align:top;min-width:50px;padding:5px;white-space: nowrap;outline:0.5px solid #555555;background-color:white;" index="' + i + '-' + j + '" row-number="' + i + '" col-number="' + j + '" colspan="' + this._contentArray[index].content[i][j].colspan + '"  rowspan="' + this._contentArray[index].content[i][j].rowspan + '">' + this._contentArray[index].content[i][j].value + '</th>';
-          }
-        }
-
-        tableTemplate += '</tr>';
-      }
-
-      this._contentDom[index] = xhtml.append(tableFrame, "<table>" + tableTemplate + "</table>");
+      this.$$initTableView(this._contentArray[index], index);
       xhtml.setStyles(this._contentDom[index], {
-        "border-collapse": "collapse",
-        "width": "100%",
         "display": index == 0 ? 'table' : "none"
       });
-    } // 添加底部控制选择显示表格按钮
+    }
+
+    this.$$addStyle('excel-view', "\n\n        .excel-view{\n            border-collapse: collapse;\n            width: 100%;\n        }\n\n        .excel-view .top-left{\n            width:50px;\n            border: 1px solid #d6cccb;\n            border-right:none;\n            background-color:white;\n        }\n\n        .excel-view .top-name{\n            border: 1px solid #d6cccb;\n            border-bottom:none;\n            color:gray;\n        }\n\n        .excel-view .line-num{\n            width:50px;border: 1px solid #d6cccb;border-right:none;color:gray;\n        }\n\n        .excel-view .item{\n            vertical-align:top;\n            min-width:50px;\n            padding:5px;\n            white-space: nowrap;\n            outline:0.5px solid #555555;\n            background-color:white;\n        }\n\n    "); // 添加底部控制选择显示表格按钮
+
+    var bottomBtns = xhtml.append(this._el, "<div class='bottom-btn' open-web-excel></div>");
+    var addBtn = xhtml.append(bottomBtns, "<span class='add item' open-web-excel>+</span>");
+    xhtml.bind(addBtn, 'click', function () {
+      // 首先，需要追加数据
+      _this._contentArray.push(_this.$$formatContent()[0]);
+
+      var index = _this._contentArray.length - 1; // 然后添加table
+
+      _this.$$initTableView(_this._contentArray[index], index); // 添加底部按钮
 
 
-    var bottomBtns = xhtml.append(this._el, "<div></div>");
-    xhtml.setStyles(bottomBtns, {
-      "width": "100%",
-      "height": "30px",
-      "overflow": "auto",
-      "border-top": "1px solid #d6cccb",
-      'box-sizing': 'border-box'
+      var bottomBtn = xhtml.append(bottomBtns, "<span class='name item' open-web-excel>" + _this._contentArray[index].name + "</span>");
+
+      _this._btnDom.push(bottomBtn);
+
+      xhtml.bind(bottomBtn, 'click', function () {
+        bottomClick(_this._btnDom, _this._contentDom, index);
+      });
     });
-    var addBtn = xhtml.append(bottomBtns, "<span>+</span>");
-    xhtml.setStyles(addBtn, {
-      "line-height": "30px",
-      "width": "30px",
-      "text-align": "center",
-      "font-size": "18px",
-      'box-sizing': 'border-box',
-      'vertical-align': "top",
-      'display': 'inline-block',
-      'cursor': 'pointer'
-    });
-    xhtml.bind(addBtn, 'click', function () {});
     this._btnDom = [];
 
     var _loop = function _loop(_index2) {
-      var bottomBtn = xhtml.append(bottomBtns, "<span>" + _this._contentArray[_index2].name + "</span>");
-      xhtml.setStyles(bottomBtn, {
-        "line-height": "30px",
-        "font-size": "12px",
-        'box-sizing': 'border-box',
-        "padding": "0 10px",
-        'vertical-align': "top",
-        'display': 'inline-block',
-        'cursor': 'pointer'
-      });
+      var bottomBtn = xhtml.append(bottomBtns, "<span class='name item' open-web-excel>" + _this._contentArray[_index2].name + "</span>"); // 点击切换显示的视图
+
       xhtml.bind(bottomBtn, 'click', function () {
-        for (var _i = 0; _i < _this._contentDom.length; _i++) {
-          if (_i == _index2) {
-            xhtml.setStyles(_this._contentDom[_i], {
-              'display': 'table'
-            });
-            xhtml.setStyles(_this._btnDom[_i], {
-              "background-color": "white"
-            });
-          } else {
-            xhtml.setStyles(_this._contentDom[_i], {
-              'display': 'none'
-            });
-            xhtml.setStyles(_this._btnDom[_i], {
-              "background-color": "transparent"
-            });
-          }
-        }
+        bottomClick(_this._btnDom, _this._contentDom, _index2);
+      }); // 双击可以修改名字
+
+      xhtml.bind(bottomBtn, 'dblclick', function () {
+        _this._btnDom[_index2].setAttribute('contenteditable', 'true');
       });
+      xhtml.bind(bottomBtn, 'blur', function () {
+        _this._contentArray[_index2].name = bottomBtn.innerText;
+      }); // 登记起来所有的按钮
 
       _this._btnDom.push(bottomBtn);
     };
 
     for (var _index2 = 0; _index2 < this._contentArray.length; _index2++) {
       _loop(_index2);
-    } // 初始化点击第一个
+    }
 
+    this.$$addStyle('bottom-btn', "\n\n        .bottom-btn{\n            width: 100%;\n            height: 30px;\n            overflow: auto;\n            border-top: 1px solid #d6cccb;\n            box-sizing: border-box;\n        }\n\n        .bottom-btn .item{\n            line-height: 30px;\n            box-sizing: border-box;\n            vertical-align: top;\n            display: inline-block;\n            cursor: pointer;\n        }\n\n        .bottom-btn .add{\n            width: 30px;\n            text-align: center;\n            font-size: 18px;\n        }\n\n        .bottom-btn .name{\n            font-size: 12px;\n            padding: 0 10px;\n        }\n        .bottom-btn .name:focus{\n            outline:none;\n        }\n\n        .bottom-btn .name:hover{\n            background-color:#efe9e9;\n        }\n\n        .bottom-btn .name[active='yes']{\n            background-color:white;\n        }\n\n    "); // 初始化点击第一个
 
     this._btnDom[0].click();
   }
@@ -494,40 +497,250 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     return result;
   }
 
-  function menu() {
-    // 顶部操作栏
-    var topDom = xhtml.append(this._el, "<div></div>");
-    xhtml.setStyles(topDom, {
-      "width": "100%",
-      "height": "62px",
-      // 26 + 36
-      "overflow": "auto"
-    }); // 菜单
+  var addUniqueNamespace = function addUniqueNamespace(style) {
+    var uniqueNameSpace = 'open-web-excel';
+    style = style.replace(/( {0,}){/g, "{");
+    style = style.replace(/( {0,}),/g, ",");
+    var temp = ""; // 分别表示：是否处于注释中、是否处于内容中、是否由于特殊情况在遇到{前完成了hash
 
-    this._menuDom = xhtml.append(topDom, "<div>\n        <span>\u7F16\u8F91</span>\n        <span>\u63D2\u5165</span>\n        <span>\u683C\u5F0F</span>\n        <span>\u516C\u5F0F</span>\n        <span>\u6570\u636E</span>\n        <span>\u5E2E\u52A9</span>\n    </div>");
-    xhtml.setStyles(this._menuDom, {
-      "border-bottom": "1px solid #d6cccb",
-      'padding': "0 20px",
-      'box-sizing': 'border-box'
-    });
-    var menuItems = xhtml.find(this._menuDom, function () {
-      return true;
-    }, 'span');
+    var isSpecial = false,
+        isContent = false,
+        hadComplete = false;
 
-    for (var i = 0; i < menuItems.length; i++) {
-      xhtml.setStyles(menuItems[i], {
-        'display': "inline-block",
-        'line-height': '26px',
-        'padding': "0 10px",
-        'font-size': '12px',
-        'cursor': 'pointer',
-        'color': "#555555"
+    for (var i = 0; i < style.length; i++) {
+      if (style[i] == ':' && !isSpecial && !hadComplete && !isContent) {
+        hadComplete = true;
+        temp += "[" + uniqueNameSpace + "]";
+      } else if (style[i] == '{' && !isSpecial) {
+        isContent = true;
+        if (!hadComplete) temp += "[" + uniqueNameSpace + "]";
+      } else if (style[i] == '}' && !isSpecial) {
+        isContent = false;
+        hadComplete = false;
+      } else if (style[i] == '/' && style[i + 1] == '*') {
+        isSpecial = true;
+      } else if (style[i] == '*' && style[i + 1] == '/') {
+        isSpecial = false;
+      } else if (style[i] == ',' && !isSpecial && !isContent) {
+        if (!hadComplete) temp += "[" + uniqueNameSpace + "]";
+        hadComplete = false;
+      }
+
+      temp += style[i];
+    }
+
+    return temp;
+  };
+
+  function style() {
+    if ('open-web-excel@style' in window) ;else {
+      window['open-web-excel@style'] = {};
+    }
+    var head = document.head || document.getElementsByTagName('head')[0];
+    return function (keyName, styleString) {
+      if (window['open-web-excel@style'][keyName]) ;else {
+        window['open-web-excel@style'][keyName] = true; // 创建style标签
+
+        var styleElement = document.createElement('style');
+        styleElement.setAttribute('type', 'text/css'); // 写入样式内容
+        // 添加统一的后缀是防止污染
+
+        styleElement.innerHTML = addUniqueNamespace(styleString); // 添加到页面
+
+        head.appendChild(styleElement);
+      }
+    };
+  }
+  /*!
+   * 💡 - 获取键盘此时按下的键的组合结果
+   * https://github.com/hai2007/tool.js/blob/master/getKeyString.js
+   *
+   * author hai2007 < https://hai2007.gitee.io/sweethome >
+   *
+   * Copyright (c) 2021-present hai2007 走一步，再走一步。
+   * Released under the MIT license
+   */
+  // 字典表
+
+
+  var dictionary = {
+    // 数字
+    48: [0, ')'],
+    49: [1, '!'],
+    50: [2, '@'],
+    51: [3, '#'],
+    52: [4, '$'],
+    53: [5, '%'],
+    54: [6, '^'],
+    55: [7, '&'],
+    56: [8, '*'],
+    57: [9, '('],
+    96: [0, 0],
+    97: 1,
+    98: 2,
+    99: 3,
+    100: 4,
+    101: 5,
+    102: 6,
+    103: 7,
+    104: 8,
+    105: 9,
+    106: "*",
+    107: "+",
+    109: "-",
+    110: ".",
+    111: "/",
+    // 字母
+    65: ["a", "A"],
+    66: ["b", "B"],
+    67: ["c", "C"],
+    68: ["d", "D"],
+    69: ["e", "E"],
+    70: ["f", "F"],
+    71: ["g", "G"],
+    72: ["h", "H"],
+    73: ["i", "I"],
+    74: ["j", "J"],
+    75: ["k", "K"],
+    76: ["l", "L"],
+    77: ["m", "M"],
+    78: ["n", "N"],
+    79: ["o", "O"],
+    80: ["p", "P"],
+    81: ["q", "Q"],
+    82: ["r", "R"],
+    83: ["s", "S"],
+    84: ["t", "T"],
+    85: ["u", "U"],
+    86: ["v", "V"],
+    87: ["w", "W"],
+    88: ["x", "X"],
+    89: ["y", "Y"],
+    90: ["z", "Z"],
+    // 方向
+    37: "left",
+    38: "up",
+    39: "right",
+    40: "down",
+    33: "page up",
+    34: "page down",
+    35: "end",
+    36: "home",
+    // 控制键
+    16: "shift",
+    17: "ctrl",
+    18: "alt",
+    91: "command",
+    92: "command",
+    93: "command",
+    9: "tab",
+    20: "caps lock",
+    32: "spacebar",
+    8: "backspace",
+    13: "enter",
+    27: "esc",
+    46: "delete",
+    45: "insert",
+    144: "number lock",
+    145: "scroll lock",
+    12: "clear",
+    19: "pause",
+    // 功能键
+    112: "f1",
+    113: "f2",
+    114: "f3",
+    115: "f4",
+    116: "f5",
+    117: "f6",
+    118: "f7",
+    119: "f8",
+    120: "f9",
+    121: "f10",
+    122: "f11",
+    123: "f12",
+    // 余下键
+    189: ["-", "_"],
+    187: ["=", "+"],
+    219: ["[", "{"],
+    221: ["]", "}"],
+    220: ["\\", "|"],
+    186: [";", ":"],
+    222: ["'", '"'],
+    188: [",", "<"],
+    190: [".", ">"],
+    191: ["/", "?"],
+    192: ["`", "~"]
+  }; // 非独立键字典
+
+  var help_key = ["shift", "ctrl", "alt"];
+  /**
+   * 键盘按键
+   * 返回键盘此时按下的键的组合结果
+   */
+
+  function getKeyString(event) {
+    event = event || window.event;
+    var keycode = event.keyCode || event.which;
+    var key = dictionary[keycode] || keycode;
+    if (!key) return;
+    if (key.constructor !== Array) key = [key, key];
+    var shift = event.shiftKey ? "shift+" : "",
+        alt = event.altKey ? "alt+" : "",
+        ctrl = event.ctrlKey ? "ctrl+" : "";
+    var resultKey = "",
+        preKey = ctrl + shift + alt;
+
+    if (help_key.indexOf(key[0]) >= 0) {
+      key[0] = key[1] = "";
+    } // 判断是否按下了caps lock
+
+
+    var lockPress = event.code == "Key" + event.key && !shift; // 只有字母（且没有按下功能Ctrl、shift或alt）区分大小写
+
+    resultKey = preKey + (preKey == '' && lockPress ? key[1] : key[0]);
+
+    if (key[0] == "") {
+      resultKey = resultKey.replace(/\+$/, '');
+    }
+
+    return resultKey;
+  } // 键盘总控
+
+
+  function renderKeyboard() {
+    var _this2 = this;
+
+    if ('_keyLog' in this) {
+      console.error('Keyboard has been initialized');
+      return;
+    } else {
+      this._keyLog = {
+        'shift': false
+      };
+      xhtml.bind(document.body, 'keydown', function (event) {
+        var keyString = getKeyString(event); // 标记shift按下
+
+        if (keyString == 'shift') _this2._keyLog.shift = true;
+      });
+      xhtml.bind(document.body, 'keyup', function (event) {
+        var keyString = getKeyString(event); // 标记shift放开
+
+        if (keyString == 'shift') _this2._keyLog.shift = false;
       });
     }
   }
 
+  function menu() {
+    // 顶部操作栏
+    var topDom = xhtml.append(this._el, "<div class='top-dom' open-web-excel></div>");
+    this.$$addStyle('top-dom', "\n\n       .top-dom{\n            width: 100%;\n            height: 62px;\n            overflow: auto;\n       }\n\n    "); // 菜单
+
+    this._menuDom = xhtml.append(topDom, "<div class='menu' open-web-excel>\n        <span open-web-excel>\n            \u683C\u5F0F\n        </span>\n        <span open-web-excel>\u5E2E\u52A9</span>\n    </div>");
+    this.$$addStyle('menu', "\n\n        .menu{\n            border-bottom: 1px solid #d6cccb;\n            padding: 0 20px;\n            box-sizing: border-box;\n        }\n\n        .menu>span{\n            display: inline-block;\n            line-height: 26px;\n            padding: 0 10px;\n            font-size: 12px;\n            cursor: pointer;\n            color: #555555;\n        }\n\n    ");
+  }
+
   var owe = function owe(options) {
-    var _this2 = this;
+    var _this3 = this;
 
     if (!(this instanceof owe)) {
       throw new Error('Open-Web-Excel is a constructor and should be called with the `new` keyword');
@@ -554,18 +767,25 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return {
         version: "0.1.0",
         filename: "Open-Web-Excel",
-        contents: _this2._contentArray
+        contents: _this3._contentArray
       };
-    };
+    }; // 启动键盘事件监听
+
+
+    this.$$renderKeyboard();
   }; // 挂载辅助方法
 
 
   owe.prototype.$$formatContent = formatContent;
-  owe.prototype.$$calcColName = calcColName; // 挂载核心方法
+  owe.prototype.$$calcColName = calcColName;
+  owe.prototype.$$addStyle = style(); // 挂载核心方法
 
   owe.prototype.$$initDom = initDom;
   owe.prototype.$$initView = initView;
-  owe.prototype.$$createdMenu = menu;
+  owe.prototype.$$initTableView = initTableView;
+  owe.prototype.$$createdMenu = menu; // 挂载键盘交互总控
+
+  owe.prototype.$$renderKeyboard = renderKeyboard;
 
   if ((typeof module === "undefined" ? "undefined" : _typeof(module)) === "object" && _typeof(module.exports) === "object") {
     module.exports = owe;
