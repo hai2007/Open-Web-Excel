@@ -36,7 +36,12 @@ export function initTableView(itemTable, index) {
 
                 // contenteditable="true" 可编辑状态，则可点击获取焦点，同时内容也是可以编辑的
                 // tabindex="0" 点击获取焦点，内容是不可编辑的
-                tableTemplate += '<th contenteditable="true" class="item" colspan="' + itemTable.content[i][j].colspan + '"  rowspan="' + itemTable.content[i][j].rowspan + '" open-web-excel>' + itemTable.content[i][j].value + '</th>';
+                tableTemplate += `<th
+                  contenteditable="true"
+                  class="item"
+                  colspan="${itemTable.content[i][j].colspan}"
+                  rowspan="${itemTable.content[i][j].rowspan}"
+                open-web-excel>${itemTable.content[i][j].value}</th>`;
 
             }
         }
