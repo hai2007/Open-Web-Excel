@@ -5,6 +5,7 @@ import { isElement } from '@hai2007/tool/type';
 import { initDom, initView, initTableView } from './excel-view/init';
 import { formatContent, calcColName, styleToString } from './excel-view/tool';
 import style from './tool/style';
+import { moveCursorTo } from './excel-view/cursor';
 
 // 键盘交互总控
 
@@ -13,6 +14,7 @@ import renderKeyboard from './Keyboard';
 // 挂载顶部菜单
 
 import menu from './menu/index';
+import updateMenu from './menu/update';
 
 let owe = function (options) {
 
@@ -70,6 +72,9 @@ owe.prototype.$$initView = initView;
 owe.prototype.$$initTableView = initTableView;
 
 owe.prototype.$$createdMenu = menu;
+owe.prototype.$$updateMenu = updateMenu;
+
+owe.prototype.$$moveCursorTo = moveCursorTo;
 
 // 挂载键盘交互总控
 

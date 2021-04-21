@@ -54,22 +54,32 @@ export function initTableView(itemTable, index, styleToString) {
 
     this._contentDom[index] = xhtml.append(this._tableFrame, "<table style='display:none;' class='excel-view' open-web-excel>" + tableTemplate + "</table>");
 
+    // 后续动态新增的需要重新绑定
+
+    let items = xhtml.find(this._contentDom[index], node => xhtml.hasClass(node, 'item'), 'th');
+
+    xhtml.bind(items, 'click', event => {
+        this.$$moveCursorTo(+event.target.getAttribute('row'), +event.target.getAttribute('col'));
+    });
+
 };
 
-let bottomClick = (btnDom, contentDom, index) => {
-    for (let i = 0; i < contentDom.length; i++) {
+let bottomClick = (target, index) => {
+    for (let i = 0; i < target._contentDom.length; i++) {
         if (i == index) {
-            xhtml.setStyles(contentDom[i], {
+            xhtml.setStyles(target._contentDom[i], {
                 'display': 'table'
             });
-            btnDom[i].setAttribute('active', 'yes');
+            target._btnDom[i].setAttribute('active', 'yes');
         } else {
-            xhtml.setStyles(contentDom[i], {
+            xhtml.setStyles(target._contentDom[i], {
                 'display': 'none'
             });
-            btnDom[i].setAttribute('active', 'no');
+            target._btnDom[i].setAttribute('active', 'no');
         }
     }
+    target._tableIndex = index;
+    target.$$moveCursorTo(1, 1);
 };
 
 export function initView() {
@@ -149,7 +159,7 @@ export function initView() {
         this._btnDom.push(bottomBtn);
 
         xhtml.bind(bottomBtn, 'click', () => {
-            bottomClick(this._btnDom, this._contentDom, index);
+            bottomClick(this, index);
         });
 
     });
@@ -161,7 +171,7 @@ export function initView() {
 
         // 点击切换显示的视图
         xhtml.bind(bottomBtn, 'click', () => {
-            bottomClick(this._btnDom, this._contentDom, index);
+            bottomClick(this, index);
         });
 
         // 双击可以修改名字

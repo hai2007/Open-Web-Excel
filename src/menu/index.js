@@ -20,28 +20,65 @@ export default function () {
     // 菜单
     this._menuDom = xhtml.append(topDom, `<div class='menu' open-web-excel>
         <span open-web-excel>
-            格式
+            操作
             <div open-web-excel>
-                <span class='item' open-web-excel>粗体</span>
-                <span class='item' open-web-excel>斜体</span>
-                <span class='item' open-web-excel>下划线</span>
-                <span class='item' open-web-excel>中划线</span>
-                <span class='line' open-web-excel></span>
                 <span class='item more' open-web-excel>
-                    合并单元格
+                    插入
                     <div open-web-excel>
-                        <span class='item' open-web-excel>全部合并</span>
-                        <span class='item' open-web-excel>水平合并</span>
-                        <span class='item' open-web-excel>垂直合并</span>
-                        <span class='item' open-web-excel>取消合并</span>
+                        <span class='item' def-type='insert-up' open-web-excel>
+                            向上插入
+                            <input value='1' open-web-excel />
+                            行
+                        </span>
+                        <span class='item' def-type='insert-down' open-web-excel>
+                            向下插入
+                            <input value='1' open-web-excel />
+                            行
+                        </span>
+                        <span class='item' def-type='insert-left' open-web-excel>
+                            向左插入
+                            <input value='1' open-web-excel />
+                            列
+                        </span>
+                        <span class='item' def-type='insert-right' open-web-excel>
+                            向右插入
+                            <input value='1' open-web-excel />
+                            列
+                        </span>
                     </div>
                 </span>
                 <span class='item more' open-web-excel>
+                    删除
+                    <div open-web-excel>
+                        <span class='item' def-type='delete-row' open-web-excel>删除所选行</span>
+                        <span class='item' def-type='delete-col' open-web-excel>删除所选列</span>
+                    </div>
+                </span>
+                <span class='item more' open-web-excel>
+                    合并单元格
+                    <div open-web-excel>
+                        <span class='item' def-type='merge-all' open-web-excel>全部合并</span>
+                        <span class='item' def-type='merge-horizontal' open-web-excel>水平合并</span>
+                        <span class='item' def-type='merge-vertical' open-web-excel>垂直合并</span>
+                        <span class='item' def-type='merge-cancel' open-web-excel>取消合并</span>
+                    </div>
+                </span>
+            </div>
+        </span>
+        <span open-web-excel>
+            格式
+            <div open-web-excel>
+                <span class='item' def-type='bold' open-web-excel>粗体</span>
+                <span class='item' def-type='italic' open-web-excel>斜体</span>
+                <span class='item' def-type='underline' open-web-excel>下划线</span>
+                <span class='item' def-type='line-through' open-web-excel>中划线</span>
+                <span class='line' open-web-excel></span>
+                <span class='item more' open-web-excel>
                     水平对齐
                     <div open-web-excel>
-                        <span class='item' open-web-excel>左对齐</span>
-                        <span class='item' open-web-excel>居中对齐</span>
-                        <span class='item' open-web-excel>右对齐</span>
+                        <span class='item' def-type='horizontal-left' open-web-excel>左对齐</span>
+                        <span class='item' def-type='horizontal-center' open-web-excel>居中对齐</span>
+                        <span class='item' def-type='horizontal-right' open-web-excel>右对齐</span>
                     </div>
                 </span>
             </div>
@@ -86,12 +123,13 @@ export default function () {
             width: 140px;
             box-shadow: 4px 3px 6px 0 #c9c9e2;
             display:none;
+            padding:5px 0;
         }
 
         .menu>span div span{
             display:block;
             position:relative;
-            padding:10px 20px;
+            padding:5px 20px;
         }
 
         .menu>span div span>div{
@@ -122,39 +160,51 @@ export default function () {
             color: #555555;
         }
 
+        .menu input{
+            width:20px;
+            outline:none;
+        }
+
+        .menu .item.active::before{
+            content: "*";
+            color: red;
+            position: absolute;
+            left: 8px;
+        }
+
     `);
 
     // 快捷菜单
     this._menuQuickDom = xhtml.append(topDom, `<div class='quick-menu' open-web-excel>
-        <span class='item' open-web-excel>格式刷</span>
+        <span class='item' def-type='format' open-web-excel>格式刷</span>
         <span class='line' open-web-excel></span>
-        <span class='item' open-web-excel>
+        <span class='item' def-type='font-color' open-web-excel>
             文字颜色：<i class='color' open-web-excel></i>
         </span>
-        <span class='item' open-web-excel>
+        <span class='item' def-type='background-color' open-web-excel>
             填充色：<i class='color' open-web-excel></i>
         </span>
         <span class='line' open-web-excel></span>
-        <span class='item' open-web-excel>
+        <span class='item' def-type='merge-all' open-web-excel>
             全部合并
         </span>
-        <span class='item' open-web-excel>
+        <span class='item' def-type='merge-horizontal' open-web-excel>
             水平合并
         </span>
-        <span class='item' open-web-excel>
+        <span class='item' def-type='merge-vertical' open-web-excel>
             垂直合并
         </span>
-        <span class='item' open-web-excel>
+        <span class='item' def-type='merge-cancel' open-web-excel>
             取消合并
         </span>
         <span class='line' open-web-excel></span>
-        <span class='item' open-web-excel>
+        <span class='item' def-type='horizontal-left' open-web-excel>
             左对齐
         </span>
-        <span class='item' open-web-excel>
+        <span class='item' def-type='horizontal-center' open-web-excel>
             居中对齐
         </span>
-        <span class='item' open-web-excel>
+        <span class='item' def-type='horizontal-right' open-web-excel>
             右对齐
         </span>
     </div>`);
