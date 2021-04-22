@@ -3,12 +3,12 @@
 export function setItemStyle(key, value) {
 
     // 更新数据内容
-    this._contentArray[this._tableIndex].content[this._rowNum - 1][this._colNum - 1].style[key] = value;
+    this.__contentArray[this.__tableIndex].content[this.__rowNum - 1][this.__colNum - 1].style[key] = value;
 
     // 更新输入条目
-    this._target.style[key] = value;
+    this.__target.style[key] = value;
 
     // 更新菜单状态
-    this.$$updateMenu(this._contentArray[this._tableIndex].content[this._rowNum - 1][this._colNum - 1].style);
+    this.$$updateMenu(this.__contentArray[this.__tableIndex].content[this.__rowNum - 1][this.__colNum - 1].style);
 
 };

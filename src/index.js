@@ -4,9 +4,12 @@ import { isElement } from '@hai2007/tool/type';
 
 import { initDom, initView, initTableView } from './excel-view/init';
 import { formatContent, calcColName, styleToString } from './excel-view/tool';
+
 import style from './tool/style';
+
 import { moveCursorTo } from './excel-view/cursor';
 import { setItemStyle } from './excel-view/modify';
+import { calcRegionInfo, showRegion, cancelRegion } from './excel-view/region';
 
 // 键盘交互总控
 
@@ -26,10 +29,13 @@ let owe = function (options) {
     // 编辑器挂载点
     if (isElement(options.el)) {
 
-        this._el = options.el;
+        this.__el = options.el;
 
         // 内容
-        this._contentArray = this.$$formatContent(options.content);
+        this.__contentArray = this.$$formatContent(options.content);
+
+        // 用于选择记录区域
+        this.__region = null;
 
     } else {
 
@@ -54,7 +60,7 @@ let owe = function (options) {
         return {
             version: "0.1.0",
             filename: "Open-Web-Excel",
-            contents: this._contentArray
+            contents: this.__contentArray
         };
     };
 
@@ -77,8 +83,11 @@ owe.prototype.$$createdMenu = menu;
 owe.prototype.$$updateMenu = updateMenu;
 
 owe.prototype.$$moveCursorTo = moveCursorTo;
-
 owe.prototype.$$setItemStyle = setItemStyle;
+
+owe.prototype.$$calcRegionInfo = calcRegionInfo;
+owe.prototype.$$showRegion = showRegion;
+owe.prototype.$$cancelRegion = cancelRegion;
 
 // 挂载键盘交互总控
 

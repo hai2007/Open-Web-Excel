@@ -3,7 +3,7 @@ import xhtml from '@hai2007/tool/xhtml';
 export default function () {
 
     // 顶部操作栏
-    let topDom = xhtml.append(this._el, `<div class='top-dom' open-web-excel>
+    let topDom = xhtml.append(this.__el, `<div class='top-dom' open-web-excel>
 
     </div>`);
 
@@ -18,7 +18,7 @@ export default function () {
     `);
 
     // 菜单
-    this._menuDom = xhtml.append(topDom, `<div class='menu' open-web-excel>
+    this.__menuDom = xhtml.append(topDom, `<div class='menu' open-web-excel>
         <span open-web-excel>
             操作
             <div open-web-excel>
@@ -172,10 +172,18 @@ export default function () {
             left: 8px;
         }
 
+        .menu .item{
+            text-decoration: none;
+        }
+
+        .menu .item:hover{
+            text-decoration: underline;
+        }
+
     `);
 
     // 快捷菜单
-    this._menuQuickDom = xhtml.append(topDom, `<div class='quick-menu' open-web-excel>
+    this.__menuQuickDom = xhtml.append(topDom, `<div class='quick-menu' open-web-excel>
         <span class='item' def-type='format' open-web-excel>格式刷</span>
         <span class='line' open-web-excel></span>
         <span class='item' def-type='font-color' open-web-excel>
@@ -273,6 +281,11 @@ export default function () {
 
         }
 
+        // 填充色
+        else if (defType == 'background-color') {
+
+        }
+
         // 粗体
         else if (defType == 'bold') {
             this.$$setItemStyle('font-weight', xhtml.hasClass(node, 'active') ? 'normal' : 'bold');
@@ -291,11 +304,6 @@ export default function () {
         // 下划线
         else if (defType == 'underline') {
             this.$$setItemStyle('text-decoration', xhtml.hasClass(node, 'active') ? 'none' : 'underline');
-        }
-
-        // 填充色
-        else if (defType == 'background-color') {
-
         }
 
         // 水平对齐方式

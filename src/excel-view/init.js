@@ -4,8 +4,8 @@ import xhtml from '@hai2007/tool/xhtml';
 
 export function initDom() {
 
-    this._el.innerHTML = "";
-    xhtml.setStyles(this._el, {
+    this.__el.innerHTML = "";
+    xhtml.setStyles(this.__el, {
         "background-color": "#f7f7f7",
         "user-select": "none"
     });
@@ -52,11 +52,11 @@ export function initTableView(itemTable, index, styleToString) {
 
     }
 
-    this._contentDom[index] = xhtml.append(this._tableFrame, "<table style='display:none;' class='excel-view' open-web-excel>" + tableTemplate + "</table>");
+    this.__contentDom[index] = xhtml.append(this.__tableFrame, "<table style='display:none;' class='excel-view' open-web-excel>" + tableTemplate + "</table>");
 
     // 后续动态新增的需要重新绑定
 
-    let items = xhtml.find(this._contentDom[index], node => xhtml.hasClass(node, 'item'), 'th');
+    let items = xhtml.find(this.__contentDom[index], node => xhtml.hasClass(node, 'item'), 'th');
 
     xhtml.bind(items, 'click', event => {
         this.$$moveCursorTo(event.target, +event.target.getAttribute('row'), +event.target.getAttribute('col'));
@@ -65,40 +65,40 @@ export function initTableView(itemTable, index, styleToString) {
 };
 
 let bottomClick = (target, index) => {
-    for (let i = 0; i < target._contentDom.length; i++) {
+    for (let i = 0; i < target.__contentDom.length; i++) {
         if (i == index) {
-            xhtml.setStyles(target._contentDom[i], {
+            xhtml.setStyles(target.__contentDom[i], {
                 'display': 'table'
             });
-            target._btnDom[i].setAttribute('active', 'yes');
+            target.__btnDom[i].setAttribute('active', 'yes');
         } else {
-            xhtml.setStyles(target._contentDom[i], {
+            xhtml.setStyles(target.__contentDom[i], {
                 'display': 'none'
             });
-            target._btnDom[i].setAttribute('active', 'no');
+            target.__btnDom[i].setAttribute('active', 'no');
         }
     }
-    target._tableIndex = index;
+    target.__tableIndex = index;
 
-    target.$$moveCursorTo(target._contentDom[index].getElementsByTagName('tr')[1].getElementsByTagName('th')[1], 1, 1);
+    target.$$moveCursorTo(target.__contentDom[index].getElementsByTagName('tr')[1].getElementsByTagName('th')[1], 1, 1);
 };
 
 export function initView() {
 
-    this._contentDom = [];
-    this._tableFrame = xhtml.append(this._el, "<div></div>");
+    this.__contentDom = [];
+    this.__tableFrame = xhtml.append(this.__el, "<div></div>");
 
-    xhtml.setStyles(this._tableFrame, {
+    xhtml.setStyles(this.__tableFrame, {
         "width": "100%",
         "height": "calc(100% - 92px)",
         "overflow": "auto"
     });
 
-    for (let index = 0; index < this._contentArray.length; index++) {
+    for (let index = 0; index < this.__contentArray.length; index++) {
 
-        this.$$initTableView(this._contentArray[index], index, this.$$styleToString);
+        this.$$initTableView(this.__contentArray[index], index, this.$$styleToString);
 
-        xhtml.setStyles(this._contentDom[index], {
+        xhtml.setStyles(this.__contentDom[index], {
             "display": index == 0 ? 'table' : "none"
         });
 
@@ -134,7 +134,6 @@ export function initView() {
             padding:5px;
             white-space: nowrap;
             outline:0.5px solid rgba(85,85,85,0.5);
-            background-color:white;
         }
 
         .excel-view .item[active='yes']{
@@ -144,24 +143,24 @@ export function initView() {
     `);
 
     // 添加底部控制选择显示表格按钮
-    let bottomBtns = xhtml.append(this._el, `<div class='bottom-btn' open-web-excel></div>`);
+    let bottomBtns = xhtml.append(this.__el, `<div class='bottom-btn' open-web-excel></div>`);
 
     let addBtn = xhtml.append(bottomBtns, "<span class='add item' open-web-excel>+</span>");
 
     xhtml.bind(addBtn, 'click', () => {
 
         // 首先，需要追加数据
-        this._contentArray.push(this.$$formatContent()[0]);
+        this.__contentArray.push(this.$$formatContent()[0]);
 
-        let index = this._contentArray.length - 1;
+        let index = this.__contentArray.length - 1;
 
         // 然后添加table
 
-        this.$$initTableView(this._contentArray[index], index, this.$$styleToString);
+        this.$$initTableView(this.__contentArray[index], index, this.$$styleToString);
 
         // 添加底部按钮
-        let bottomBtn = xhtml.append(bottomBtns, "<span class='name item' open-web-excel>" + this._contentArray[index].name + "</span>");
-        this._btnDom.push(bottomBtn);
+        let bottomBtn = xhtml.append(bottomBtns, "<span class='name item' open-web-excel>" + this.__contentArray[index].name + "</span>");
+        this.__btnDom.push(bottomBtn);
 
         xhtml.bind(bottomBtn, 'click', () => {
             bottomClick(this, index);
@@ -169,10 +168,10 @@ export function initView() {
 
     });
 
-    this._btnDom = [];
+    this.__btnDom = [];
 
-    for (let index = 0; index < this._contentArray.length; index++) {
-        let bottomBtn = xhtml.append(bottomBtns, "<span class='name item' open-web-excel>" + this._contentArray[index].name + "</span>");
+    for (let index = 0; index < this.__contentArray.length; index++) {
+        let bottomBtn = xhtml.append(bottomBtns, "<span class='name item' open-web-excel>" + this.__contentArray[index].name + "</span>");
 
         // 点击切换显示的视图
         xhtml.bind(bottomBtn, 'click', () => {
@@ -182,15 +181,15 @@ export function initView() {
         // 双击可以修改名字
 
         xhtml.bind(bottomBtn, 'dblclick', () => {
-            this._btnDom[index].setAttribute('contenteditable', 'true');
+            this.__btnDom[index].setAttribute('contenteditable', 'true');
         });
 
         xhtml.bind(bottomBtn, 'blur', () => {
-            this._contentArray[index].name = bottomBtn.innerText;
+            this.__contentArray[index].name = bottomBtn.innerText;
         });
 
         // 登记起来所有的按钮
-        this._btnDom.push(bottomBtn);
+        this.__btnDom.push(bottomBtn);
     }
 
     this.$$addStyle('bottom-btn', `
@@ -236,6 +235,6 @@ export function initView() {
     `);
 
     // 初始化点击第一个
-    this._btnDom[0].click();
+    this.__btnDom[0].click();
 
 };

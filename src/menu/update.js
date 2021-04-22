@@ -4,7 +4,7 @@ export default function (style) {
 
     // 更新顶部菜单
 
-    let menuItems = xhtml.find(this._menuDom, node => node.getAttribute('def-type'), 'span');
+    let menuItems = xhtml.find(this.__menuDom, node => node.getAttribute('def-type'), 'span');
     for (let i = 0; i < menuItems.length; i++) {
 
         // 获取按钮类型
@@ -69,7 +69,7 @@ export default function (style) {
 
     // 更新快速使用菜单
 
-    let quickItems = xhtml.find(this._menuQuickDom, node => node.getAttribute('def-type'), 'span');
+    let quickItems = xhtml.find(this.__menuQuickDom, node => node.getAttribute('def-type'), 'span');
     for (let i = 0; i < quickItems.length; i++) {
 
         // 获取按钮类型

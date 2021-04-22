@@ -5,12 +5,12 @@ import xhtml from '@hai2007/tool/xhtml';
 
 export default function () {
 
-    if ('_keyLog' in this) {
+    if ('__keyLog' in this) {
         console.error('Keyboard has been initialized');
         return;
     } else {
 
-        this._keyLog = {
+        this.__keyLog = {
             'shift': false
         };
 
@@ -18,14 +18,14 @@ export default function () {
             let keyString = getKeyString(event);
 
             // 标记shift按下
-            if (keyString == 'shift') this._keyLog.shift = true;
+            if (keyString == 'shift') this.__keyLog.shift = true;
         });
 
         xhtml.bind(document.body, 'keyup', event => {
             let keyString = getKeyString(event);
 
             // 标记shift放开
-            if (keyString == 'shift') this._keyLog.shift = false;
+            if (keyString == 'shift') this.__keyLog.shift = false;
         });
 
     }
