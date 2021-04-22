@@ -9,7 +9,7 @@
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Thu Apr 22 2021 17:33:53 GMT+0800 (GMT+08:00)
+* Date:Thu Apr 22 2021 22:03:55 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -413,7 +413,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       });
     }
 
-    this.$$addStyle('excel-view', "\n\n        .excel-view{\n            border-collapse: collapse;\n            width: 100%;\n        }\n\n        .excel-view .top-left{\n            width:50px;\n            border: 1px solid #d6cccb;\n            border-right:none;\n            background-color:white;\n        }\n\n        .excel-view .top-name{\n            border: 1px solid #d6cccb;\n            border-bottom:none;\n            color:gray;\n        }\n\n        .excel-view .line-num{\n            width:50px;border: 1px solid #d6cccb;border-right:none;color:gray;\n        }\n\n        .excel-view .item{\n            vertical-align:top;\n            min-width:50px;\n            padding:5px;\n            white-space: nowrap;\n            outline:0.5px solid rgba(85,85,85,0.5);\n        }\n\n        .excel-view .item[active='yes']{\n            outline: 2px solid red;\n        }\n\n    "); // 添加底部控制选择显示表格按钮
+    this.$$addStyle('excel-view', "\n\n        .excel-view{\n            border-collapse: collapse;\n            width: 100%;\n        }\n\n        .excel-view .top-left{\n            border: 1px solid #d6cccb;\n            border-right:none;\n            background-color:white;\n        }\n\n        .excel-view .top-name{\n            border: 1px solid #d6cccb;\n            border-bottom:none;\n            color:gray;\n            font-size:12px;\n        }\n\n        .excel-view .line-num{\n            padding:0 5px;\n            border: 1px solid #d6cccb;\n            border-right:none;\n            color:gray;\n            font-size:12px;\n\n        }\n\n        .excel-view .item{\n            vertical-align:top;\n            min-width:50px;\n            padding:2px;\n            white-space: nowrap;\n            border:0.5px solid rgba(85,85,85,0.5);\n            outline:none;\n            font-size:12px;\n        }\n\n        .excel-view .item[active='yes']{\n            border: 2px dashed red;\n        }\n\n    "); // 添加底部控制选择显示表格按钮
 
     var bottomBtns = xhtml.append(this.__el, "<div class='bottom-btn' open-web-excel></div>");
     var addBtn = xhtml.append(bottomBtns, "<span class='add item' open-web-excel>+</span>");

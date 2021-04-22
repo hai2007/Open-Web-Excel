@@ -112,7 +112,6 @@ export function initView() {
         }
 
         .excel-view .top-left{
-            width:50px;
             border: 1px solid #d6cccb;
             border-right:none;
             background-color:white;
@@ -122,22 +121,30 @@ export function initView() {
             border: 1px solid #d6cccb;
             border-bottom:none;
             color:gray;
+            font-size:12px;
         }
 
         .excel-view .line-num{
-            width:50px;border: 1px solid #d6cccb;border-right:none;color:gray;
+            padding:0 5px;
+            border: 1px solid #d6cccb;
+            border-right:none;
+            color:gray;
+            font-size:12px;
+
         }
 
         .excel-view .item{
             vertical-align:top;
             min-width:50px;
-            padding:5px;
+            padding:2px;
             white-space: nowrap;
-            outline:0.5px solid rgba(85,85,85,0.5);
+            border:0.5px solid rgba(85,85,85,0.5);
+            outline:none;
+            font-size:12px;
         }
 
         .excel-view .item[active='yes']{
-            outline: 2px solid red;
+            border: 2px dashed red;
         }
 
     `);
