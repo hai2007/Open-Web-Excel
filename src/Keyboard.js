@@ -15,14 +15,14 @@ export default function () {
         };
 
         xhtml.bind(document.body, 'keydown', event => {
-            var keyString = getKeyString(event);
+            let keyString = getKeyString(event);
 
             // 标记shift按下
             if (keyString == 'shift') this._keyLog.shift = true;
         });
 
         xhtml.bind(document.body, 'keyup', event => {
-            var keyString = getKeyString(event);
+            let keyString = getKeyString(event);
 
             // 标记shift放开
             if (keyString == 'shift') this._keyLog.shift = false;

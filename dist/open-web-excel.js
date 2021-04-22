@@ -9,7 +9,7 @@
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Wed Apr 21 2021 16:02:29 GMT+0800 (GMT+08:00)
+* Date:Thu Apr 22 2021 11:46:10 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -370,7 +370,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return xhtml.hasClass(node, 'item');
     }, 'th');
     xhtml.bind(items, 'click', function (event) {
-      _this.$$moveCursorTo(+event.target.getAttribute('row'), +event.target.getAttribute('col'));
+      _this.$$moveCursorTo(event.target, +event.target.getAttribute('row'), +event.target.getAttribute('col'));
     });
   }
 
@@ -392,7 +392,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }
 
     target._tableIndex = index;
-    target.$$moveCursorTo(1, 1);
+    target.$$moveCursorTo(target._contentDom[index].getElementsByTagName('tr')[1].getElementsByTagName('th')[1], 1, 1);
   };
 
   function initView() {
@@ -413,7 +413,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       });
     }
 
-    this.$$addStyle('excel-view', "\n\n        .excel-view{\n            border-collapse: collapse;\n            width: 100%;\n        }\n\n        .excel-view .top-left{\n            width:50px;\n            border: 1px solid #d6cccb;\n            border-right:none;\n            background-color:white;\n        }\n\n        .excel-view .top-name{\n            border: 1px solid #d6cccb;\n            border-bottom:none;\n            color:gray;\n        }\n\n        .excel-view .line-num{\n            width:50px;border: 1px solid #d6cccb;border-right:none;color:gray;\n        }\n\n        .excel-view .item{\n            vertical-align:top;\n            min-width:50px;\n            padding:5px;\n            white-space: nowrap;\n            outline:0.5px solid #555555;\n            background-color:white;\n        }\n\n    "); // 添加底部控制选择显示表格按钮
+    this.$$addStyle('excel-view', "\n\n        .excel-view{\n            border-collapse: collapse;\n            width: 100%;\n        }\n\n        .excel-view .top-left{\n            width:50px;\n            border: 1px solid #d6cccb;\n            border-right:none;\n            background-color:white;\n        }\n\n        .excel-view .top-name{\n            border: 1px solid #d6cccb;\n            border-bottom:none;\n            color:gray;\n        }\n\n        .excel-view .line-num{\n            width:50px;border: 1px solid #d6cccb;border-right:none;color:gray;\n        }\n\n        .excel-view .item{\n            vertical-align:top;\n            min-width:50px;\n            padding:5px;\n            white-space: nowrap;\n            outline:0.5px solid rgba(85,85,85,0.5);\n            background-color:white;\n        }\n\n        .excel-view .item[active='yes']{\n            outline: 2px solid red;\n        }\n\n    "); // 添加底部控制选择显示表格按钮
 
     var bottomBtns = xhtml.append(this._el, "<div class='bottom-btn' open-web-excel></div>");
     var addBtn = xhtml.append(bottomBtns, "<span class='add item' open-web-excel>+</span>");
@@ -580,7 +580,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         styleElement.setAttribute('type', 'text/css'); // 写入样式内容
         // 添加统一的后缀是防止污染
 
-        styleElement.innerHTML = addUniqueNamespace("/*\n    Style for Open-Web-Excel\n    https://www.npmjs.com/package/open-web-excel\n*/\n            " + styleString); // 添加到页面
+        styleElement.innerHTML = addUniqueNamespace("/*\n    Style[".concat(keyName, "] for Open-Web-Excel\n    https://www.npmjs.com/package/open-web-excel\n*/\n            ") + styleString); // 添加到页面
 
         head.appendChild(styleElement);
       }
@@ -588,14 +588,32 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   } // 移动光标到指定位置
 
 
-  function moveCursorTo(rowNum, colNum) {
-    // 记录当前鼠标的位置
-    this._rowNum = rowNum;
-    this._colNum = colNum; // 先获取对应的原始数据
+  function moveCursorTo(target, rowNum, colNum) {
+    // 如果shift被按下，我们认为是在选择区间
+    if (this._keyLog.shift) {
+      console.log('触发选择区间');
+    } else {
+      if (isElement(this._target)) this._target.setAttribute('active', 'no'); // 记录当前鼠标的位置
 
-    var oralItemData = this._contentArray[this._tableIndex].content[rowNum - 1][colNum - 1]; // 接着更新顶部菜单
+      this._rowNum = rowNum;
+      this._colNum = colNum;
+      this._target = target; // 先获取对应的原始数据
 
-    this.$$updateMenu(oralItemData.style);
+      var oralItemData = this._contentArray[this._tableIndex].content[rowNum - 1][colNum - 1]; // 接着更新顶部菜单
+
+      this.$$updateMenu(oralItemData.style);
+      target.setAttribute('active', 'yes');
+    }
+  } // 修改默认输入条目的样式
+
+
+  function setItemStyle(key, value) {
+    // 更新数据内容
+    this._contentArray[this._tableIndex].content[this._rowNum - 1][this._colNum - 1].style[key] = value; // 更新输入条目
+
+    this._target.style[key] = value; // 更新菜单状态
+
+    this.$$updateMenu(this._contentArray[this._tableIndex].content[this._rowNum - 1][this._colNum - 1].style);
   }
   /*!
    * 💡 - 获取键盘此时按下的键的组合结果
@@ -730,6 +748,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var key = dictionary[keycode] || keycode;
     if (!key) return;
     if (key.constructor !== Array) key = [key, key];
+    var _key = key[0];
     var shift = event.shiftKey ? "shift+" : "",
         alt = event.altKey ? "alt+" : "",
         ctrl = event.ctrlKey ? "ctrl+" : "";
@@ -749,7 +768,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       resultKey = resultKey.replace(/\+$/, '');
     }
 
-    return resultKey;
+    return resultKey == '' ? _key : resultKey;
   } // 键盘总控
 
 
@@ -777,6 +796,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   }
 
   function menu() {
+    var _this4 = this;
+
     // 顶部操作栏
     var topDom = xhtml.append(this._el, "<div class='top-dom' open-web-excel>\n\n    </div>");
     this.$$addStyle('top-dom', "\n\n       .top-dom{\n            width: 100%;\n            height: 62px;\n            overflow: auto;\n       }\n\n    "); // 菜单
@@ -785,12 +806,42 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.$$addStyle('menu', "\n\n        .menu{\n            border-bottom: 1px solid #d6cccb;\n            padding: 0 20px;\n            box-sizing: border-box;\n        }\n\n        .menu>span{\n            display: inline-block;\n            line-height: 26px;\n            padding: 0 10px;\n            font-size: 12px;\n            cursor: pointer;\n            color: #555555;\n        }\n        .menu>span:hover{\n            background: white;\n        }\n\n        .menu>span>div{\n            margin-left: -10px;\n        }\n\n        .menu>span div{\n            position:absolute;\n            background: white;\n            width: 140px;\n            box-shadow: 4px 3px 6px 0 #c9c9e2;\n            display:none;\n            padding:5px 0;\n        }\n\n        .menu>span div span{\n            display:block;\n            position:relative;\n            padding:5px 20px;\n        }\n\n        .menu>span div span>div{\n            left:140px;\n            top:0px;\n        }\n\n        .menu .line{\n            height:1px;\n            background-color:#d6cccb;\n            padding:0;\n            margin:0 10px;\n        }\n\n        .menu span:hover>div{\n            display:block;\n        }\n\n        .menu span.more:after{\n            content:\">\";\n            position: absolute;\n            right: 12px;\n            font-weight: 800;\n        }\n\n        .menu a{\n            text-decoration: none;\n            color: #555555;\n        }\n\n        .menu input{\n            width:20px;\n            outline:none;\n        }\n\n        .menu .item.active::before{\n            content: \"*\";\n            color: red;\n            position: absolute;\n            left: 8px;\n        }\n\n    "); // 快捷菜单
 
     this._menuQuickDom = xhtml.append(topDom, "<div class='quick-menu' open-web-excel>\n        <span class='item' def-type='format' open-web-excel>\u683C\u5F0F\u5237</span>\n        <span class='line' open-web-excel></span>\n        <span class='item' def-type='font-color' open-web-excel>\n            \u6587\u5B57\u989C\u8272\uFF1A<i class='color' open-web-excel></i>\n        </span>\n        <span class='item' def-type='background-color' open-web-excel>\n            \u586B\u5145\u8272\uFF1A<i class='color' open-web-excel></i>\n        </span>\n        <span class='line' open-web-excel></span>\n        <span class='item' def-type='merge-all' open-web-excel>\n            \u5168\u90E8\u5408\u5E76\n        </span>\n        <span class='item' def-type='merge-horizontal' open-web-excel>\n            \u6C34\u5E73\u5408\u5E76\n        </span>\n        <span class='item' def-type='merge-vertical' open-web-excel>\n            \u5782\u76F4\u5408\u5E76\n        </span>\n        <span class='item' def-type='merge-cancel' open-web-excel>\n            \u53D6\u6D88\u5408\u5E76\n        </span>\n        <span class='line' open-web-excel></span>\n        <span class='item' def-type='horizontal-left' open-web-excel>\n            \u5DE6\u5BF9\u9F50\n        </span>\n        <span class='item' def-type='horizontal-center' open-web-excel>\n            \u5C45\u4E2D\u5BF9\u9F50\n        </span>\n        <span class='item' def-type='horizontal-right' open-web-excel>\n            \u53F3\u5BF9\u9F50\n        </span>\n    </div>");
-    this.$$addStyle('quick-menu', "\n\n        .quick-menu{\n            line-height: 36px;\n            font-size: 12px;\n        }\n\n        .quick-menu span{\n            display:inline-block;\n            vertical-align: top;\n        }\n\n        .quick-menu span>i.color{\n            display: inline-block;\n            height: 14px;\n            width: 20px;\n            border:1px solid #d6cccb;\n            vertical-align: middle;\n        }\n\n        .quick-menu .item{\n            margin:0 10px;\n            cursor: pointer;\n        }\n\n        .quick-menu .line{\n            background-color:#d6cccb;\n            width:1px;\n            height:22px;\n            margin-top:7px;\n        }\n\n        .quick-menu .item:hover{\n            font-weight: 800;\n        }\n\n        .quick-menu .item.active{\n            font-weight: 800;\n            color: red;\n        }\n\n    ");
+    this.$$addStyle('quick-menu', "\n\n        .quick-menu{\n            line-height: 36px;\n            font-size: 12px;\n        }\n\n        .quick-menu span{\n            display:inline-block;\n            vertical-align: top;\n        }\n\n        .quick-menu span>i.color{\n            display: inline-block;\n            height: 14px;\n            width: 20px;\n            border:1px solid #d6cccb;\n            vertical-align: middle;\n        }\n\n        .quick-menu .item{\n            margin:0 10px;\n            cursor: pointer;\n        }\n\n        .quick-menu .line{\n            background-color:#d6cccb;\n            width:1px;\n            height:22px;\n            margin-top:7px;\n        }\n\n        .quick-menu .item:hover{\n            font-weight: 800;\n        }\n\n        .quick-menu .item.active{\n            font-weight: 800;\n            color: red;\n        }\n\n    "); // 对菜单添加点击事件
+
+    var menuClickItems = xhtml.find(topDom, function (node) {
+      return node.getAttribute('def-type');
+    }, 'span');
+    xhtml.bind(menuClickItems, 'click', function (event) {
+      var node = event.target; // 获取按钮类型
+
+      var defType = node.getAttribute('def-type'); // 格式刷
+
+      if (defType == 'format') ; // 文字颜色
+      else if (defType == 'font-color') ; // 粗体
+        else if (defType == 'bold') {
+            _this4.$$setItemStyle('font-weight', xhtml.hasClass(node, 'active') ? 'normal' : 'bold');
+          } // 斜体
+          else if (defType == 'italic') {
+              _this4.$$setItemStyle('font-style', xhtml.hasClass(node, 'active') ? 'normal' : 'italic');
+            } // 中划线
+            else if (defType == 'line-through') {
+                _this4.$$setItemStyle('text-decoration', xhtml.hasClass(node, 'active') ? 'none' : 'line-through');
+              } // 下划线
+              else if (defType == 'underline') {
+                  _this4.$$setItemStyle('text-decoration', xhtml.hasClass(node, 'active') ? 'none' : 'underline');
+                } // 填充色
+                else if (defType == 'background-color') ; // 水平对齐方式
+                  else if (/^horizontal\-/.test(defType)) {
+                      _this4.$$setItemStyle('text-align', defType.replace('horizontal-', ''));
+                    } // 合并单元格
+                    else if (/^merge\-/.test(defType)) ; // 插入
+                      else if (/^insert\-/.test(defType)) ; // 删除
+                        else if (/^delete\-/.test(defType)) ;
+    });
   }
 
   function updateMenu(style) {
-    console.log(style); // 更新顶部菜单
-
+    // 更新顶部菜单
     var menuItems = xhtml.find(this._menuDom, function (node) {
       return node.getAttribute('def-type');
     }, 'span');
@@ -863,7 +914,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   }
 
   var owe = function owe(options) {
-    var _this4 = this;
+    var _this5 = this;
 
     if (!(this instanceof owe)) {
       throw new Error('Open-Web-Excel is a constructor and should be called with the `new` keyword');
@@ -877,8 +928,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     } else {
       // 挂载点是必须的，一定要有
       throw new Error('options.el is not a element!');
-    } // 先初始化DOM
+    } // 启动键盘事件监听
 
+
+    this.$$renderKeyboard(); // 先初始化DOM
 
     this.$$initDom(); // 挂载菜单
 
@@ -890,12 +943,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return {
         version: "0.1.0",
         filename: "Open-Web-Excel",
-        contents: _this4._contentArray
+        contents: _this5._contentArray
       };
-    }; // 启动键盘事件监听
-
-
-    this.$$renderKeyboard();
+    };
   }; // 挂载辅助方法
 
 
@@ -909,7 +959,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   owe.prototype.$$initTableView = initTableView;
   owe.prototype.$$createdMenu = menu;
   owe.prototype.$$updateMenu = updateMenu;
-  owe.prototype.$$moveCursorTo = moveCursorTo; // 挂载键盘交互总控
+  owe.prototype.$$moveCursorTo = moveCursorTo;
+  owe.prototype.$$setItemStyle = setItemStyle; // 挂载键盘交互总控
 
   owe.prototype.$$renderKeyboard = renderKeyboard;
 

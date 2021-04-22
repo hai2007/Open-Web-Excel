@@ -2,8 +2,6 @@ import xhtml from "@hai2007/tool/xhtml";
 
 export default function (style) {
 
-    console.log(style);
-
     // 更新顶部菜单
 
     let menuItems = xhtml.find(this._menuDom, node => node.getAttribute('def-type'), 'span');

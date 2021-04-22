@@ -252,4 +252,72 @@ export default function () {
 
     `);
 
+    // 对菜单添加点击事件
+    let menuClickItems = xhtml.find(topDom, node => node.getAttribute('def-type'), 'span');
+
+    xhtml.bind(menuClickItems, 'click', event => {
+
+        let node = event.target;
+
+        // 获取按钮类型
+        let defType = node.getAttribute('def-type');
+
+        // 格式刷
+        if (defType == 'format') {
+
+
+        }
+
+        // 文字颜色
+        else if (defType == 'font-color') {
+
+        }
+
+        // 粗体
+        else if (defType == 'bold') {
+            this.$$setItemStyle('font-weight', xhtml.hasClass(node, 'active') ? 'normal' : 'bold');
+        }
+
+        // 斜体
+        else if (defType == 'italic') {
+            this.$$setItemStyle('font-style', xhtml.hasClass(node, 'active') ? 'normal' : 'italic');
+        }
+
+        // 中划线
+        else if (defType == 'line-through') {
+            this.$$setItemStyle('text-decoration', xhtml.hasClass(node, 'active') ? 'none' : 'line-through');
+        }
+
+        // 下划线
+        else if (defType == 'underline') {
+            this.$$setItemStyle('text-decoration', xhtml.hasClass(node, 'active') ? 'none' : 'underline');
+        }
+
+        // 填充色
+        else if (defType == 'background-color') {
+
+        }
+
+        // 水平对齐方式
+        else if (/^horizontal\-/.test(defType)) {
+            this.$$setItemStyle('text-align', defType.replace('horizontal-', ''));
+        }
+
+        // 合并单元格
+        else if (/^merge\-/.test(defType)) {
+
+        }
+
+        // 插入
+        else if (/^insert\-/.test(defType)) {
+
+        }
+
+        // 删除
+        else if (/^delete\-/.test(defType)) {
+
+        }
+
+    })
+
 };

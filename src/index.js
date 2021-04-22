@@ -6,6 +6,7 @@ import { initDom, initView, initTableView } from './excel-view/init';
 import { formatContent, calcColName, styleToString } from './excel-view/tool';
 import style from './tool/style';
 import { moveCursorTo } from './excel-view/cursor';
+import { setItemStyle } from './excel-view/modify';
 
 // 键盘交互总控
 
@@ -36,6 +37,9 @@ let owe = function (options) {
         throw new Error('options.el is not a element!');
     }
 
+    // 启动键盘事件监听
+    this.$$renderKeyboard();
+
     // 先初始化DOM
     this.$$initDom();
 
@@ -54,8 +58,6 @@ let owe = function (options) {
         };
     };
 
-    // 启动键盘事件监听
-    this.$$renderKeyboard();
 };
 
 // 挂载辅助方法
@@ -75,6 +77,8 @@ owe.prototype.$$createdMenu = menu;
 owe.prototype.$$updateMenu = updateMenu;
 
 owe.prototype.$$moveCursorTo = moveCursorTo;
+
+owe.prototype.$$setItemStyle = setItemStyle;
 
 // 挂载键盘交互总控
 

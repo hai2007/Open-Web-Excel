@@ -59,7 +59,7 @@ export default function () {
             // 写入样式内容
             // 添加统一的后缀是防止污染
             styleElement.innerHTML = addUniqueNamespace(`/*
-    Style for Open-Web-Excel
+    Style[${keyName}] for Open-Web-Excel
     https://www.npmjs.com/package/open-web-excel
 */
             `+ styleString);

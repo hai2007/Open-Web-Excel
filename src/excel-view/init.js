@@ -59,7 +59,7 @@ export function initTableView(itemTable, index, styleToString) {
     let items = xhtml.find(this._contentDom[index], node => xhtml.hasClass(node, 'item'), 'th');
 
     xhtml.bind(items, 'click', event => {
-        this.$$moveCursorTo(+event.target.getAttribute('row'), +event.target.getAttribute('col'));
+        this.$$moveCursorTo(event.target, +event.target.getAttribute('row'), +event.target.getAttribute('col'));
     });
 
 };
@@ -79,7 +79,8 @@ let bottomClick = (target, index) => {
         }
     }
     target._tableIndex = index;
-    target.$$moveCursorTo(1, 1);
+
+    target.$$moveCursorTo(target._contentDom[index].getElementsByTagName('tr')[1].getElementsByTagName('th')[1], 1, 1);
 };
 
 export function initView() {
@@ -132,8 +133,12 @@ export function initView() {
             min-width:50px;
             padding:5px;
             white-space: nowrap;
-            outline:0.5px solid #555555;
+            outline:0.5px solid rgba(85,85,85,0.5);
             background-color:white;
+        }
+
+        .excel-view .item[active='yes']{
+            outline: 2px solid red;
         }
 
     `);
