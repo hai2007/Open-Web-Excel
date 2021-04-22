@@ -58,8 +58,6 @@ export default function () {
                     合并单元格
                     <div open-web-excel>
                         <span class='item' def-type='merge-all' open-web-excel>全部合并</span>
-                        <span class='item' def-type='merge-horizontal' open-web-excel>水平合并</span>
-                        <span class='item' def-type='merge-vertical' open-web-excel>垂直合并</span>
                         <span class='item' def-type='merge-cancel' open-web-excel>取消合并</span>
                     </div>
                 </span>
@@ -196,12 +194,6 @@ export default function () {
         <span class='item' def-type='merge-all' open-web-excel>
             全部合并
         </span>
-        <span class='item' def-type='merge-horizontal' open-web-excel>
-            水平合并
-        </span>
-        <span class='item' def-type='merge-vertical' open-web-excel>
-            垂直合并
-        </span>
         <span class='item' def-type='merge-cancel' open-web-excel>
             取消合并
         </span>
@@ -313,6 +305,44 @@ export default function () {
 
         // 合并单元格
         else if (/^merge\-/.test(defType)) {
+
+            // 无选择区域，直接结束
+            if (this.__region == null) return;
+
+            // 全部合并
+            if (defType == 'merge-all') {
+
+                // 如果选择的区域就一个结点，不用额外的操作了
+                if (this.__region.nodes.length <= 1) return;
+
+                // 删除多余的结点并修改数据
+                for (let i = 1; i < this.__region.nodes.length; i++) {
+
+                    this.__contentArray[this.__tableIndex].content[this.__region.nodes[i].getAttribute('row') - 1][this.__region.nodes[i].getAttribute('col') - 1] = 'null';
+                    this.__region.nodes[i].remove();
+                }
+
+                this.__region.nodes = [this.__region.nodes[0]];
+
+                // 修改第一个结点的数据和占位
+
+                this.__contentArray[this.__tableIndex].content[this.__region.nodes[0].getAttribute('row') - 1][this.__region.nodes[0].getAttribute('col') - 1].colspan = (this.__region.info.col[1] - this.__region.info.col[0] + 1) + "";
+                this.__contentArray[this.__tableIndex].content[this.__region.nodes[0].getAttribute('row') - 1][this.__region.nodes[0].getAttribute('col') - 1].rowspan = (this.__region.info.row[1] - this.__region.info.row[0] + 1) + "";
+
+                this.__region.nodes[0].setAttribute('colspan', (this.__region.info.col[1] - this.__region.info.col[0] + 1) + "");
+                this.__region.nodes[0].setAttribute('rowspan', (this.__region.info.row[1] - this.__region.info.row[0] + 1) + "");
+
+                this.$$cancelRegion();
+                this.__region = null;
+
+            }
+
+            // 取消合并
+            else if (defType == 'merge-cancel') {
+
+
+
+            }
 
         }
 

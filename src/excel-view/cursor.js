@@ -18,13 +18,13 @@ export function moveCursorTo(target, rowNum, colNum) {
         this.__region = this.$$calcRegionInfo({
             row: this.__rowNum,
             col: this.__colNum,
-            rowNum: +this.__target.getAttribute('colspan'),
-            colNum: +this.__target.getAttribute('rowspan')
+            rowNum: +this.__target.getAttribute('rowspan'),
+            colNum: +this.__target.getAttribute('colspan')
         }, {
             row: rowNum,
             col: colNum,
-            rowNum: +target.getAttribute('colspan'),
-            colNum: +target.getAttribute('rowspan')
+            rowNum: +target.getAttribute('rowspan'),
+            colNum: +target.getAttribute('colspan')
         });
 
         this.$$showRegion();
