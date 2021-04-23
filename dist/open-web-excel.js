@@ -4,12 +4,12 @@
 *
 * author 你好2007
 *
-* version 0.1.0-beta
+* version 0.1.0
 *
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Fri Apr 23 2021 14:18:16 GMT+0800 (GMT+08:00)
+* Date:Fri Apr 23 2021 14:23:16 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
