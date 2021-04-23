@@ -1,4 +1,5 @@
 import xhtml from '@hai2007/tool/xhtml';
+import getColorTemplate from './color-template';
 
 export default function () {
 
@@ -23,42 +24,9 @@ export default function () {
             操作
             <div open-web-excel>
                 <span class='item more' open-web-excel>
-                    插入
-                    <div open-web-excel>
-                        <span class='item' def-type='insert-up' open-web-excel>
-                            向上插入
-                            <input value='1' open-web-excel />
-                            行
-                        </span>
-                        <span class='item' def-type='insert-down' open-web-excel>
-                            向下插入
-                            <input value='1' open-web-excel />
-                            行
-                        </span>
-                        <span class='item' def-type='insert-left' open-web-excel>
-                            向左插入
-                            <input value='1' open-web-excel />
-                            列
-                        </span>
-                        <span class='item' def-type='insert-right' open-web-excel>
-                            向右插入
-                            <input value='1' open-web-excel />
-                            列
-                        </span>
-                    </div>
-                </span>
-                <span class='item more' open-web-excel>
-                    删除
-                    <div open-web-excel>
-                        <span class='item' def-type='delete-row' open-web-excel>删除所选行</span>
-                        <span class='item' def-type='delete-col' open-web-excel>删除所选列</span>
-                    </div>
-                </span>
-                <span class='item more' open-web-excel>
                     合并单元格
                     <div open-web-excel>
                         <span class='item' def-type='merge-all' open-web-excel>全部合并</span>
-                        <span class='item' def-type='merge-cancel' open-web-excel>取消合并</span>
                     </div>
                 </span>
             </div>
@@ -184,18 +152,17 @@ export default function () {
     this.__menuQuickDom = xhtml.append(topDom, `<div class='quick-menu' open-web-excel>
         <span class='item' def-type='format' open-web-excel>格式刷</span>
         <span class='line' open-web-excel></span>
-        <span class='item' def-type='font-color' open-web-excel>
+        <span class='item color' def-type='font-color' open-web-excel>
             文字颜色：<i class='color' open-web-excel></i>
+            ${getColorTemplate()}
         </span>
-        <span class='item' def-type='background-color' open-web-excel>
+        <span class='item color' def-type='background-color' open-web-excel>
             填充色：<i class='color' open-web-excel></i>
+            ${getColorTemplate()}
         </span>
         <span class='line' open-web-excel></span>
         <span class='item' def-type='merge-all' open-web-excel>
             全部合并
-        </span>
-        <span class='item' def-type='merge-cancel' open-web-excel>
-            取消合并
         </span>
         <span class='line' open-web-excel></span>
         <span class='item' def-type='horizontal-left' open-web-excel>
@@ -248,6 +215,42 @@ export default function () {
         .quick-menu .item.active{
             font-weight: 800;
             color: red;
+        }
+
+        /* 选择颜色 */
+
+        .color-view{
+            font-size: 0px;
+            width: 171px;
+            position: absolute;
+            padding: 10px;
+            box-sizing: content-box;
+            background: #fefefe;
+            box-shadow: 1px 1px 5px #9e9695;
+            line-height:1em;
+            display:none;
+        }
+
+        .color:hover>.color-view{
+            display:block;
+        }
+
+        .color-item{
+            display: inline-block;
+            width: 19px;
+            height: 19px;
+        }
+
+        .color-item>span{
+            width: 15px;
+            height: 15px;
+            margin: 2px;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        .color-item>span:hover{
+            outline:1px solid black;
         }
 
     `);
@@ -336,23 +339,6 @@ export default function () {
                 this.__region = null;
 
             }
-
-            // 取消合并
-            else if (defType == 'merge-cancel') {
-
-
-
-            }
-
-        }
-
-        // 插入
-        else if (/^insert\-/.test(defType)) {
-
-        }
-
-        // 删除
-        else if (/^delete\-/.test(defType)) {
 
         }
 
