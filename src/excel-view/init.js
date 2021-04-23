@@ -32,21 +32,19 @@ export function initTableView(itemTable, index, styleToString) {
 
         //  列
         for (let j = 0; j < itemTable.content[i].length; j++) {
-            if (itemTable.content[i][j] != 'null') {
 
-                // contenteditable="true" 可编辑状态，则可点击获取焦点，同时内容也是可以编辑的
-                // tabindex="0" 点击获取焦点，内容是不可编辑的
-                tableTemplate += `<th
-                  row='${i + 1}'
-                  col='${j + 1}'
-                  contenteditable="true"
-                  class="item"
-                  colspan="${itemTable.content[i][j].colspan}"
-                  rowspan="${itemTable.content[i][j].rowspan}"
-                  style="${styleToString(itemTable.content[i][j].style)}"
-                open-web-excel>${itemTable.content[i][j].value}</th>`;
+            // contenteditable="true" 可编辑状态，则可点击获取焦点，同时内容也是可以编辑的
+            // tabindex="0" 点击获取焦点，内容是不可编辑的
+            tableTemplate += `<th
+                row='${i + 1}'
+                col='${j + 1}'
+                contenteditable="true"
+                class="item"
+                colspan="${itemTable.content[i][j].colspan}"
+                rowspan="${itemTable.content[i][j].rowspan}"
+                style="${styleToString(itemTable.content[i][j].style)}"
+            open-web-excel>${itemTable.content[i][j].value}</th>`;
 
-            }
         }
         tableTemplate += '</tr>';
 
@@ -144,7 +142,7 @@ export function initView() {
         }
 
         .excel-view .item[active='yes']{
-            border: 2px dashed red;
+            outline: 2px dashed red;
         }
 
     `);

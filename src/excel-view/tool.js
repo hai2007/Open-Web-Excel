@@ -27,6 +27,7 @@ export function formatContent(file) {
                 rowArray.push({
                     value: "", colspan: "1", rowspan: "1",
                     style: {
+                        display:"table-cell",
                         color: 'black',
                         background: 'white',
                         'text-align': 'left',

@@ -58,7 +58,7 @@ let owe = function (options) {
     // 获取当前Excel内容
     this.valueOf = () => {
         return {
-            version: "0.1.0",
+            version: "v1",
             filename: "Open-Web-Excel",
             contents: this.__contentArray
         };

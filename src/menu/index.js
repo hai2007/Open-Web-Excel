@@ -1,12 +1,10 @@
 import xhtml from '@hai2007/tool/xhtml';
-import getColorTemplate from './color-template';
+import colorTemplate from './color-template';
 
 export default function () {
 
     // 顶部操作栏
-    let topDom = xhtml.append(this.__el, `<div class='top-dom' open-web-excel>
-
-    </div>`);
+    let topDom = xhtml.append(this.__el, `<div class='top-dom' open-web-excel></div>`);
 
     this.$$addStyle('top-dom', `
 
@@ -27,6 +25,7 @@ export default function () {
                     合并单元格
                     <div open-web-excel>
                         <span class='item' def-type='merge-all' open-web-excel>全部合并</span>
+                        <span class='item' def-type='merge-cancel' open-web-excel>取消合并</span>
                     </div>
                 </span>
             </div>
@@ -153,15 +152,18 @@ export default function () {
         <span class='line' open-web-excel></span>
         <span class='item color' def-type='font-color' open-web-excel>
             文字颜色：<i class='color' open-web-excel></i>
-            ${getColorTemplate()}
+            ${colorTemplate}
         </span>
         <span class='item color' def-type='background-color' open-web-excel>
             填充色：<i class='color' open-web-excel></i>
-            ${getColorTemplate()}
+            ${colorTemplate}
         </span>
         <span class='line' open-web-excel></span>
         <span class='item' def-type='merge-all' open-web-excel>
             全部合并
+        </span>
+        <span class='item' def-type='merge-cancel' open-web-excel>
+            取消合并
         </span>
         <span class='line' open-web-excel></span>
         <span class='item' def-type='horizontal-left' open-web-excel>
@@ -305,8 +307,9 @@ export default function () {
                 // 删除多余的结点并修改数据
                 for (let i = 1; i < this.__region.nodes.length; i++) {
 
-                    this.__contentArray[this.__tableIndex].content[this.__region.nodes[i].getAttribute('row') - 1][this.__region.nodes[i].getAttribute('col') - 1] = 'null';
-                    this.__region.nodes[i].remove();
+                    this.__contentArray[this.__tableIndex].content[this.__region.nodes[i].getAttribute('row') - 1][this.__region.nodes[i].getAttribute('col') - 1].style.display = 'none';
+                    this.__contentArray[this.__tableIndex].content[this.__region.nodes[i].getAttribute('row') - 1][this.__region.nodes[i].getAttribute('col') - 1].value = '';
+                    this.__region.nodes[i].style.display = 'none';
                 }
 
                 this.__region.nodes = [this.__region.nodes[0]];
@@ -318,6 +321,37 @@ export default function () {
 
                 this.__region.nodes[0].setAttribute('colspan', (this.__region.info.col[1] - this.__region.info.col[0] + 1) + "");
                 this.__region.nodes[0].setAttribute('rowspan', (this.__region.info.row[1] - this.__region.info.row[0] + 1) + "");
+
+                this.$$cancelRegion();
+                this.__region = null;
+
+            }
+
+            // 取消合并
+            else if (defType == 'merge-cancel') {
+
+                let rowNodes = xhtml.find(this.__contentDom[this.__tableIndex], () => true, 'tr');
+
+                // 确保所有的格子都是 1*1 的
+                for (let row = this.__region.info.row[0]; row <= this.__region.info.row[1]; row++) {
+
+                    let colNodes = xhtml.find(rowNodes[row], () => true, 'th');
+
+                    for (let col = this.__region.info.col[0]; col <= this.__region.info.col[1]; col++) {
+
+                        // 修改界面显示
+                        colNodes[col].style.display = 'table-cell';
+                        colNodes[col].setAttribute('colspan', '1');
+                        colNodes[col].setAttribute('rowspan', '1');
+
+                        // 修改数据
+                        this.__contentArray[this.__tableIndex].content[row - 1][col - 1].style.display = 'table-cell';
+                        this.__contentArray[this.__tableIndex].content[row - 1][col - 1].colspan = '1';
+                        this.__contentArray[this.__tableIndex].content[row - 1][col - 1].rowspan = '1';
+
+                    }
+
+                }
 
                 this.$$cancelRegion();
                 this.__region = null;
