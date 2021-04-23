@@ -9,7 +9,7 @@
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Fri Apr 23 2021 11:06:52 GMT+0800 (GMT+08:00)
+* Date:Fri Apr 23 2021 14:10:44 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -892,7 +892,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.$$addStyle('menu', "\n\n        .menu{\n            border-bottom: 1px solid #d6cccb;\n            padding: 0 20px;\n            box-sizing: border-box;\n        }\n\n        .menu>span{\n            display: inline-block;\n            line-height: 26px;\n            padding: 0 10px;\n            font-size: 12px;\n            cursor: pointer;\n            color: #555555;\n        }\n        .menu>span:hover{\n            background: white;\n        }\n\n        .menu>span>div{\n            margin-left: -10px;\n        }\n\n        .menu>span div{\n            position:absolute;\n            background: white;\n            width: 140px;\n            box-shadow: 4px 3px 6px 0 #c9c9e2;\n            display:none;\n            padding:5px 0;\n        }\n\n        .menu>span div span{\n            display:block;\n            position:relative;\n            padding:5px 20px;\n        }\n\n        .menu>span div span>div{\n            left:140px;\n            top:0px;\n        }\n\n        .menu .line{\n            height:1px;\n            background-color:#d6cccb;\n            padding:0;\n            margin:0 10px;\n        }\n\n        .menu span:hover>div{\n            display:block;\n        }\n\n        .menu span.more:after{\n            content:\">\";\n            position: absolute;\n            right: 12px;\n            font-weight: 800;\n        }\n\n        .menu a{\n            text-decoration: none;\n            color: #555555;\n        }\n\n        .menu input{\n            width:20px;\n            outline:none;\n        }\n\n        .menu .item.active::before{\n            content: \"*\";\n            color: red;\n            position: absolute;\n            left: 8px;\n        }\n\n        .menu .item{\n            text-decoration: none;\n        }\n\n        .menu .item:hover{\n            text-decoration: underline;\n        }\n\n    "); // 快捷菜单
 
     this.__menuQuickDom = xhtml.append(topDom, "<div class='quick-menu' open-web-excel>\n        <span class='item' def-type='format' open-web-excel>\u683C\u5F0F\u5237</span>\n        <span class='line' open-web-excel></span>\n        <span class='item color' def-type='font-color' open-web-excel>\n            \u6587\u5B57\u989C\u8272\uFF1A<i class='color' open-web-excel></i>\n            ".concat(getColorTemplate(), "\n        </span>\n        <span class='item color' def-type='background-color' open-web-excel>\n            \u586B\u5145\u8272\uFF1A<i class='color' open-web-excel></i>\n            ").concat(getColorTemplate(), "\n        </span>\n        <span class='line' open-web-excel></span>\n        <span class='item' def-type='merge-all' open-web-excel>\n            \u5168\u90E8\u5408\u5E76\n        </span>\n        <span class='line' open-web-excel></span>\n        <span class='item' def-type='horizontal-left' open-web-excel>\n            \u5DE6\u5BF9\u9F50\n        </span>\n        <span class='item' def-type='horizontal-center' open-web-excel>\n            \u5C45\u4E2D\u5BF9\u9F50\n        </span>\n        <span class='item' def-type='horizontal-right' open-web-excel>\n            \u53F3\u5BF9\u9F50\n        </span>\n    </div>"));
-    this.$$addStyle('quick-menu', "\n\n        .quick-menu{\n            line-height: 36px;\n            font-size: 12px;\n        }\n\n        .quick-menu span{\n            display:inline-block;\n            vertical-align: top;\n        }\n\n        .quick-menu span>i.color{\n            display: inline-block;\n            height: 14px;\n            width: 20px;\n            border:1px solid #d6cccb;\n            vertical-align: middle;\n        }\n\n        .quick-menu .item{\n            margin:0 10px;\n            cursor: pointer;\n        }\n\n        .quick-menu .line{\n            background-color:#d6cccb;\n            width:1px;\n            height:22px;\n            margin-top:7px;\n        }\n\n        .quick-menu .item:hover{\n            font-weight: 800;\n        }\n\n        .quick-menu .item.active{\n            font-weight: 800;\n            color: red;\n        }\n\n        /* \u9009\u62E9\u989C\u8272 */\n\n        .color-view{\n            font-size: 0px;\n            width: 171px;\n            position: absolute;\n            padding: 10px;\n            box-sizing: content-box;\n            background: #fefefe;\n            box-shadow: 1px 1px 5px #9e9695;\n            line-height:1em;\n            display:none;\n        }\n\n        .color:hover>.color-view{\n            display:block;\n        }\n\n        .color-item{\n            display: inline-block;\n            width: 19px;\n            height: 19px;\n        }\n\n        .color-item>span{\n            width: 15px;\n            height: 15px;\n            margin: 2px;\n            cursor: pointer;\n            box-sizing: border-box;\n        }\n\n        .color-item>span:hover{\n            outline:1px solid black;\n        }\n\n    "); // 对菜单添加点击事件
+    this.$$addStyle('quick-menu', "\n\n        .quick-menu{\n            line-height: 36px;\n            font-size: 12px;\n        }\n\n        .quick-menu span{\n            display:inline-block;\n            vertical-align: top;\n        }\n\n        .quick-menu span>i.color{\n            display: inline-block;\n            height: 14px;\n            width: 20px;\n            border:1px solid #d6cccb;\n            vertical-align: middle;\n        }\n\n        .quick-menu .item{\n            margin:0 10px;\n            cursor: pointer;\n        }\n\n        .quick-menu .line{\n            background-color:#d6cccb;\n            width:1px;\n            height:22px;\n            margin-top:7px;\n        }\n\n        .quick-menu .item:hover{\n            font-weight: 800;\n        }\n\n        .quick-menu .item.active{\n            font-weight: 800;\n            color: red;\n        }\n\n        /* \u9009\u62E9\u989C\u8272 */\n\n        .color-view{\n            font-size: 0px;\n            width: 171px;\n            position: absolute;\n            padding: 10px;\n            box-sizing: content-box;\n            background: #fefefe;\n            box-shadow: 1px 1px 5px #9e9695;\n            line-height:1em;\n            display:none;\n            margin-top: -5px;\n        }\n\n        .color:hover>.color-view, .color-view:hover{\n            display:block;\n        }\n\n        .color-item{\n            display: inline-block;\n            width: 19px;\n            height: 19px;\n        }\n\n        .color-item>span{\n            width: 15px;\n            height: 15px;\n            margin: 2px;\n            cursor: pointer;\n            box-sizing: border-box;\n        }\n\n        .color-item>span:hover{\n            outline:1px solid black;\n        }\n\n    "); // 对菜单添加点击事件
 
     var menuClickItems = xhtml.find(topDom, function (node) {
       return node.getAttribute('def-type');
@@ -902,53 +902,74 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       var defType = node.getAttribute('def-type'); // 格式刷
 
-      if (defType == 'format') ; // 文字颜色
-      else if (defType == 'font-color') ; // 填充色
-        else if (defType == 'background-color') ; // 粗体
-          else if (defType == 'bold') {
-              _this4.$$setItemStyle('font-weight', xhtml.hasClass(node, 'active') ? 'normal' : 'bold');
-            } // 斜体
-            else if (defType == 'italic') {
-                _this4.$$setItemStyle('font-style', xhtml.hasClass(node, 'active') ? 'normal' : 'italic');
-              } // 中划线
-              else if (defType == 'line-through') {
-                  _this4.$$setItemStyle('text-decoration', xhtml.hasClass(node, 'active') ? 'none' : 'line-through');
-                } // 下划线
-                else if (defType == 'underline') {
-                    _this4.$$setItemStyle('text-decoration', xhtml.hasClass(node, 'active') ? 'none' : 'underline');
-                  } // 水平对齐方式
-                  else if (/^horizontal\-/.test(defType)) {
-                      _this4.$$setItemStyle('text-align', defType.replace('horizontal-', ''));
-                    } // 合并单元格
-                    else if (/^merge\-/.test(defType)) {
-                        // 无选择区域，直接结束
-                        if (_this4.__region == null) return; // 全部合并
+      if (defType == 'format') ; // 粗体
+      else if (defType == 'bold') {
+          _this4.$$setItemStyle('font-weight', xhtml.hasClass(node, 'active') ? 'normal' : 'bold');
+        } // 斜体
+        else if (defType == 'italic') {
+            _this4.$$setItemStyle('font-style', xhtml.hasClass(node, 'active') ? 'normal' : 'italic');
+          } // 中划线
+          else if (defType == 'line-through') {
+              _this4.$$setItemStyle('text-decoration', xhtml.hasClass(node, 'active') ? 'none' : 'line-through');
+            } // 下划线
+            else if (defType == 'underline') {
+                _this4.$$setItemStyle('text-decoration', xhtml.hasClass(node, 'active') ? 'none' : 'underline');
+              } // 水平对齐方式
+              else if (/^horizontal\-/.test(defType)) {
+                  _this4.$$setItemStyle('text-align', defType.replace('horizontal-', ''));
+                } // 合并单元格
+                else if (/^merge\-/.test(defType)) {
+                    // 无选择区域，直接结束
+                    if (_this4.__region == null) return; // 全部合并
 
-                        if (defType == 'merge-all') {
-                          // 如果选择的区域就一个结点，不用额外的操作了
-                          if (_this4.__region.nodes.length <= 1) return; // 删除多余的结点并修改数据
+                    if (defType == 'merge-all') {
+                      // 如果选择的区域就一个结点，不用额外的操作了
+                      if (_this4.__region.nodes.length <= 1) return; // 删除多余的结点并修改数据
 
-                          for (var i = 1; i < _this4.__region.nodes.length; i++) {
-                            _this4.__contentArray[_this4.__tableIndex].content[_this4.__region.nodes[i].getAttribute('row') - 1][_this4.__region.nodes[i].getAttribute('col') - 1] = 'null';
+                      for (var i = 1; i < _this4.__region.nodes.length; i++) {
+                        _this4.__contentArray[_this4.__tableIndex].content[_this4.__region.nodes[i].getAttribute('row') - 1][_this4.__region.nodes[i].getAttribute('col') - 1] = 'null';
 
-                            _this4.__region.nodes[i].remove();
-                          }
-
-                          _this4.__region.nodes = [_this4.__region.nodes[0]]; // 修改第一个结点的数据和占位
-
-                          _this4.__contentArray[_this4.__tableIndex].content[_this4.__region.nodes[0].getAttribute('row') - 1][_this4.__region.nodes[0].getAttribute('col') - 1].colspan = _this4.__region.info.col[1] - _this4.__region.info.col[0] + 1 + "";
-                          _this4.__contentArray[_this4.__tableIndex].content[_this4.__region.nodes[0].getAttribute('row') - 1][_this4.__region.nodes[0].getAttribute('col') - 1].rowspan = _this4.__region.info.row[1] - _this4.__region.info.row[0] + 1 + "";
-
-                          _this4.__region.nodes[0].setAttribute('colspan', _this4.__region.info.col[1] - _this4.__region.info.col[0] + 1 + "");
-
-                          _this4.__region.nodes[0].setAttribute('rowspan', _this4.__region.info.row[1] - _this4.__region.info.row[0] + 1 + "");
-
-                          _this4.$$cancelRegion();
-
-                          _this4.__region = null;
-                        }
+                        _this4.__region.nodes[i].remove();
                       }
-    });
+
+                      _this4.__region.nodes = [_this4.__region.nodes[0]]; // 修改第一个结点的数据和占位
+
+                      _this4.__contentArray[_this4.__tableIndex].content[_this4.__region.nodes[0].getAttribute('row') - 1][_this4.__region.nodes[0].getAttribute('col') - 1].colspan = _this4.__region.info.col[1] - _this4.__region.info.col[0] + 1 + "";
+                      _this4.__contentArray[_this4.__tableIndex].content[_this4.__region.nodes[0].getAttribute('row') - 1][_this4.__region.nodes[0].getAttribute('col') - 1].rowspan = _this4.__region.info.row[1] - _this4.__region.info.row[0] + 1 + "";
+
+                      _this4.__region.nodes[0].setAttribute('colspan', _this4.__region.info.col[1] - _this4.__region.info.col[0] + 1 + "");
+
+                      _this4.__region.nodes[0].setAttribute('rowspan', _this4.__region.info.row[1] - _this4.__region.info.row[0] + 1 + "");
+
+                      _this4.$$cancelRegion();
+
+                      _this4.__region = null;
+                    }
+                  }
+    }); // 对选择颜色添加点击事件
+
+    var colorItems = xhtml.find(topDom, function (node) {
+      return xhtml.hasClass(node, 'color');
+    }, 'span');
+
+    var _loop2 = function _loop2(i) {
+      var colorClickItems = xhtml.find(colorItems[i], function () {
+        return true;
+      }, 'span');
+      xhtml.bind(colorClickItems, 'click', function (event) {
+        var defType = colorItems[i].getAttribute('def-type');
+        var colorValue = event.target.style.background; // 设置
+
+        _this4.$$setItemStyle({
+          'background-color': 'background',
+          'font-color': 'color'
+        }[defType], colorValue);
+      });
+    };
+
+    for (var i = 0; i < colorItems.length; i++) {
+      _loop2(i);
+    }
   }
 
   function updateMenu(style) {

@@ -229,9 +229,10 @@ export default function () {
             box-shadow: 1px 1px 5px #9e9695;
             line-height:1em;
             display:none;
+            margin-top: -5px;
         }
 
-        .color:hover>.color-view{
+        .color:hover>.color-view, .color-view:hover{
             display:block;
         }
 
@@ -267,17 +268,6 @@ export default function () {
 
         // 格式刷
         if (defType == 'format') {
-
-
-        }
-
-        // 文字颜色
-        else if (defType == 'font-color') {
-
-        }
-
-        // 填充色
-        else if (defType == 'background-color') {
 
         }
 
@@ -342,6 +332,26 @@ export default function () {
 
         }
 
-    })
+    });
+
+    // 对选择颜色添加点击事件
+    let colorItems = xhtml.find(topDom, node => xhtml.hasClass(node, 'color'), 'span');
+    for (let i = 0; i < colorItems.length; i++) {
+
+        let colorClickItems = xhtml.find(colorItems[i], () => true, 'span');
+        xhtml.bind(colorClickItems, 'click', event => {
+
+            let defType = colorItems[i].getAttribute('def-type');
+            let colorValue = event.target.style.background;
+
+            // 设置
+            this.$$setItemStyle({
+                'background-color': 'background',
+                'font-color': 'color'
+            }[defType], colorValue);
+
+        });
+
+    }
 
 };
