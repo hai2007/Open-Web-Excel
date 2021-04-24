@@ -57,7 +57,43 @@ export function initTableView(itemTable, index, styleToString) {
     let items = xhtml.find(this.__contentDom[index], node => xhtml.hasClass(node, 'item'), 'th');
 
     xhtml.bind(items, 'click', event => {
+
+        // 如果格式刷按下了
+        if (this.__format == true) {
+
+            let rowNodes = xhtml.find(this.__contentDom[this.__tableIndex], () => true, 'tr');
+
+            let targetStyle = this.__contentArray[this.__tableIndex].content[+event.target.getAttribute('row') - 1][+event.target.getAttribute('col') - 1].style;
+
+            for (let row = this.__region.info.row[0]; row <= this.__region.info.row[1]; row++) {
+
+                let colNodes = xhtml.find(rowNodes[row], () => true, 'th');
+
+                for (let col = this.__region.info.col[0]; col <= this.__region.info.col[1]; col++) {
+
+                    // 遍历所有的样式
+                    for (let key in targetStyle) {
+
+                        // 修改界面显示
+                        colNodes[col].style[key] = targetStyle[key];
+
+                        // 修改数据
+                        this.__contentArray[this.__tableIndex].content[row - 1][col - 1].style[key] = targetStyle[key];
+
+                    }
+
+                }
+
+            }
+
+            // 取消标记格式刷
+            this.__format = false;
+            xhtml.removeClass(xhtml.find(this.__menuQuickDom, node => node.getAttribute('def-type') == 'format', 'span')[0], 'active');
+
+        }
+
         this.$$moveCursorTo(event.target, +event.target.getAttribute('row'), +event.target.getAttribute('col'));
+
     });
 
 };

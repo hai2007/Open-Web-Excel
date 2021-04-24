@@ -125,11 +125,6 @@ export default function () {
             color: #555555;
         }
 
-        .menu input{
-            width:20px;
-            outline:none;
-        }
-
         .menu .item.active::before{
             content: "*";
             color: red;
@@ -149,6 +144,7 @@ export default function () {
 
     // 快捷菜单
     this.__menuQuickDom = xhtml.append(topDom, `<div class='quick-menu' open-web-excel>
+        <span class='item' def-type='format' open-web-excel>格式化</span>
         <span class='line' open-web-excel></span>
         <span class='item color' def-type='font-color' open-web-excel>
             文字颜色：<i class='color' open-web-excel></i>
@@ -267,8 +263,22 @@ export default function () {
         // 获取按钮类型
         let defType = node.getAttribute('def-type');
 
+        // 格式化
+        if (defType == 'format') {
+
+            // 首先需要确定选择区域，然后点击格式刷来同步格式
+            if (this.__region != null) {
+
+                // 标记格式刷
+                this.__format = true;
+                xhtml.addClass(xhtml.find(this.__menuQuickDom, node => node.getAttribute('def-type') == 'format', 'span')[0], 'active');
+
+            }
+
+        }
+
         // 粗体
-        if (defType == 'bold') {
+        else if (defType == 'bold') {
             this.$$setItemStyle('font-weight', xhtml.hasClass(node, 'active') ? 'normal' : 'bold');
         }
 

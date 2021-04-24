@@ -37,6 +37,9 @@ let owe = function (options) {
         // 用于选择记录区域
         this.__region = null;
 
+        // 用于记录是否按下了格式刷按钮
+        this.__format = false;
+
     } else {
 
         // 挂载点是必须的，一定要有
