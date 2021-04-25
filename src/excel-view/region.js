@@ -42,7 +42,7 @@ export function calcRegionInfo(target1, target2) {
 
     // 最后我们需要计算出此区域里面所有的结点
 
-    let trs = this.__contentDom[owe.__tableIndex].getElementsByTagName('tr');
+    let trs = this.__contentDom[this.__tableIndex].getElementsByTagName('tr');
     for (let i = row_min; i <= row_max; i++) {
         let ths = trs[i].getElementsByTagName('th');
         for (let j = 1; j < ths.length; j++) {

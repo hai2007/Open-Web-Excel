@@ -4,12 +4,12 @@
 *
 * author 你好2007
 *
-* version 0.1.2
+* version 0.1.3
 *
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Sat Apr 24 2021 14:10:04 GMT+0800 (GMT+08:00)
+* Date:Sun Apr 25 2021 16:10:37 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -691,7 +691,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       col: [col_min, col_max]
     }; // 最后我们需要计算出此区域里面所有的结点
 
-    var trs = this.__contentDom[owe.__tableIndex].getElementsByTagName('tr');
+    var trs = this.__contentDom[this.__tableIndex].getElementsByTagName('tr');
 
     for (var i = row_min; i <= row_max; i++) {
       var ths = trs[i].getElementsByTagName('th');
@@ -1117,10 +1117,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }
   }
 
-  var owe$1 = function owe$1(options) {
+  var owe = function owe(options) {
     var _this5 = this;
 
-    if (!(this instanceof owe$1)) {
+    if (!(this instanceof owe)) {
       throw new Error('Open-Web-Excel is a constructor and should be called with the `new` keyword');
     } // 编辑器挂载点
 
@@ -1157,27 +1157,27 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   }; // 挂载辅助方法
 
 
-  owe$1.prototype.$$formatContent = formatContent;
-  owe$1.prototype.$$calcColName = calcColName;
-  owe$1.prototype.$$addStyle = style();
-  owe$1.prototype.$$styleToString = styleToString; // 挂载核心方法
+  owe.prototype.$$formatContent = formatContent;
+  owe.prototype.$$calcColName = calcColName;
+  owe.prototype.$$addStyle = style();
+  owe.prototype.$$styleToString = styleToString; // 挂载核心方法
 
-  owe$1.prototype.$$initDom = initDom;
-  owe$1.prototype.$$initView = initView;
-  owe$1.prototype.$$initTableView = initTableView;
-  owe$1.prototype.$$createdMenu = menu;
-  owe$1.prototype.$$updateMenu = updateMenu;
-  owe$1.prototype.$$moveCursorTo = moveCursorTo;
-  owe$1.prototype.$$setItemStyle = setItemStyle;
-  owe$1.prototype.$$calcRegionInfo = calcRegionInfo;
-  owe$1.prototype.$$showRegion = showRegion;
-  owe$1.prototype.$$cancelRegion = cancelRegion; // 挂载键盘交互总控
+  owe.prototype.$$initDom = initDom;
+  owe.prototype.$$initView = initView;
+  owe.prototype.$$initTableView = initTableView;
+  owe.prototype.$$createdMenu = menu;
+  owe.prototype.$$updateMenu = updateMenu;
+  owe.prototype.$$moveCursorTo = moveCursorTo;
+  owe.prototype.$$setItemStyle = setItemStyle;
+  owe.prototype.$$calcRegionInfo = calcRegionInfo;
+  owe.prototype.$$showRegion = showRegion;
+  owe.prototype.$$cancelRegion = cancelRegion; // 挂载键盘交互总控
 
-  owe$1.prototype.$$renderKeyboard = renderKeyboard;
+  owe.prototype.$$renderKeyboard = renderKeyboard;
 
   if ((typeof module === "undefined" ? "undefined" : _typeof(module)) === "object" && _typeof(module.exports) === "object") {
-    module.exports = owe$1;
+    module.exports = owe;
   } else {
-    window.OpenWebExcel = owe$1;
+    window.OpenWebExcel = owe;
   }
 })();
