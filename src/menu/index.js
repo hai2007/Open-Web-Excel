@@ -22,6 +22,23 @@ export default function () {
             操作
             <div open-web-excel>
                 <span class='item more' open-web-excel>
+                    插入
+                    <div open-web-excel>
+                        <span class='item' open-web-excel def-type='insert-up'>
+                            向上插入一行
+                        </span>
+                        <span class='item' open-web-excel def-type='insert-down'>
+                            向下插入一行
+                        </span>
+                        <span class='item' open-web-excel def-type='insert-left'>
+                            向左插入一列
+                        </span>
+                        <span class='item' open-web-excel def-type='insert-right'>
+                            向右插入一列
+                        </span>
+                    </div>
+                </span>
+                <span class='item more' open-web-excel>
                     合并单元格
                     <div open-web-excel>
                         <span class='item' def-type='merge-all' open-web-excel>全部合并</span>
@@ -72,6 +89,7 @@ export default function () {
             border-bottom: 1px solid #d6cccb;
             padding: 0 20px;
             box-sizing: border-box;
+            white-space: nowrap;
         }
 
         .menu>span{
@@ -131,6 +149,11 @@ export default function () {
         .menu a{
             text-decoration: none;
             color: #555555;
+        }
+
+        .menu input{
+            width:20px;
+            outline:none;
         }
 
         .menu .item.active::before{
@@ -345,7 +368,7 @@ export default function () {
                 for (let i = 1; i < this.__region.nodes.length; i++) {
 
                     this.__contentArray[this.__tableIndex].content[this.__region.nodes[i].getAttribute('row') - 1][this.__region.nodes[i].getAttribute('col') - 1].style.display = 'none';
-                    this.__contentArray[this.__tableIndex].content[this.__region.nodes[i].getAttribute('row') - 1][this.__region.nodes[i].getAttribute('col') - 1].value = '';
+                    this.__contentArray[this.__tableIndex].content[this.__region.nodes[i].getAttribute('row') - 1][this.__region.nodes[i].getAttribute('col') - 1].value = ' ';
                     this.__region.nodes[i].style.display = 'none';
                 }
 
@@ -393,6 +416,31 @@ export default function () {
                 this.$$cancelRegion();
                 this.__region = null;
 
+            }
+
+        }
+
+        // 插入
+        else if (/^insert\-/.test(defType)) {
+
+            // 向上插入行
+            if (defType == 'insert-up') {
+                this.$$insertUpNRow();
+            }
+
+            // 向下插入行
+            else if (defType == 'insert-down') {
+                this.$$insertDownNRow();
+            }
+
+            // 向左插入列
+            else if (defType == 'insert-left') {
+                this.$$insertLeftNCol();
+            }
+
+            // 向右插入列
+            else if (defType == 'insert-right') {
+                this.$$insertRightNCol();
             }
 
         }

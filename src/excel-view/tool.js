@@ -8,6 +8,22 @@ export function styleToString(style) {
     return styleString;
 };
 
+export function newItemData() {
+    return {
+        value: " ", colspan: "1", rowspan: "1",
+        style: {
+            display: "table-cell",
+            color: 'black',
+            background: 'white',
+            'vertical-align': 'top',
+            'text-align': 'left',
+            'font-weight': "normal",// bold粗体
+            'font-style': 'normal',// italic斜体
+            'text-decoration': 'none'// line-through中划线 underline下划线
+        }
+    };
+};
+
 export function formatContent(file) {
 
     // 如果传递了内容
@@ -24,19 +40,7 @@ export function formatContent(file) {
         for (let i = 0; i < 100; i++) {
             let rowArray = []
             for (let j = 0; j < 30; j++) {
-                rowArray.push({
-                    value: "", colspan: "1", rowspan: "1",
-                    style: {
-                        display:"table-cell",
-                        color: 'black',
-                        background: 'white',
-                        'vertical-align':'top',
-                        'text-align': 'left',
-                        'font-weight': "normal",// bold粗体
-                        'font-style': 'normal',// italic斜体
-                        'text-decoration': 'none'// line-through中划线 underline下划线
-                    }
-                });
+                rowArray.push(this.$$newItemData());
             }
             content.push(rowArray);
         }
