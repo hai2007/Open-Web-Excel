@@ -21,6 +21,7 @@ import menu from './menu/index';
 import updateMenu from './menu/update';
 
 import { insertUp, insertDown, insertLeft, insertRight } from './menu/insert';
+import { deleteCRow, deleteCCol } from './menu/delete';
 
 let owe = function (options) {
 
@@ -100,6 +101,9 @@ owe.prototype.$$insertUpNRow = insertUp;
 owe.prototype.$$insertDownNRow = insertDown;
 owe.prototype.$$insertLeftNCol = insertLeft;
 owe.prototype.$$insertRightNCol = insertRight;
+
+owe.prototype.$$deleteCRow = deleteCRow;
+owe.prototype.$$deleteCCol = deleteCCol;
 
 // 挂载键盘交互总控
 

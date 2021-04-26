@@ -39,6 +39,17 @@ export default function () {
                     </div>
                 </span>
                 <span class='item more' open-web-excel>
+                    删除
+                    <div open-web-excel>
+                        <span class='item' open-web-excel def-type='delete-row'>
+                            删除当前行
+                        </span>
+                        <span class='item' open-web-excel def-type='delete-col'>
+                            删除当前列
+                        </span>
+                    </div>
+                </span>
+                <span class='item more' open-web-excel>
                     合并单元格
                     <div open-web-excel>
                         <span class='item' def-type='merge-all' open-web-excel>全部合并</span>
@@ -444,6 +455,21 @@ export default function () {
             }
 
         }
+
+          // 删除
+          else if (/^delete\-/.test(defType)) {
+
+             // 删除当前行
+             if (defType == 'delete-row') {
+                this.$$deleteCRow();
+            }
+
+            // 删除当前列
+            else if (defType == 'delete-col') {
+                this.$$deleteCCol();
+            }
+
+          }
 
     });
 

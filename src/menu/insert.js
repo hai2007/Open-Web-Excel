@@ -82,12 +82,18 @@ export function insertUp() {
 
 export function insertDown() {
 
+    console.log('向下插入一行');
+
 };
 
 export function insertLeft() {
 
+    console.log('向左插入一列');
+
 };
 
 export function insertRight() {
+
+    console.log('向右插入一列');
 
 };
