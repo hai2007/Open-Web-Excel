@@ -11,7 +11,7 @@ export default function () {
        .top-dom{
             width: 100%;
             height: 62px;
-            overflow: auto;
+            overflow: hidden;
        }
 
     `);
@@ -44,6 +44,14 @@ export default function () {
                         <span class='item' def-type='horizontal-left' open-web-excel>左对齐</span>
                         <span class='item' def-type='horizontal-center' open-web-excel>居中对齐</span>
                         <span class='item' def-type='horizontal-right' open-web-excel>右对齐</span>
+                    </div>
+                </span>
+                <span class='item more' open-web-excel>
+                    垂直对齐
+                    <div open-web-excel>
+                        <span class='item' def-type='vertical-top' open-web-excel>顶部对齐</span>
+                        <span class='item' def-type='vertical-middle' open-web-excel>居中对齐</span>
+                        <span class='item' def-type='vertical-bottom' open-web-excel>底部对齐</span>
                     </div>
                 </span>
             </div>
@@ -171,6 +179,16 @@ export default function () {
         <span class='item' def-type='horizontal-right' open-web-excel>
             右对齐
         </span>
+        <span class='line' open-web-excel></span>
+        <span class='item' def-type='vertical-top' open-web-excel>
+            顶部对齐
+        </span>
+        <span class='item' def-type='vertical-middle' open-web-excel>
+            居中对齐
+        </span>
+        <span class='item' def-type='vertical-bottom' open-web-excel>
+            底部对齐
+        </span>
     </div>`);
 
     this.$$addStyle('quick-menu', `
@@ -178,6 +196,9 @@ export default function () {
         .quick-menu{
             line-height: 36px;
             font-size: 12px;
+            white-space: nowrap;
+            width: 100%;
+            overflow: auto;
         }
 
         .quick-menu span{
@@ -227,6 +248,7 @@ export default function () {
             line-height:1em;
             display:none;
             margin-top: -5px;
+            white-space: normal;
         }
 
         .color:hover>.color-view, .color-view:hover{
@@ -300,6 +322,11 @@ export default function () {
         // 水平对齐方式
         else if (/^horizontal\-/.test(defType)) {
             this.$$setItemStyle('text-align', defType.replace('horizontal-', ''));
+        }
+
+        // 垂直对齐方式
+        else if (/^vertical\-/.test(defType)) {
+            this.$$setItemStyle('vertical-align', defType.replace('vertical-', ''));
         }
 
         // 合并单元格

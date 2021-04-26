@@ -5,7 +5,8 @@
   "main": "dist/open-web-excel.min.js",
   "scripts": {
     "start": "npm install && npm run build",
-    "build": "hai2007_nodejs --config hai2007_nodejs.config.js init && hai2007_nodejs --config hai2007_nodejs.config.js bundle && hai2007_nodejs --config hai2007_nodejs.config.js babel && hai2007_nodejs --config hai2007_nodejs.config.js uglifyjs && hai2007_nodejs --config hai2007_nodejs.config.js end"
+    "build": "hai2007_nodejs --config hai2007_nodejs.config.js init && hai2007_nodejs --config hai2007_nodejs.config.js bundle && hai2007_nodejs --config hai2007_nodejs.config.js babel && hai2007_nodejs --config hai2007_nodejs.config.js uglifyjs && hai2007_nodejs --config hai2007_nodejs.config.js end",
+    "server": "hai2007_nodejs -s"
   },
   "repository": {
     "type": "git",

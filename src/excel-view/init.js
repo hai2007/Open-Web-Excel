@@ -164,17 +164,15 @@ export function initView() {
             border-right:none;
             color:gray;
             font-size:12px;
-
         }
 
         .excel-view .item{
-            vertical-align:top;
             min-width:50px;
-            padding:2px;
             white-space: nowrap;
             border:0.5px solid rgba(85,85,85,0.5);
             outline:none;
             font-size:12px;
+            padding:2px 5px;
         }
 
         .excel-view .item[active='yes']{

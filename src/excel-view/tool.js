@@ -30,6 +30,7 @@ export function formatContent(file) {
                         display:"table-cell",
                         color: 'black',
                         background: 'white',
+                        'vertical-align':'top',
                         'text-align': 'left',
                         'font-weight': "normal",// bold粗体
                         'font-style': 'normal',// italic斜体

@@ -65,6 +65,17 @@ export default function (style) {
 
         }
 
+        // 垂直对齐方式
+        else if (/^vertical\-/.test(defType)) {
+
+            if (defType == 'vertical-' + style['vertical-align']) {
+                xhtml.addClass(menuItems[i], 'active');
+            } else {
+                xhtml.removeClass(menuItems[i], 'active');
+            }
+
+        }
+
     }
 
     // 更新快速使用菜单
@@ -89,6 +100,17 @@ export default function (style) {
         else if (/^horizontal\-/.test(defType)) {
 
             if (defType == 'horizontal-' + style['text-align']) {
+                xhtml.addClass(quickItems[i], 'active');
+            } else {
+                xhtml.removeClass(quickItems[i], 'active');
+            }
+
+        }
+
+        // 垂直对齐方式
+        else if (/^vertical\-/.test(defType)) {
+
+            if (defType == 'vertical-' + style['vertical-align']) {
                 xhtml.addClass(quickItems[i], 'active');
             } else {
                 xhtml.removeClass(quickItems[i], 'active');
