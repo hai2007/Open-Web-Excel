@@ -125,6 +125,8 @@ export function insertLeft() {
 
     }
 
+     // 最后标记右移
+     this.__colNum += 1;
 };
 
 export function insertRight() {

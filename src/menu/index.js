@@ -476,12 +476,12 @@ export default function () {
 
             // 删除当前行
             if (defType == 'delete-row') {
-                this.$$deleteCRow();
+                this.$$deleteCurrentRow();
             }
 
             // 删除当前列
             else if (defType == 'delete-col') {
-                this.$$deleteCCol();
+                this.$$deleteCurrentCol();
             }
 
         }

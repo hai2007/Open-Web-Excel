@@ -9,7 +9,7 @@
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Tue Apr 27 2021 10:44:10 GMT+0800 (GMT+08:00)
+* Date:Tue Apr 27 2021 14:18:44 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -1084,10 +1084,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                       else if (/^delete\-/.test(defType)) {
                           // 删除当前行
                           if (defType == 'delete-row') {
-                            _this4.$$deleteCRow();
+                            _this4.$$deleteCurrentRow();
                           } // 删除当前列
                           else if (defType == 'delete-col') {
-                              _this4.$$deleteCCol();
+                              _this4.$$deleteCurrentCol();
                             }
                         }
     }); // 对选择颜色添加点击事件
@@ -1317,7 +1317,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       xhtml.bind(newItemNode, 'click', function (event) {
         _this7.$$itemClickHandler(event);
       });
-    }
+    } // 最后标记右移
+
+
+    this.__colNum += 1;
   }
 
   function insertRight() {
@@ -1352,12 +1355,60 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }
   }
 
-  function deleteCRow() {
-    console.log('删除当前行');
+  function deleteRow() {
+    var rowNodes = xhtml.find(this.__contentDom[this.__tableIndex], function () {
+      return true;
+    }, 'tr'); // 校对行号
+
+    for (var row = this.__rowNum + 1; row <= this.__contentArray[this.__tableIndex].content.length; row++) {
+      var colNodes = xhtml.find(rowNodes[row], function () {
+        return true;
+      }, 'th'); // 修改行数
+
+      colNodes[0].innerText = row - 1; // 依次修改记录的行数
+
+      for (var col = 1; col < colNodes.length; col++) {
+        colNodes[col].setAttribute('row', row - 1);
+      }
+    } // 删除当前行
+
+
+    rowNodes[this.__rowNum].remove(); // 删除数据
+
+
+    this.__contentArray[this.__tableIndex].content.splice(this.__rowNum - 1, 1); // 重置光标
+
+
+    this.__btnDom[this.__tableIndex].click();
   }
 
-  function deleteCCol() {
-    console.log('删除当前列');
+  function deleteCol() {
+    var rowNodes = xhtml.find(this.__contentDom[this.__tableIndex], function () {
+      return true;
+    }, 'tr'); // 先删除列标题
+
+    xhtml.find(rowNodes[0], function () {
+      return true;
+    }, 'th')[this.__contentArray[this.__tableIndex].content[0].length].remove();
+
+    for (var row = 1; row < rowNodes.length; row++) {
+      var colNodes = xhtml.find(rowNodes[row], function () {
+        return true;
+      }, 'th'); // 校对列序号
+
+      for (var col = this.__colNum + 1; col < colNodes.length; col++) {
+        colNodes[col].setAttribute('col', col - 1);
+      } // 删除当前光标所在列
+
+
+      colNodes[this.__colNum].remove(); // 数据也要删除
+
+
+      this.__contentArray[this.__tableIndex].content[row - 1].splice(this.__colNum - 1, 1);
+    } // 重置光标
+
+
+    this.__btnDom[this.__tableIndex].click();
   }
 
   var owe = function owe(options) {
@@ -1421,8 +1472,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   owe.prototype.$$insertDownNewRow = insertDown;
   owe.prototype.$$insertLeftNewCol = insertLeft;
   owe.prototype.$$insertRightNewCol = insertRight;
-  owe.prototype.$$deleteCRow = deleteCRow;
-  owe.prototype.$$deleteCCol = deleteCCol; // 挂载键盘交互总控
+  owe.prototype.$$deleteCurrentRow = deleteRow;
+  owe.prototype.$$deleteCurrentCol = deleteCol; // 挂载键盘交互总控
 
   owe.prototype.$$renderKeyboard = renderKeyboard;
 
