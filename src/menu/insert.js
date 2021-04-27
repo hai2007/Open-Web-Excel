@@ -23,10 +23,75 @@ export function insertUp() {
         }
     }
 
-    for (let col = 1; col <= this.__contentArray[this.__tableIndex].content[0].length; col++) {
+    for (let col = 1; col <= this.__contentArray[this.__tableIndex].content[this.__rowNum == 1 ? 1 : 0].length; col++) {
 
         // 获取新的数据
         let tempNewItemData = this.$$newItemData();
+
+        /**
+         * 嗅探当前单元格情况，
+         * 由于会出现合并单元格情况，所以需要对一些特殊情况，进行特殊校对
+         */
+
+        let currentItemData = this.__contentArray[this.__tableIndex].content[this.__rowNum][col - 1];
+
+        //  如果不是第一行，而且自己不可见
+        if (this.__rowNum != 1 && currentItemData.style.display == 'none') {
+
+            // 那么，我们现在需要确定我们当前行是否位于合并单元格的顶部
+            // 因为，如果自己位于顶部，即使不可见，依旧应该可以向上新增一行而不是增高自己
+
+            // 如何直接自己是不是顶部？
+            // 我们可以不停的嗅探左边第一个显示的单元格，如果他可以囊括自己，那自己应该就是上顶部
+            // 否则就是非第一行
+
+            let isFirstLine = false;
+            for (let toLeftCol = col - 1; toLeftCol >= 1; toLeftCol--) {
+                let leftItemData = this.__contentArray[this.__tableIndex].content[this.__rowNum][toLeftCol - 1];
+                if (leftItemData.style.display != 'none') {
+
+                    // 如果找到的第一个显示的可以包含当前条目
+                    if (toLeftCol - -leftItemData.colspan > col) isFirstLine = true;
+
+                    break;
+                }
+
+            }
+
+            // 如果是第一行我们就可以直接放过
+            if (!isFirstLine) {
+
+                // 到目前为止，我们可以确定的是，当前新增的条目需要隐藏
+                tempNewItemData.style.display = 'none';
+
+                // 判断是不是最左边的
+                let isLeftFirst = col == 1 || this.__contentArray[this.__tableIndex].content[this.__rowNum][col - 2].style.display != 'none';
+
+                // 如果是最坐标的，就需要负责修改左上角格子的值
+                if (isLeftFirst) {
+
+                    for (let preRow = this.__rowNum - 1; preRow > 0; preRow--) {
+
+                        // 接着，让我们寻找这个条目合并后单元格的左上角
+                        if (this.__contentArray[this.__tableIndex].content[preRow - 1][col - 1].style.display != 'none') {
+
+                            // 数据
+                            this.__contentArray[this.__tableIndex].content[preRow - 1][col - 1].rowspan -= -1;
+
+                            // 结点
+                            let leftTopNode = xhtml.find(rowNodes[preRow], () => true, 'th')[col];
+                            leftTopNode.setAttribute('rowspan', leftTopNode.getAttribute('rowspan') - -1);
+
+                            // 找到以后别忘了停止
+                            break;
+                        }
+                    }
+
+                }
+
+            }
+
+        }
 
         // 追加数据
         this.__contentArray[this.__tableIndex].content[this.__rowNum - 1].push(tempNewItemData);
@@ -125,8 +190,8 @@ export function insertLeft() {
 
     }
 
-     // 最后标记右移
-     this.__colNum += 1;
+    // 最后标记右移
+    this.__colNum += 1;
 };
 
 export function insertRight() {

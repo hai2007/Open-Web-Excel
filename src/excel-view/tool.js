@@ -44,6 +44,7 @@ export function formatContent(file) {
             for (let j = 0; j < 30; j++) {
                 rowArray.push(this.$$newItemData());
             }
+
             content.push(rowArray);
         }
         return [{
