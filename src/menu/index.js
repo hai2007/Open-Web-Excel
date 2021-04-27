@@ -24,17 +24,25 @@ export default function () {
                 <span class='item more' open-web-excel>
                     插入
                     <div open-web-excel>
-                        <span class='item' open-web-excel def-type='insert-up'>
-                            向上插入一行
+                        <span class='item' open-web-excel>
+                            <span def-type='insert-up'>向上插入</span>
+                            <input value='1' open-web-excel />
+                            <span def-type='insert-up'>行</span>
                         </span>
-                        <span class='item' open-web-excel def-type='insert-down'>
-                            向下插入一行
+                        <span class='item' open-web-excel>
+                            <span def-type='insert-down'>向下插入</span>
+                            <input value='1' open-web-excel />
+                            <span def-type='insert-down'>行</span>
                         </span>
-                        <span class='item' open-web-excel def-type='insert-left'>
-                            向左插入一列
+                        <span class='item' open-web-excel>
+                            <span def-type='insert-left'>向左插入</span>
+                            <input value='1' open-web-excel />
+                            <span def-type='insert-left'>列</span>
                         </span>
-                        <span class='item' open-web-excel def-type='insert-right'>
-                            向右插入一列
+                        <span class='item' open-web-excel>
+                            <span def-type='insert-right'>向右插入</span>
+                            <input value='1' open-web-excel />
+                            <span def-type='insert-right'>列</span>
                         </span>
                     </div>
                 </span>
@@ -144,6 +152,11 @@ export default function () {
             background-color:#d6cccb;
             padding:0;
             margin:0 10px;
+        }
+
+        .menu input{
+            width:20px;
+            outline:none;
         }
 
         .menu span:hover>div{
@@ -434,33 +447,35 @@ export default function () {
         // 插入
         else if (/^insert\-/.test(defType)) {
 
+            let num = +xhtml.find(node.parentNode, () => true, 'input')[0].value;
+
             // 向上插入行
             if (defType == 'insert-up') {
-                this.$$insertUpNRow();
+                for (let i = 0; i < num; i++) this.$$insertUpNewRow();
             }
 
             // 向下插入行
             else if (defType == 'insert-down') {
-                this.$$insertDownNRow();
+                for (let i = 0; i < num; i++) this.$$insertDownNewRow();
             }
 
             // 向左插入列
             else if (defType == 'insert-left') {
-                this.$$insertLeftNCol();
+                for (let i = 0; i < num; i++) this.$$insertLeftNewCol();
             }
 
             // 向右插入列
             else if (defType == 'insert-right') {
-                this.$$insertRightNCol();
+                for (let i = 0; i < num; i++) this.$$insertRightNewCol();
             }
 
         }
 
-          // 删除
-          else if (/^delete\-/.test(defType)) {
+        // 删除
+        else if (/^delete\-/.test(defType)) {
 
-             // 删除当前行
-             if (defType == 'delete-row') {
+            // 删除当前行
+            if (defType == 'delete-row') {
                 this.$$deleteCRow();
             }
 
@@ -469,7 +484,7 @@ export default function () {
                 this.$$deleteCCol();
             }
 
-          }
+        }
 
     });
 

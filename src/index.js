@@ -97,10 +97,10 @@ owe.prototype.$$calcRegionInfo = calcRegionInfo;
 owe.prototype.$$showRegion = showRegion;
 owe.prototype.$$cancelRegion = cancelRegion;
 
-owe.prototype.$$insertUpNRow = insertUp;
-owe.prototype.$$insertDownNRow = insertDown;
-owe.prototype.$$insertLeftNCol = insertLeft;
-owe.prototype.$$insertRightNCol = insertRight;
+owe.prototype.$$insertUpNewRow = insertUp;
+owe.prototype.$$insertDownNewRow = insertDown;
+owe.prototype.$$insertLeftNewCol = insertLeft;
+owe.prototype.$$insertRightNewCol = insertRight;
 
 owe.prototype.$$deleteCRow = deleteCRow;
 owe.prototype.$$deleteCCol = deleteCCol;

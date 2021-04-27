@@ -1,3 +1,5 @@
+import { isNumber } from "@hai2007/tool/type";
+
 export function styleToString(style) {
 
     let styleString = "";
@@ -41,6 +43,8 @@ export function formatContent(file) {
             let rowArray = []
             for (let j = 0; j < 30; j++) {
                 rowArray.push(this.$$newItemData());
+
+                rowArray[j].value = i + '-' + j;
             }
             content.push(rowArray);
         }
@@ -53,8 +57,11 @@ export function formatContent(file) {
 };
 
 export function calcColName(index) {
+    if (!isNumber(index)) return index;
+
     let codes = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
     let result = "";
+
     while (true) {
 
         // 求解当前坐标

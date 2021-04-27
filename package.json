@@ -1,6 +1,6 @@
 {
   "name": "open-web-excel",
-  "version": "0.2.0-alpha.0",
+  "version": "0.2.0-alpha.1",
   "description": "✍️ An Excel Used on the Browser Side.",
   "main": "dist/open-web-excel.min.js",
   "scripts": {

@@ -4,12 +4,12 @@
 *
 * author 你好2007
 *
-* version 0.2.0-alpha.0
+* version 0.2.0-alpha.1
 *
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Mon Apr 26 2021 17:14:54 GMT+0800 (GMT+08:00)
+* Date:Tue Apr 27 2021 10:44:10 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -33,6 +33,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }
 
     return toString.call(value);
+  }
+  /**
+   * 判断一个值是不是number。
+   *
+   * @param {*} value 需要判断类型的值
+   * @returns {boolean} 如果是number返回true，否则返回false
+   */
+
+
+  function _isNumber(value) {
+    return typeof value === 'number' || value !== null && _typeof(value) === 'object' && getType(value) === '[object Number]';
   }
   /**
    * 判断一个值是不是一个朴素的'对象'
@@ -64,8 +75,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
   var domTypeHelp = function domTypeHelp(types, value) {
     return value !== null && _typeof(value) === 'object' && types.indexOf(value.nodeType) > -1 && !_isPlainObject(value);
-  }; // 结点类型
+  };
 
+  var isNumber = _isNumber; // 结点类型
 
   var isElement = function isElement(input) {
     return domTypeHelp([1, 9, 11], input);
@@ -552,6 +564,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
           for (var j = 0; j < 30; j++) {
             rowArray.push(this.$$newItemData());
+            rowArray[j].value = i + '-' + j;
           }
 
           content.push(rowArray);
@@ -565,6 +578,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   }
 
   function calcColName(index) {
+    if (!isNumber(index)) return index;
     var codes = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
     var result = "";
 
@@ -945,8 +959,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var topDom = xhtml.append(this.__el, "<div class='top-dom' open-web-excel></div>");
     this.$$addStyle('top-dom', "\n\n       .top-dom{\n            width: 100%;\n            height: 62px;\n            overflow: hidden;\n       }\n\n    "); // 菜单
 
-    this.__menuDom = xhtml.append(topDom, "<div class='menu' open-web-excel>\n        <span open-web-excel>\n            \u64CD\u4F5C\n            <div open-web-excel>\n                <span class='item more' open-web-excel>\n                    \u63D2\u5165\n                    <div open-web-excel>\n                        <span class='item' open-web-excel def-type='insert-up'>\n                            \u5411\u4E0A\u63D2\u5165\u4E00\u884C\n                        </span>\n                        <span class='item' open-web-excel def-type='insert-down'>\n                            \u5411\u4E0B\u63D2\u5165\u4E00\u884C\n                        </span>\n                        <span class='item' open-web-excel def-type='insert-left'>\n                            \u5411\u5DE6\u63D2\u5165\u4E00\u5217\n                        </span>\n                        <span class='item' open-web-excel def-type='insert-right'>\n                            \u5411\u53F3\u63D2\u5165\u4E00\u5217\n                        </span>\n                    </div>\n                </span>\n                <span class='item more' open-web-excel>\n                    \u5220\u9664\n                    <div open-web-excel>\n                        <span class='item' open-web-excel def-type='delete-row'>\n                            \u5220\u9664\u5F53\u524D\u884C\n                        </span>\n                        <span class='item' open-web-excel def-type='delete-col'>\n                            \u5220\u9664\u5F53\u524D\u5217\n                        </span>\n                    </div>\n                </span>\n                <span class='item more' open-web-excel>\n                    \u5408\u5E76\u5355\u5143\u683C\n                    <div open-web-excel>\n                        <span class='item' def-type='merge-all' open-web-excel>\u5168\u90E8\u5408\u5E76</span>\n                        <span class='item' def-type='merge-cancel' open-web-excel>\u53D6\u6D88\u5408\u5E76</span>\n                    </div>\n                </span>\n            </div>\n        </span>\n        <span open-web-excel>\n            \u683C\u5F0F\n            <div open-web-excel>\n                <span class='item' def-type='bold' open-web-excel>\u7C97\u4F53</span>\n                <span class='item' def-type='italic' open-web-excel>\u659C\u4F53</span>\n                <span class='item' def-type='underline' open-web-excel>\u4E0B\u5212\u7EBF</span>\n                <span class='item' def-type='line-through' open-web-excel>\u4E2D\u5212\u7EBF</span>\n                <span class='line' open-web-excel></span>\n                <span class='item more' open-web-excel>\n                    \u6C34\u5E73\u5BF9\u9F50\n                    <div open-web-excel>\n                        <span class='item' def-type='horizontal-left' open-web-excel>\u5DE6\u5BF9\u9F50</span>\n                        <span class='item' def-type='horizontal-center' open-web-excel>\u5C45\u4E2D\u5BF9\u9F50</span>\n                        <span class='item' def-type='horizontal-right' open-web-excel>\u53F3\u5BF9\u9F50</span>\n                    </div>\n                </span>\n                <span class='item more' open-web-excel>\n                    \u5782\u76F4\u5BF9\u9F50\n                    <div open-web-excel>\n                        <span class='item' def-type='vertical-top' open-web-excel>\u9876\u90E8\u5BF9\u9F50</span>\n                        <span class='item' def-type='vertical-middle' open-web-excel>\u5C45\u4E2D\u5BF9\u9F50</span>\n                        <span class='item' def-type='vertical-bottom' open-web-excel>\u5E95\u90E8\u5BF9\u9F50</span>\n                    </div>\n                </span>\n            </div>\n        </span>\n        <span open-web-excel>\n            \u5E2E\u52A9\n            <div open-web-excel>\n                <span class='item' open-web-excel>\n                    <a href='https://github.com/hai2007/Open-Web-Excel/issues' open-web-excel target='_blank'>\u95EE\u9898\u53CD\u9988</a>\n                </span>\n            </div>\n        </span>\n    </div>");
-    this.$$addStyle('menu', "\n\n        .menu{\n            border-bottom: 1px solid #d6cccb;\n            padding: 0 20px;\n            box-sizing: border-box;\n            white-space: nowrap;\n        }\n\n        .menu>span{\n            display: inline-block;\n            line-height: 26px;\n            padding: 0 10px;\n            font-size: 12px;\n            cursor: pointer;\n            color: #555555;\n        }\n        .menu>span:hover{\n            background: white;\n        }\n\n        .menu>span>div{\n            margin-left: -10px;\n        }\n\n        .menu>span div{\n            position:absolute;\n            background: white;\n            width: 140px;\n            box-shadow: 4px 3px 6px 0 #c9c9e2;\n            display:none;\n            padding:5px 0;\n        }\n\n        .menu>span div span{\n            display:block;\n            position:relative;\n            padding:5px 20px;\n        }\n\n        .menu>span div span>div{\n            left:140px;\n            top:0px;\n        }\n\n        .menu .line{\n            height:1px;\n            background-color:#d6cccb;\n            padding:0;\n            margin:0 10px;\n        }\n\n        .menu span:hover>div{\n            display:block;\n        }\n\n        .menu span.more:after{\n            content:\">\";\n            position: absolute;\n            right: 12px;\n            font-weight: 800;\n        }\n\n        .menu a{\n            text-decoration: none;\n            color: #555555;\n        }\n\n        .menu input{\n            width:20px;\n            outline:none;\n        }\n\n        .menu .item.active::before{\n            content: \"*\";\n            color: red;\n            position: absolute;\n            left: 8px;\n        }\n\n        .menu .item{\n            text-decoration: none;\n        }\n\n        .menu .item:hover{\n            text-decoration: underline;\n        }\n\n    "); // 快捷菜单
+    this.__menuDom = xhtml.append(topDom, "<div class='menu' open-web-excel>\n        <span open-web-excel>\n            \u64CD\u4F5C\n            <div open-web-excel>\n                <span class='item more' open-web-excel>\n                    \u63D2\u5165\n                    <div open-web-excel>\n                        <span class='item' open-web-excel>\n                            <span def-type='insert-up'>\u5411\u4E0A\u63D2\u5165</span>\n                            <input value='1' open-web-excel />\n                            <span def-type='insert-up'>\u884C</span>\n                        </span>\n                        <span class='item' open-web-excel>\n                            <span def-type='insert-down'>\u5411\u4E0B\u63D2\u5165</span>\n                            <input value='1' open-web-excel />\n                            <span def-type='insert-down'>\u884C</span>\n                        </span>\n                        <span class='item' open-web-excel>\n                            <span def-type='insert-left'>\u5411\u5DE6\u63D2\u5165</span>\n                            <input value='1' open-web-excel />\n                            <span def-type='insert-left'>\u5217</span>\n                        </span>\n                        <span class='item' open-web-excel>\n                            <span def-type='insert-right'>\u5411\u53F3\u63D2\u5165</span>\n                            <input value='1' open-web-excel />\n                            <span def-type='insert-right'>\u5217</span>\n                        </span>\n                    </div>\n                </span>\n                <span class='item more' open-web-excel>\n                    \u5220\u9664\n                    <div open-web-excel>\n                        <span class='item' open-web-excel def-type='delete-row'>\n                            \u5220\u9664\u5F53\u524D\u884C\n                        </span>\n                        <span class='item' open-web-excel def-type='delete-col'>\n                            \u5220\u9664\u5F53\u524D\u5217\n                        </span>\n                    </div>\n                </span>\n                <span class='item more' open-web-excel>\n                    \u5408\u5E76\u5355\u5143\u683C\n                    <div open-web-excel>\n                        <span class='item' def-type='merge-all' open-web-excel>\u5168\u90E8\u5408\u5E76</span>\n                        <span class='item' def-type='merge-cancel' open-web-excel>\u53D6\u6D88\u5408\u5E76</span>\n                    </div>\n                </span>\n            </div>\n        </span>\n        <span open-web-excel>\n            \u683C\u5F0F\n            <div open-web-excel>\n                <span class='item' def-type='bold' open-web-excel>\u7C97\u4F53</span>\n                <span class='item' def-type='italic' open-web-excel>\u659C\u4F53</span>\n                <span class='item' def-type='underline' open-web-excel>\u4E0B\u5212\u7EBF</span>\n                <span class='item' def-type='line-through' open-web-excel>\u4E2D\u5212\u7EBF</span>\n                <span class='line' open-web-excel></span>\n                <span class='item more' open-web-excel>\n                    \u6C34\u5E73\u5BF9\u9F50\n                    <div open-web-excel>\n                        <span class='item' def-type='horizontal-left' open-web-excel>\u5DE6\u5BF9\u9F50</span>\n                        <span class='item' def-type='horizontal-center' open-web-excel>\u5C45\u4E2D\u5BF9\u9F50</span>\n                        <span class='item' def-type='horizontal-right' open-web-excel>\u53F3\u5BF9\u9F50</span>\n                    </div>\n                </span>\n                <span class='item more' open-web-excel>\n                    \u5782\u76F4\u5BF9\u9F50\n                    <div open-web-excel>\n                        <span class='item' def-type='vertical-top' open-web-excel>\u9876\u90E8\u5BF9\u9F50</span>\n                        <span class='item' def-type='vertical-middle' open-web-excel>\u5C45\u4E2D\u5BF9\u9F50</span>\n                        <span class='item' def-type='vertical-bottom' open-web-excel>\u5E95\u90E8\u5BF9\u9F50</span>\n                    </div>\n                </span>\n            </div>\n        </span>\n        <span open-web-excel>\n            \u5E2E\u52A9\n            <div open-web-excel>\n                <span class='item' open-web-excel>\n                    <a href='https://github.com/hai2007/Open-Web-Excel/issues' open-web-excel target='_blank'>\u95EE\u9898\u53CD\u9988</a>\n                </span>\n            </div>\n        </span>\n    </div>");
+    this.$$addStyle('menu', "\n\n        .menu{\n            border-bottom: 1px solid #d6cccb;\n            padding: 0 20px;\n            box-sizing: border-box;\n            white-space: nowrap;\n        }\n\n        .menu>span{\n            display: inline-block;\n            line-height: 26px;\n            padding: 0 10px;\n            font-size: 12px;\n            cursor: pointer;\n            color: #555555;\n        }\n        .menu>span:hover{\n            background: white;\n        }\n\n        .menu>span>div{\n            margin-left: -10px;\n        }\n\n        .menu>span div{\n            position:absolute;\n            background: white;\n            width: 140px;\n            box-shadow: 4px 3px 6px 0 #c9c9e2;\n            display:none;\n            padding:5px 0;\n        }\n\n        .menu>span div span{\n            display:block;\n            position:relative;\n            padding:5px 20px;\n        }\n\n        .menu>span div span>div{\n            left:140px;\n            top:0px;\n        }\n\n        .menu .line{\n            height:1px;\n            background-color:#d6cccb;\n            padding:0;\n            margin:0 10px;\n        }\n\n        .menu input{\n            width:20px;\n            outline:none;\n        }\n\n        .menu span:hover>div{\n            display:block;\n        }\n\n        .menu span.more:after{\n            content:\">\";\n            position: absolute;\n            right: 12px;\n            font-weight: 800;\n        }\n\n        .menu a{\n            text-decoration: none;\n            color: #555555;\n        }\n\n        .menu input{\n            width:20px;\n            outline:none;\n        }\n\n        .menu .item.active::before{\n            content: \"*\";\n            color: red;\n            position: absolute;\n            left: 8px;\n        }\n\n        .menu .item{\n            text-decoration: none;\n        }\n\n        .menu .item:hover{\n            text-decoration: underline;\n        }\n\n    "); // 快捷菜单
 
     this.__menuQuickDom = xhtml.append(topDom, "<div class='quick-menu' open-web-excel>\n        <span class='item' def-type='format' open-web-excel>\u683C\u5F0F\u5316</span>\n        <span class='line' open-web-excel></span>\n        <span class='item color' def-type='font-color' open-web-excel>\n            \u6587\u5B57\u989C\u8272\uFF1A<i class='color' open-web-excel></i>\n            ".concat(colorTemplate, "\n        </span>\n        <span class='item color' def-type='background-color' open-web-excel>\n            \u586B\u5145\u8272\uFF1A<i class='color' open-web-excel></i>\n            ").concat(colorTemplate, "\n        </span>\n        <span class='line' open-web-excel></span>\n        <span class='item' def-type='merge-all' open-web-excel>\n            \u5168\u90E8\u5408\u5E76\n        </span>\n        <span class='item' def-type='merge-cancel' open-web-excel>\n            \u53D6\u6D88\u5408\u5E76\n        </span>\n        <span class='line' open-web-excel></span>\n        <span class='item' def-type='horizontal-left' open-web-excel>\n            \u5DE6\u5BF9\u9F50\n        </span>\n        <span class='item' def-type='horizontal-center' open-web-excel>\n            \u5C45\u4E2D\u5BF9\u9F50\n        </span>\n        <span class='item' def-type='horizontal-right' open-web-excel>\n            \u53F3\u5BF9\u9F50\n        </span>\n        <span class='line' open-web-excel></span>\n        <span class='item' def-type='vertical-top' open-web-excel>\n            \u9876\u90E8\u5BF9\u9F50\n        </span>\n        <span class='item' def-type='vertical-middle' open-web-excel>\n            \u5C45\u4E2D\u5BF9\u9F50\n        </span>\n        <span class='item' def-type='vertical-bottom' open-web-excel>\n            \u5E95\u90E8\u5BF9\u9F50\n        </span>\n    </div>"));
     this.$$addStyle('quick-menu', "\n\n        .quick-menu{\n            line-height: 36px;\n            font-size: 12px;\n            white-space: nowrap;\n            width: 100%;\n            overflow: auto;\n        }\n\n        .quick-menu span{\n            display:inline-block;\n            vertical-align: top;\n        }\n\n        .quick-menu span>i.color{\n            display: inline-block;\n            height: 14px;\n            width: 20px;\n            border:1px solid #d6cccb;\n            vertical-align: middle;\n        }\n\n        .quick-menu .item{\n            margin:0 10px;\n            cursor: pointer;\n        }\n\n        .quick-menu .line{\n            background-color:#d6cccb;\n            width:1px;\n            height:22px;\n            margin-top:7px;\n        }\n\n        .quick-menu .item:hover{\n            font-weight: 800;\n        }\n\n        .quick-menu .item.active{\n            font-weight: 800;\n            color: red;\n        }\n\n        /* \u9009\u62E9\u989C\u8272 */\n\n        .color-view{\n            font-size: 0px;\n            width: 171px;\n            position: absolute;\n            padding: 10px;\n            box-sizing: content-box;\n            background: #fefefe;\n            box-shadow: 1px 1px 5px #9e9695;\n            line-height:1em;\n            display:none;\n            margin-top: -5px;\n            white-space: normal;\n        }\n\n        .color:hover>.color-view, .color-view:hover{\n            display:block;\n        }\n\n        .color-item{\n            display: inline-block;\n            width: 19px;\n            height: 19px;\n        }\n\n        .color-item>span{\n            width: 15px;\n            height: 15px;\n            margin: 2px;\n            cursor: pointer;\n            box-sizing: border-box;\n        }\n\n        .color-item>span:hover{\n            outline:1px solid black;\n        }\n\n    "); // 对菜单添加点击事件
@@ -1042,18 +1056,29 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                         }
                     } // 插入
                     else if (/^insert\-/.test(defType)) {
-                        // 向上插入行
+                        var num = +xhtml.find(node.parentNode, function () {
+                          return true;
+                        }, 'input')[0].value; // 向上插入行
+
                         if (defType == 'insert-up') {
-                          _this4.$$insertUpNRow();
+                          for (var _i2 = 0; _i2 < num; _i2++) {
+                            _this4.$$insertUpNewRow();
+                          }
                         } // 向下插入行
                         else if (defType == 'insert-down') {
-                            _this4.$$insertDownNRow();
+                            for (var _i3 = 0; _i3 < num; _i3++) {
+                              _this4.$$insertDownNewRow();
+                            }
                           } // 向左插入列
                           else if (defType == 'insert-left') {
-                              _this4.$$insertLeftNCol();
+                              for (var _i4 = 0; _i4 < num; _i4++) {
+                                _this4.$$insertLeftNewCol();
+                              }
                             } // 向右插入列
                             else if (defType == 'insert-right') {
-                                _this4.$$insertRightNCol();
+                                for (var _i5 = 0; _i5 < num; _i5++) {
+                                  _this4.$$insertRightNewCol();
+                                }
                               }
                       } // 删除
                       else if (/^delete\-/.test(defType)) {
@@ -1071,12 +1096,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return xhtml.hasClass(node, 'color');
     }, 'span');
 
-    var _loop2 = function _loop2(_i2) {
-      var colorClickItems = xhtml.find(colorItems[_i2], function () {
+    var _loop2 = function _loop2(_i6) {
+      var colorClickItems = xhtml.find(colorItems[_i6], function () {
         return true;
       }, 'span');
       xhtml.bind(colorClickItems, 'click', function (event) {
-        var defType = colorItems[_i2].getAttribute('def-type');
+        var defType = colorItems[_i6].getAttribute('def-type');
 
         var colorValue = event.target.style.background; // 设置
 
@@ -1087,8 +1112,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       });
     };
 
-    for (var _i2 = 0; _i2 < colorItems.length; _i2++) {
-      _loop2(_i2);
+    for (var _i6 = 0; _i6 < colorItems.length; _i6++) {
+      _loop2(_i6);
     }
   }
 
@@ -1098,51 +1123,51 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return node.getAttribute('def-type');
     }, 'span');
 
-    for (var _i3 = 0; _i3 < menuItems.length; _i3++) {
+    for (var _i7 = 0; _i7 < menuItems.length; _i7++) {
       // 获取按钮类型
-      var defType = menuItems[_i3].getAttribute('def-type'); // 粗体
+      var defType = menuItems[_i7].getAttribute('def-type'); // 粗体
 
 
       if (defType == 'bold') {
         if (style['font-weight'] == 'bold') {
-          xhtml.addClass(menuItems[_i3], 'active');
+          xhtml.addClass(menuItems[_i7], 'active');
         } else {
-          xhtml.removeClass(menuItems[_i3], 'active');
+          xhtml.removeClass(menuItems[_i7], 'active');
         }
       } // 粗体
       else if (defType == 'italic') {
           if (style['font-style'] == 'italic') {
-            xhtml.addClass(menuItems[_i3], 'active');
+            xhtml.addClass(menuItems[_i7], 'active');
           } else {
-            xhtml.removeClass(menuItems[_i3], 'active');
+            xhtml.removeClass(menuItems[_i7], 'active');
           }
         } // 中划线
         else if (defType == 'underline') {
             if (style['text-decoration'] == 'underline') {
-              xhtml.addClass(menuItems[_i3], 'active');
+              xhtml.addClass(menuItems[_i7], 'active');
             } else {
-              xhtml.removeClass(menuItems[_i3], 'active');
+              xhtml.removeClass(menuItems[_i7], 'active');
             }
           } // 下划线
           else if (defType == 'line-through') {
               if (style['text-decoration'] == 'line-through') {
-                xhtml.addClass(menuItems[_i3], 'active');
+                xhtml.addClass(menuItems[_i7], 'active');
               } else {
-                xhtml.removeClass(menuItems[_i3], 'active');
+                xhtml.removeClass(menuItems[_i7], 'active');
               }
             } // 水平对齐方式
             else if (/^horizontal\-/.test(defType)) {
                 if (defType == 'horizontal-' + style['text-align']) {
-                  xhtml.addClass(menuItems[_i3], 'active');
+                  xhtml.addClass(menuItems[_i7], 'active');
                 } else {
-                  xhtml.removeClass(menuItems[_i3], 'active');
+                  xhtml.removeClass(menuItems[_i7], 'active');
                 }
               } // 垂直对齐方式
               else if (/^vertical\-/.test(defType)) {
                   if (defType == 'vertical-' + style['vertical-align']) {
-                    xhtml.addClass(menuItems[_i3], 'active');
+                    xhtml.addClass(menuItems[_i7], 'active');
                   } else {
-                    xhtml.removeClass(menuItems[_i3], 'active');
+                    xhtml.removeClass(menuItems[_i7], 'active');
                   }
                 }
     } // 更新快速使用菜单
@@ -1152,29 +1177,29 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return node.getAttribute('def-type');
     }, 'span');
 
-    for (var _i4 = 0; _i4 < quickItems.length; _i4++) {
+    for (var _i8 = 0; _i8 < quickItems.length; _i8++) {
       // 获取按钮类型
-      var _defType = quickItems[_i4].getAttribute('def-type'); // 文字颜色
+      var _defType = quickItems[_i8].getAttribute('def-type'); // 文字颜色
 
 
       if (_defType == 'font-color') {
-        quickItems[_i4].getElementsByTagName('i')[0].style.backgroundColor = style.color;
+        quickItems[_i8].getElementsByTagName('i')[0].style.backgroundColor = style.color;
       } // 填充色
       else if (_defType == 'background-color') {
-          quickItems[_i4].getElementsByTagName('i')[0].style.backgroundColor = style.background;
+          quickItems[_i8].getElementsByTagName('i')[0].style.backgroundColor = style.background;
         } // 水平对齐方式
         else if (/^horizontal\-/.test(_defType)) {
             if (_defType == 'horizontal-' + style['text-align']) {
-              xhtml.addClass(quickItems[_i4], 'active');
+              xhtml.addClass(quickItems[_i8], 'active');
             } else {
-              xhtml.removeClass(quickItems[_i4], 'active');
+              xhtml.removeClass(quickItems[_i8], 'active');
             }
           } // 垂直对齐方式
           else if (/^vertical\-/.test(_defType)) {
               if (_defType == 'vertical-' + style['vertical-align']) {
-                xhtml.addClass(quickItems[_i4], 'active');
+                xhtml.addClass(quickItems[_i8], 'active');
               } else {
-                xhtml.removeClass(quickItems[_i4], 'active');
+                xhtml.removeClass(quickItems[_i8], 'active');
               }
             }
     }
@@ -1185,64 +1210,146 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     var rowNodes = xhtml.find(this.__contentDom[this.__tableIndex], function () {
       return true;
-    }, 'tr');
-    var newRowNode = xhtml.after(rowNodes[rowNodes.length - 1], '<tr><th class="line-num" open-web-excel>' + rowNodes.length + '</th></tr>');
-    rowNodes.push(newRowNode);
+    }, 'tr'); // 首先，直接在插入行前面插入一行
 
-    this.__contentArray[this.__tableIndex].content.push([]); // 一列列插入
+    var newRowNode = xhtml.before(rowNodes[this.__rowNum], '<tr><th class="line-num" open-web-excel>' + this.__rowNum + '</th></tr>');
+    rowNodes.splice(this.__rowNum, 0, newRowNode);
 
-
-    var colNum = this.__contentArray[this.__tableIndex].content[0].length;
-
-    for (var index = 0; index < colNum; index++) {
-      // 寻找到第一个可以在其前面追加的位置
-      // 如果没有，第一个一定总是合适的
-      var row = void 0;
-
-      for (row = this.__rowNum; row > 1; row--) {
-        if ( // 如果当前结点显示，肯定可以
-        this.__contentArray[this.__tableIndex].content[row - 1][index].style.display != 'none' || // 如果前一个显示，而且行为1，当前应该也可以
-        this.__contentArray[this.__tableIndex].content[row - 2][index].style.display != 'none' && this.__contentArray[this.__tableIndex].content[row - 2][index].rowspan == '1') break;
-      } // 然后一个个向下迁移
+    this.__contentArray[this.__tableIndex].content.splice(this.__rowNum - 1, 0, []); // 然后，校对数据
 
 
-      var index_move = void 0;
+    for (var row = this.__rowNum + 1; row <= rowNodes.length - 1; row++) {
+      var colNodes = xhtml.find(rowNodes[row], function () {
+        return true;
+      }, 'th'); // 修改行数
 
-      for (index_move = rowNodes.length - 1; index_move > row; index_move--) {
-        var needMoveNode = xhtml.find(rowNodes[index_move - 1], 'th')[index + 1]; // 修改行号
+      colNodes[0].innerText = row; // 依次修改记录的行数
 
-        needMoveNode.setAttribute('row', 1 - -needMoveNode.getAttribute('row')); // 结点
+      for (var col = 1; col < colNodes.length; col++) {
+        colNodes[col].setAttribute('row', row);
+      }
+    }
 
-        xhtml.after(xhtml.find(rowNodes[index_move], 'th')[index], needMoveNode); // 数据
+    for (var _col = 1; _col <= this.__contentArray[this.__tableIndex].content[0].length; _col++) {
+      // 获取新的数据
+      var tempNewItemData = this.$$newItemData(); // 追加数据
 
-        this.__contentArray[this.__tableIndex].content[index_move - 1][index] = this.__contentArray[this.__tableIndex].content[index_move - 2][index];
-      } // 然后对于空白的，进行补充
+      this.__contentArray[this.__tableIndex].content[this.__rowNum - 1].push(tempNewItemData); // 追加结点
 
 
-      var tempNewItemData = this.$$newItemData(); // 数据
-
-      this.__contentArray[this.__tableIndex].content[index_move - 1][index] = tempNewItemData; // 结点
-
-      var newItemNode = xhtml.after(xhtml.find(rowNodes[index_move], 'th')[index], "<th row=\"".concat(index_move, "\" col=\"").concat(index + 1, "\" contenteditable=\"true\" class=\"item\" colspan=\"1\" rowspan=\"1\" style=\"").concat(this.$$styleToString(tempNewItemData.style), "\" open-web-excel></th>")); // 绑定事件
+      var newItemNode = xhtml.append(newRowNode, "<th row=\"".concat(this.__rowNum, "\" col=\"").concat(_col, "\" contenteditable=\"true\" class=\"item\" colspan=\"1\" rowspan=\"1\" style=\"").concat(this.$$styleToString(tempNewItemData.style), "\" open-web-excel></th>")); // 绑定事件
 
       xhtml.bind(newItemNode, 'click', function (event) {
         _this5.$$itemClickHandler(event);
       });
-    }
+    } // 最后标记下沉
+
 
     this.__rowNum += 1;
   }
 
   function insertDown() {
-    console.log('向下插入一行');
+    var _this6 = this;
+
+    var rowNodes = xhtml.find(this.__contentDom[this.__tableIndex], function () {
+      return true;
+    }, 'tr'); // 首先，直接在插入行前面插入一行
+
+    var newRowNode = xhtml.after(rowNodes[this.__rowNum], '<tr><th class="line-num" open-web-excel>' + (this.__rowNum + 1) + '</th></tr>');
+    rowNodes.splice(this.__rowNum + 1, 0, newRowNode);
+
+    this.__contentArray[this.__tableIndex].content.splice(this.__rowNum, 0, []); // 然后，校对数据
+
+
+    for (var row = this.__rowNum + 2; row <= rowNodes.length - 1; row++) {
+      var colNodes = xhtml.find(rowNodes[row], function () {
+        return true;
+      }, 'th'); // 修改行数
+
+      colNodes[0].innerText = row; // 依次修改记录的行数
+
+      for (var col = 1; col < colNodes.length; col++) {
+        colNodes[col].setAttribute('row', row);
+      }
+    }
+
+    for (var _col2 = 1; _col2 <= this.__contentArray[this.__tableIndex].content[0].length; _col2++) {
+      // 获取新的数据
+      var tempNewItemData = this.$$newItemData(); // 追加数据
+
+      this.__contentArray[this.__tableIndex].content[this.__rowNum].push(tempNewItemData); // 追加结点
+
+
+      var newItemNode = xhtml.append(newRowNode, "<th row=\"".concat(this.__rowNum, "\" col=\"").concat(_col2, "\" contenteditable=\"true\" class=\"item\" colspan=\"1\" rowspan=\"1\" style=\"").concat(this.$$styleToString(tempNewItemData.style), "\" open-web-excel></th>")); // 绑定事件
+
+      xhtml.bind(newItemNode, 'click', function (event) {
+        _this6.$$itemClickHandler(event);
+      });
+    }
   }
 
   function insertLeft() {
-    console.log('向左插入一列');
+    var _this7 = this;
+
+    var rowNodes = xhtml.find(this.__contentDom[this.__tableIndex], function () {
+      return true;
+    }, 'tr'); // 先修改顶部的位置提示
+
+    xhtml.append(rowNodes[0], "<th class='top-name' open-web-excel>" + this.$$calcColName(this.__contentArray[this.__tableIndex].content[0].length) + "</th>");
+
+    for (var row = 1; row < rowNodes.length; row++) {
+      var colNodes = xhtml.find(rowNodes[row], function () {
+        return true;
+      }, 'th'); // 校对列序号
+
+      for (var col = this.__colNum; col < colNodes.length; col++) {
+        colNodes[col].setAttribute('col', col + 1);
+      } // 获取新的数据
+
+
+      var tempNewItemData = this.$$newItemData(); // 追加数据
+
+      this.__contentArray[this.__tableIndex].content[row - 1].splice(this.__colNum - 1, 0, tempNewItemData); // 追加结点
+
+
+      var newItemNode = xhtml.before(colNodes[this.__colNum], "<th row=\"".concat(row, "\" col=\"").concat(this.__colNum, "\" contenteditable=\"true\" class=\"item\" colspan=\"1\" rowspan=\"1\" style=\"").concat(this.$$styleToString(tempNewItemData.style), "\" open-web-excel></th>")); // 绑定事件
+
+      xhtml.bind(newItemNode, 'click', function (event) {
+        _this7.$$itemClickHandler(event);
+      });
+    }
   }
 
   function insertRight() {
-    console.log('向右插入一列');
+    var _this8 = this;
+
+    var rowNodes = xhtml.find(this.__contentDom[this.__tableIndex], function () {
+      return true;
+    }, 'tr'); // 先修改顶部的位置提示
+
+    xhtml.append(rowNodes[0], "<th class='top-name' open-web-excel>" + this.$$calcColName(this.__contentArray[this.__tableIndex].content[0].length) + "</th>");
+
+    for (var row = 1; row < rowNodes.length; row++) {
+      var colNodes = xhtml.find(rowNodes[row], function () {
+        return true;
+      }, 'th'); // 校对列序号
+
+      for (var col = this.__colNum + 1; col < colNodes.length; col++) {
+        colNodes[col].setAttribute('col', col + 1);
+      } // 获取新的数据
+
+
+      var tempNewItemData = this.$$newItemData(); // 追加数据
+
+      this.__contentArray[this.__tableIndex].content[row - 1].splice(this.__colNum, 0, tempNewItemData); // 追加结点
+
+
+      var newItemNode = xhtml.after(colNodes[this.__colNum], "<th row=\"".concat(row, "\" col=\"").concat(this.__colNum + 1, "\" contenteditable=\"true\" class=\"item\" colspan=\"1\" rowspan=\"1\" style=\"").concat(this.$$styleToString(tempNewItemData.style), "\" open-web-excel></th>")); // 绑定事件
+
+      xhtml.bind(newItemNode, 'click', function (event) {
+        _this8.$$itemClickHandler(event);
+      });
+    }
   }
 
   function deleteCRow() {
@@ -1254,7 +1361,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   }
 
   var owe = function owe(options) {
-    var _this6 = this;
+    var _this9 = this;
 
     if (!(this instanceof owe)) {
       throw new Error('Open-Web-Excel is a constructor and should be called with the `new` keyword');
@@ -1287,7 +1394,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return {
         version: "v1",
         filename: "Open-Web-Excel",
-        contents: _this6.__contentArray
+        contents: _this9.__contentArray
       };
     };
   }; // 挂载辅助方法
@@ -1310,10 +1417,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   owe.prototype.$$calcRegionInfo = calcRegionInfo;
   owe.prototype.$$showRegion = showRegion;
   owe.prototype.$$cancelRegion = cancelRegion;
-  owe.prototype.$$insertUpNRow = insertUp;
-  owe.prototype.$$insertDownNRow = insertDown;
-  owe.prototype.$$insertLeftNCol = insertLeft;
-  owe.prototype.$$insertRightNCol = insertRight;
+  owe.prototype.$$insertUpNewRow = insertUp;
+  owe.prototype.$$insertDownNewRow = insertDown;
+  owe.prototype.$$insertLeftNewCol = insertLeft;
+  owe.prototype.$$insertRightNewCol = insertRight;
   owe.prototype.$$deleteCRow = deleteCRow;
   owe.prototype.$$deleteCCol = deleteCCol; // 挂载键盘交互总控
 
