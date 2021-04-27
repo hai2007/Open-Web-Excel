@@ -9,7 +9,7 @@
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Tue Apr 27 2021 16:21:40 GMT+0800 (GMT+08:00)
+* Date:Tue Apr 27 2021 18:03:54 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -564,6 +564,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
           for (var j = 0; j < 30; j++) {
             rowArray.push(this.$$newItemData());
+            rowArray[j].value = i + 1 + '-' + (j + 1);
           }
 
           content.push(rowArray);
@@ -1324,7 +1325,18 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     for (var _col2 = 1; _col2 <= this.__contentArray[this.__tableIndex].content[0].length; _col2++) {
       // 获取新的数据
-      var tempNewItemData = this.$$newItemData(); // 追加数据
+      var tempNewItemData = this.$$newItemData();
+      /**
+       * 对当前单元格合并情况进行嗅探
+       */
+      //  如果不是最后一行
+
+      if (this.__rowNum != this.__contentArray[this.__tableIndex].content.length - 1) {
+        var currentItemData = this.__contentArray[this.__tableIndex].content[this.__rowNum - 1][_col2 - 1]; // 不可见或行数不为1
+
+        if (currentItemData.style.display == 'none' || currentItemData.rowspan != '1') ;
+      } // 追加数据
+
 
       this.__contentArray[this.__tableIndex].content[this.__rowNum].push(tempNewItemData); // 追加结点
 

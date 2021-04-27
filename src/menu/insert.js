@@ -140,6 +140,26 @@ export function insertDown() {
         // 获取新的数据
         let tempNewItemData = this.$$newItemData();
 
+        /**
+         * 对当前单元格合并情况进行嗅探
+         */
+
+        //  如果不是最后一行
+        if (this.__rowNum != this.__contentArray[this.__tableIndex].content.length - 1) {
+
+            let currentItemData = this.__contentArray[this.__tableIndex].content[this.__rowNum - 1][col - 1];
+
+            // 不可见或行数不为1
+            if (currentItemData.style.display == 'none' || currentItemData.rowspan != '1') {
+
+                // 为了可以之前当前插入点的相对位置，我们首先需要找到合并后单元格左上角的数据和位置
+
+
+
+            }
+
+        }
+
         // 追加数据
         this.__contentArray[this.__tableIndex].content[this.__rowNum].push(tempNewItemData);
 
