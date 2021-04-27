@@ -4,12 +4,12 @@
 *
 * author 你好2007
 *
-* version 0.2.0-alpha.1
+* version 0.2.0-beta.0
 *
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Tue Apr 27 2021 14:18:44 GMT+0800 (GMT+08:00)
+* Date:Tue Apr 27 2021 14:43:26 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -564,7 +564,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
           for (var j = 0; j < 30; j++) {
             rowArray.push(this.$$newItemData());
-            rowArray[j].value = i + '-' + j;
           }
 
           content.push(rowArray);
@@ -1024,9 +1023,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
                         _this4.__region.nodes[0].setAttribute('rowspan', _this4.__region.info.row[1] - _this4.__region.info.row[0] + 1 + "");
 
-                        _this4.$$cancelRegion();
-
-                        _this4.__region = null;
+                        _this4.__region.nodes[0].click();
                       } // 取消合并
                       else if (defType == 'merge-cancel') {
                           var rowNodes = xhtml.find(_this4.__contentDom[_this4.__tableIndex], function () {

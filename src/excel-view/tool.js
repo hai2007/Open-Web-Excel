@@ -43,8 +43,6 @@ export function formatContent(file) {
             let rowArray = []
             for (let j = 0; j < 30; j++) {
                 rowArray.push(this.$$newItemData());
-
-                rowArray[j].value = i + '-' + j;
             }
             content.push(rowArray);
         }

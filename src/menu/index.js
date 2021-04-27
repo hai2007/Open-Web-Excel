@@ -406,9 +406,7 @@ export default function () {
                 this.__region.nodes[0].setAttribute('colspan', (this.__region.info.col[1] - this.__region.info.col[0] + 1) + "");
                 this.__region.nodes[0].setAttribute('rowspan', (this.__region.info.row[1] - this.__region.info.row[0] + 1) + "");
 
-                this.$$cancelRegion();
-                this.__region = null;
-
+                this.__region.nodes[0].click();
             }
 
             // 取消合并
