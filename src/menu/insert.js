@@ -153,11 +153,28 @@ export function insertDown() {
             if (currentItemData.style.display == 'none' || currentItemData.rowspan != '1') {
 
                 // 为了可以之前当前插入点的相对位置，我们首先需要找到合并后单元格左上角的数据和位置
+                let leftTopData = this.$$getLeftTop(this.__rowNum, col);
 
+                // 如果不是最底部一行
+                if (leftTopData.row - -leftTopData.content.rowspan - 1 > this.__rowNum) {
 
+                    // 到此为止，可以确定当前的条目一定隐藏
+                    tempNewItemData.style.display = 'none';
 
+                    // 如果是最左边的
+                    if (leftTopData.col == col) {
+
+                        // 数据
+                        this.__contentArray[this.__tableIndex].content[leftTopData.row - 1][col - 1].rowspan -= -1;
+
+                        // 结点
+                        let leftTopNode = xhtml.find(rowNodes[leftTopData.row], () => true, 'th')[col];
+                        leftTopNode.setAttribute('rowspan', leftTopNode.getAttribute('rowspan') - -1);
+
+                    }
+
+                }
             }
-
         }
 
         // 追加数据

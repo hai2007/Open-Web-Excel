@@ -9,7 +9,7 @@
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Tue Apr 27 2021 18:03:54 GMT+0800 (GMT+08:00)
+* Date:Wed Apr 28 2021 10:30:40 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -595,6 +595,32 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }
 
     return result;
+  }
+
+  function getLeftTop(rowIndex, colIndex) {
+    var content = this.__contentArray[this.__tableIndex].content; // 从下到上
+
+    for (var row = rowIndex; row >= 1; row--) {
+      // 从右到左
+      for (var col = colIndex; col >= 1; col--) {
+        // 同一行如果遇到第一个显示的，只有两种可能：
+        // 1.这个就是所求
+        // 2.本行都不会有结果
+        if (content[row - 1][col - 1].style.display != 'none') {
+          // 如果目标可以包含自己，那就找到了
+          if (content[row - 1][col - 1].rowspan - -row > rowIndex && content[row - 1][col - 1].colspan - -col > colIndex) {
+            return {
+              row: row,
+              col: col,
+              content: content[row - 1][col - 1]
+            };
+          } else {
+            break;
+          }
+        } // 不加else的原因是，理论上一定会存在唯一的一个
+
+      }
+    }
   }
 
   var addUniqueNamespace = function addUniqueNamespace(style) {
@@ -1334,7 +1360,26 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       if (this.__rowNum != this.__contentArray[this.__tableIndex].content.length - 1) {
         var currentItemData = this.__contentArray[this.__tableIndex].content[this.__rowNum - 1][_col2 - 1]; // 不可见或行数不为1
 
-        if (currentItemData.style.display == 'none' || currentItemData.rowspan != '1') ;
+        if (currentItemData.style.display == 'none' || currentItemData.rowspan != '1') {
+          // 为了可以之前当前插入点的相对位置，我们首先需要找到合并后单元格左上角的数据和位置
+          var leftTopData = this.$$getLeftTop(this.__rowNum, _col2); // 如果不是最底部一行
+
+          if (leftTopData.row - -leftTopData.content.rowspan - 1 > this.__rowNum) {
+            // 到此为止，可以确定当前的条目一定隐藏
+            tempNewItemData.style.display = 'none'; // 如果是最左边的
+
+            if (leftTopData.col == _col2) {
+              // 数据
+              this.__contentArray[this.__tableIndex].content[leftTopData.row - 1][_col2 - 1].rowspan -= -1; // 结点
+
+              var leftTopNode = xhtml.find(rowNodes[leftTopData.row], function () {
+                return true;
+              }, 'th')[_col2];
+
+              leftTopNode.setAttribute('rowspan', leftTopNode.getAttribute('rowspan') - -1);
+            }
+          }
+        }
       } // 追加数据
 
 
@@ -1517,7 +1562,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   owe.prototype.$$addStyle = style();
   owe.prototype.$$styleToString = styleToString;
   owe.prototype.$$newItemData = newItemData;
-  owe.prototype.$$itemClickHandler = itemClickHandler; // 挂载核心方法
+  owe.prototype.$$itemClickHandler = itemClickHandler;
+  owe.prototype.$$getLeftTop = getLeftTop; // 挂载核心方法
 
   owe.prototype.$$initDom = initDom;
   owe.prototype.$$initView = initView;

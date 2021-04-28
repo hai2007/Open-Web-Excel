@@ -81,3 +81,41 @@ export function calcColName(index) {
     }
     return result;
 };
+
+export function getLeftTop(rowIndex, colIndex) {
+    let content = this.__contentArray[this.__tableIndex].content;
+
+    // 从下到上
+    for (let row = rowIndex; row >= 1; row--) {
+        // 从右到左
+        for (let col = colIndex; col >= 1; col--) {
+
+            // 同一行如果遇到第一个显示的，只有两种可能：
+            // 1.这个就是所求
+            // 2.本行都不会有结果
+            if (content[row - 1][col - 1].style.display != 'none') {
+
+                // 如果目标可以包含自己，那就找到了
+                if (
+                    content[row - 1][col - 1].rowspan - - row > rowIndex
+                    &&
+                    content[row - 1][col - 1].colspan - - col > colIndex
+                ) {
+
+                    return {
+                        row,
+                        col,
+                        content: content[row - 1][col - 1]
+                    };
+
+                } else {
+                    break;
+                }
+
+            }
+
+            // 不加else的原因是，理论上一定会存在唯一的一个
+
+        }
+    }
+};

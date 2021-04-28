@@ -3,7 +3,7 @@ import { isElement } from '@hai2007/tool/type';
 // 核心方法和工具方法
 
 import { initDom, initView, initTableView, itemClickHandler } from './excel-view/init';
-import { formatContent, calcColName, styleToString, newItemData } from './excel-view/tool';
+import { formatContent, calcColName, styleToString, newItemData, getLeftTop } from './excel-view/tool';
 
 import style from './tool/style';
 
@@ -80,6 +80,7 @@ owe.prototype.$$addStyle = style();
 owe.prototype.$$styleToString = styleToString;
 owe.prototype.$$newItemData = newItemData;
 owe.prototype.$$itemClickHandler = itemClickHandler;
+owe.prototype.$$getLeftTop = getLeftTop;
 
 // 挂载核心方法
 
