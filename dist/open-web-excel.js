@@ -9,7 +9,7 @@
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Wed Apr 28 2021 10:30:40 GMT+0800 (GMT+08:00)
+* Date:Wed Apr 28 2021 12:48:07 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -1370,12 +1370,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
             if (leftTopData.col == _col2) {
               // 数据
-              this.__contentArray[this.__tableIndex].content[leftTopData.row - 1][_col2 - 1].rowspan -= -1; // 结点
+              this.__contentArray[this.__tableIndex].content[leftTopData.row - 1][leftTopData.col - 1].rowspan -= -1; // 结点
 
               var leftTopNode = xhtml.find(rowNodes[leftTopData.row], function () {
                 return true;
-              }, 'th')[_col2];
-
+              }, 'th')[leftTopData.col];
               leftTopNode.setAttribute('rowspan', leftTopNode.getAttribute('rowspan') - -1);
             }
           }
@@ -1413,7 +1412,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       } // 获取新的数据
 
 
-      var tempNewItemData = this.$$newItemData(); // 追加数据
+      var tempNewItemData = this.$$newItemData();
+      /**
+       * 对当前单元格合并情况进行嗅探
+       */
+
+      var currentItemData = this.__contentArray[this.__tableIndex].content[row - 1][this.__colNum - 1]; //  如果不是第一列，而且自己不可见
+
+      if (this.__colNum != 1 && currentItemData.style.display == 'none') ; // 追加数据
 
       this.__contentArray[this.__tableIndex].content[row - 1].splice(this.__colNum - 1, 0, tempNewItemData); // 追加结点
 
@@ -1448,7 +1454,36 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       } // 获取新的数据
 
 
-      var tempNewItemData = this.$$newItemData(); // 追加数据
+      var tempNewItemData = this.$$newItemData();
+      /**
+      * 对当前单元格合并情况进行嗅探
+      */
+      //  如果不是最后一列
+
+      if (this.__colNum != this.__contentArray[this.__tableIndex].content[0].length - 1) {
+        var currentItemData = this.__contentArray[this.__tableIndex].content[row - 1][this.__colNum - 1]; // 不可见或列数不为1
+
+        if (currentItemData.style.display == 'none' || currentItemData.colspan != '1') {
+          // 为了可以之前当前插入点的相对位置，我们首先需要找到合并后单元格左上角的数据和位置
+          var leftTopData = this.$$getLeftTop(row, this.__colNum); // 如果不是最右边一列
+
+          if (leftTopData.col - -leftTopData.content.colspan - 1 > this.__colNum) {
+            // 到此为止，可以确定当前的条目一定隐藏
+            tempNewItemData.style.display = 'none'; // 如果是最顶部的
+
+            if (leftTopData.row == row) {
+              // 数据
+              this.__contentArray[this.__tableIndex].content[leftTopData.row - 1][leftTopData.col - 1].colspan -= -1; // 结点
+
+              var leftTopNode = xhtml.find(rowNodes[leftTopData.row], function () {
+                return true;
+              }, 'th')[leftTopData.col];
+              leftTopNode.setAttribute('colspan', leftTopNode.getAttribute('colspan') - -1);
+            }
+          }
+        }
+      } // 追加数据
+
 
       this.__contentArray[this.__tableIndex].content[row - 1].splice(this.__colNum, 0, tempNewItemData); // 追加结点
 

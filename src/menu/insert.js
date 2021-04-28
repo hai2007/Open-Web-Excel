@@ -165,10 +165,10 @@ export function insertDown() {
                     if (leftTopData.col == col) {
 
                         // 数据
-                        this.__contentArray[this.__tableIndex].content[leftTopData.row - 1][col - 1].rowspan -= -1;
+                        this.__contentArray[this.__tableIndex].content[leftTopData.row - 1][leftTopData.col - 1].rowspan -= -1;
 
                         // 结点
-                        let leftTopNode = xhtml.find(rowNodes[leftTopData.row], () => true, 'th')[col];
+                        let leftTopNode = xhtml.find(rowNodes[leftTopData.row], () => true, 'th')[leftTopData.col];
                         leftTopNode.setAttribute('rowspan', leftTopNode.getAttribute('rowspan') - -1);
 
                     }
@@ -212,6 +212,19 @@ export function insertLeft() {
         // 获取新的数据
         let tempNewItemData = this.$$newItemData();
 
+        /**
+         * 对当前单元格合并情况进行嗅探
+         */
+
+        let currentItemData = this.__contentArray[this.__tableIndex].content[row - 1][this.__colNum - 1];
+
+        //  如果不是第一列，而且自己不可见
+        if (this.__colNum != 1 && currentItemData.style.display == 'none') {
+
+            // todo
+
+        }
+
         // 追加数据
         this.__contentArray[this.__tableIndex].content[row - 1].splice(this.__colNum - 1, 0, tempNewItemData);
 
@@ -248,6 +261,44 @@ export function insertRight() {
 
         // 获取新的数据
         let tempNewItemData = this.$$newItemData();
+
+        /**
+        * 对当前单元格合并情况进行嗅探
+        */
+
+        //  如果不是最后一列
+        if (this.__colNum != this.__contentArray[this.__tableIndex].content[0].length - 1) {
+
+            let currentItemData = this.__contentArray[this.__tableIndex].content[row - 1][this.__colNum - 1];
+
+            // 不可见或列数不为1
+            if (currentItemData.style.display == 'none' || currentItemData.colspan != '1') {
+
+                // 为了可以之前当前插入点的相对位置，我们首先需要找到合并后单元格左上角的数据和位置
+                let leftTopData = this.$$getLeftTop(row, this.__colNum);
+
+                // 如果不是最右边一列
+                if (leftTopData.col - -leftTopData.content.colspan - 1 > this.__colNum) {
+
+                    // 到此为止，可以确定当前的条目一定隐藏
+                    tempNewItemData.style.display = 'none';
+
+                    // 如果是最顶部的
+                    if (leftTopData.row == row) {
+
+                        // 数据
+                        this.__contentArray[this.__tableIndex].content[leftTopData.row - 1][leftTopData.col - 1].colspan -= -1;
+
+                        // 结点
+                        let leftTopNode = xhtml.find(rowNodes[leftTopData.row], () => true, 'th')[leftTopData.col];
+                        leftTopNode.setAttribute('colspan', leftTopNode.getAttribute('colspan') - -1);
+
+                    }
+
+                }
+            }
+
+        }
 
         // 追加数据
         this.__contentArray[this.__tableIndex].content[row - 1].splice(this.__colNum, 0, tempNewItemData);
