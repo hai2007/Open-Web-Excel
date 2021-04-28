@@ -9,7 +9,7 @@
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Wed Apr 28 2021 13:15:11 GMT+0800 (GMT+08:00)
+* Date:Wed Apr 28 2021 15:35:37 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -564,7 +564,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
           for (var j = 0; j < 30; j++) {
             rowArray.push(this.$$newItemData());
-            rowArray[j].value = i + 1 + '-' + (j + 1);
           }
 
           content.push(rowArray);
@@ -1548,6 +1547,53 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       for (var col = 1; col < colNodes.length; col++) {
         colNodes[col].setAttribute('row', row - 1);
       }
+    }
+
+    var isLastLine = this.__rowNum == this.__contentArray[this.__tableIndex].content.length; // 是否是最后一行
+
+    var downColNodes;
+    if (!isLastLine) downColNodes = xhtml.find(rowNodes[this.__rowNum + 1], function () {
+      return true;
+    }, 'th'); // 校对colspan
+
+    for (var _col3 = 1; _col3 <= this.__contentArray[this.__tableIndex].content[0].length; _col3++) {
+      // 如果当前条目隐藏
+      if (this.__contentArray[this.__tableIndex].content[this.__rowNum - 1][_col3 - 1].style.display == 'none') {
+        // 隐藏的话，就只需要考虑位于左上角的正下方情况
+        for (var preRow = this.__rowNum - 1; preRow >= 1; preRow--) {
+          if (this.__contentArray[this.__tableIndex].content[preRow - 1][_col3 - 1].style.display != 'none') {
+            // 如果是左上角
+            if (preRow - -this.__contentArray[this.__tableIndex].content[preRow - 1][_col3 - 1].rowspan > this.__rowNum) {
+              var newRowspan = this.__contentArray[this.__tableIndex].content[preRow - 1][_col3 - 1].rowspan - 1; // 结点
+
+              xhtml.find(rowNodes[preRow], function () {
+                return true;
+              }, 'th')[_col3].setAttribute('rowspan', newRowspan); // 数据
+
+
+              this.__contentArray[this.__tableIndex].content[preRow - 1][_col3 - 1].rowspan = newRowspan;
+            }
+
+            break;
+          }
+        }
+      } // 如果没有隐藏，可是是左上角
+      // (如果是一行肯定可以直接无视)
+      else if (this.__contentArray[this.__tableIndex].content[this.__rowNum - 1][_col3 - 1].rowspan - 1 > 0) {
+          var _newRowspan = this.__contentArray[this.__tableIndex].content[this.__rowNum - 1][_col3 - 1].rowspan - 1;
+
+          var colspan = this.__contentArray[this.__tableIndex].content[this.__rowNum - 1][_col3 - 1].colspan; // 结点
+
+          downColNodes[_col3].setAttribute('rowspan', _newRowspan);
+
+          downColNodes[_col3].setAttribute('colspan', colspan);
+
+          downColNodes[_col3].style.display = 'table-cell'; // 数据
+
+          this.__contentArray[this.__tableIndex].content[this.__rowNum][_col3 - 1].rowspan = _newRowspan;
+          this.__contentArray[this.__tableIndex].content[this.__rowNum][_col3 - 1].colspan = colspan;
+          this.__contentArray[this.__tableIndex].content[this.__rowNum][_col3 - 1].style.display = 'table-cell';
+        }
     } // 删除当前行
 
 

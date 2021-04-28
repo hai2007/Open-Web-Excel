@@ -18,6 +18,62 @@ export function deleteRow() {
 
     }
 
+    let isLastLine = this.__rowNum == this.__contentArray[this.__tableIndex].content.length;// 是否是最后一行
+
+    let downColNodes;
+    if (!isLastLine) downColNodes = xhtml.find(rowNodes[this.__rowNum + 1], () => true, 'th');
+
+    // 校对colspan
+    for (let col = 1; col <= this.__contentArray[this.__tableIndex].content[0].length; col++) {
+
+        // 如果当前条目隐藏
+        if (this.__contentArray[this.__tableIndex].content[this.__rowNum - 1][col - 1].style.display == 'none') {
+
+            // 隐藏的话，就只需要考虑位于左上角的正下方情况
+            for (let preRow = this.__rowNum - 1; preRow >= 1; preRow--) {
+                if (this.__contentArray[this.__tableIndex].content[preRow - 1][col - 1].style.display != 'none') {
+
+                    // 如果是左上角
+                    if (preRow - -this.__contentArray[this.__tableIndex].content[preRow - 1][col - 1].rowspan > this.__rowNum) {
+
+                        let newRowspan = this.__contentArray[this.__tableIndex].content[preRow - 1][col - 1].rowspan - 1;
+
+                        // 结点
+                        xhtml.find(rowNodes[preRow], () => true, 'th')[col].setAttribute('rowspan', newRowspan);
+
+                        // 数据
+                        this.__contentArray[this.__tableIndex].content[preRow - 1][col - 1].rowspan = newRowspan;
+
+                    }
+
+                    break;
+                }
+
+            }
+
+        }
+
+        // 如果没有隐藏，可是是左上角
+        // (如果是一行肯定可以直接无视)
+        else if (this.__contentArray[this.__tableIndex].content[this.__rowNum - 1][col - 1].rowspan - 1 > 0) {
+
+            let newRowspan = this.__contentArray[this.__tableIndex].content[this.__rowNum - 1][col - 1].rowspan - 1;
+            let colspan = this.__contentArray[this.__tableIndex].content[this.__rowNum - 1][col - 1].colspan;
+
+            // 结点
+            downColNodes[col].setAttribute('rowspan', newRowspan);
+            downColNodes[col].setAttribute('colspan', colspan);
+            downColNodes[col].style.display = 'table-cell';
+
+            // 数据
+            this.__contentArray[this.__tableIndex].content[this.__rowNum][col - 1].rowspan = newRowspan;
+            this.__contentArray[this.__tableIndex].content[this.__rowNum][col - 1].colspan = colspan;
+            this.__contentArray[this.__tableIndex].content[this.__rowNum][col - 1].style.display = 'table-cell';
+
+        }
+
+    }
+
     // 删除当前行
     rowNodes[this.__rowNum].remove();
 
