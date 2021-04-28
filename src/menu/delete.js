@@ -88,6 +88,57 @@ export function deleteCol() {
 
     let rowNodes = xhtml.find(this.__contentDom[this.__tableIndex], () => true, 'tr');
 
+    // 校对rowspan
+    for (let row = 1; row <= this.__contentArray[this.__tableIndex].content.length; row++) {
+
+        // 如果当前条目隐藏
+        if (this.__contentArray[this.__tableIndex].content[row - 1][this.__colNum - 1].style.display == 'none') {
+
+            for (let preCol = this.__colNum - 1; preCol >= 1; preCol--) {
+
+                if (this.__contentArray[this.__tableIndex].content[row - 1][preCol - 1].style.display != 'none') {
+
+                    // 如果是左上角
+                    if (preCol - -this.__contentArray[this.__tableIndex].content[row - 1][preCol - 1].colspan > this.__colNum) {
+
+                        let newColspan = this.__contentArray[this.__tableIndex].content[row - 1][preCol - 1].colspan - 1;
+
+                        // 结点
+                        xhtml.find(rowNodes[row], () => true, 'th')[preCol].setAttribute('colspan', newColspan);
+
+                        // 数据
+                        this.__contentArray[this.__tableIndex].content[row - 1][preCol - 1].colspan = newColspan;
+
+                    }
+
+                    break;
+                }
+
+            }
+
+        }
+
+        //  左上角
+        else if (this.__contentArray[this.__tableIndex].content[row - 1][this.__colNum - 1].colspan - 1 > 0) {
+
+            let nextColNode = xhtml.find(rowNodes[row], () => true, 'th')[this.__colNum + 1];
+            let newColspan = this.__contentArray[this.__tableIndex].content[row - 1][this.__colNum - 1].colspan - 1;
+            let rowspan = this.__contentArray[this.__tableIndex].content[row - 1][this.__colNum - 1].rowspan;
+
+            // 结点
+            nextColNode.setAttribute('colspan', newColspan);
+            nextColNode.setAttribute('rowspan', rowspan);
+            nextColNode.style.display = 'table-cell';
+
+            // 数据
+            this.__contentArray[this.__tableIndex].content[row - 1][this.__colNum].colspan = newColspan;
+            this.__contentArray[this.__tableIndex].content[row - 1][this.__colNum].rowspan = rowspan;
+            this.__contentArray[this.__tableIndex].content[row - 1][this.__colNum].style.display = 'table-cell';
+
+        }
+
+    }
+
     // 先删除列标题
     xhtml.find(rowNodes[0], () => true, 'th')[this.__contentArray[this.__tableIndex].content[0].length].remove();
 
