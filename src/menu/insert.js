@@ -221,7 +221,49 @@ export function insertLeft() {
         //  如果不是第一列，而且自己不可见
         if (this.__colNum != 1 && currentItemData.style.display == 'none') {
 
-            // todo
+            let isFirstCol = false;
+            for (let toTopRow = row - 1; toTopRow >= 1; toTopRow--) {
+                let topItemData = this.__contentArray[this.__tableIndex].content[toTopRow - 1][this.__colNum];
+                if (topItemData.style.display != 'none') {
+
+                    // 如果找到的第一个显示的可以包含当前条目
+                    if (toTopRow - -topItemData.rowspan > row) isFirstCol = true;
+
+                    break;
+                }
+
+            }
+
+            // 如果是第一列我们就可以直接放过
+            if (!isFirstCol) {
+                tempNewItemData.style.display = 'none';
+
+                // 判断是不是最顶部的
+                let isTopFirst = row == 1 || this.__contentArray[this.__tableIndex].content[row - 2][this.__colNum].style.display != 'none';
+
+                // 如果是最坐标的，就需要负责修改左上角格子的值
+                if (isTopFirst) {
+
+                    for (let preCol = this.__colNum - 1; preCol > 0; preCol--) {
+
+                        // 接着，让我们寻找这个条目合并后单元格的左上角
+                        if (this.__contentArray[this.__tableIndex].content[row - 1][preCol - 1].style.display != 'none') {
+
+                            // 数据
+                            this.__contentArray[this.__tableIndex].content[row - 1][preCol - 1].colspan -= -1;
+
+                            // 结点
+                            let leftTopNode = xhtml.find(rowNodes[row], () => true, 'th')[preCol];
+                            leftTopNode.setAttribute('colspan', leftTopNode.getAttribute('colspan') - -1);
+
+                            // 找到以后别忘了停止
+                            break;
+                        }
+                    }
+
+                }
+
+            }
 
         }
 
