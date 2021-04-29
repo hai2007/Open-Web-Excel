@@ -106,6 +106,10 @@ export function insertUp() {
             this.$$itemClickHandler(event);
         });
 
+        xhtml.bind(newItemNode, 'input', event => {
+            this.$$itemInputHandler(event);
+        });
+
     }
 
     // 最后标记下沉
@@ -188,6 +192,9 @@ export function insertDown() {
         // 绑定事件
         xhtml.bind(newItemNode, 'click', event => {
             this.$$itemClickHandler(event);
+        });
+        xhtml.bind(newItemNode, 'input', event => {
+            this.$$itemInputHandler(event);
         });
 
     }
@@ -279,6 +286,9 @@ export function insertLeft() {
         xhtml.bind(newItemNode, 'click', event => {
             this.$$itemClickHandler(event);
         });
+        xhtml.bind(newItemNode, 'input', event => {
+            this.$$itemInputHandler(event);
+        });
 
     }
 
@@ -353,6 +363,9 @@ export function insertRight() {
         // 绑定事件
         xhtml.bind(newItemNode, 'click', event => {
             this.$$itemClickHandler(event);
+        });
+        xhtml.bind(newItemNode, 'input', event => {
+            this.$$itemInputHandler(event);
         });
     }
 

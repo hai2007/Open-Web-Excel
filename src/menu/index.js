@@ -1,5 +1,6 @@
 import xhtml from '@hai2007/tool/xhtml';
 import colorTemplate from './color-template';
+import { getTargetNode } from '../tool/polyfill';
 
 export default function () {
 
@@ -327,7 +328,7 @@ export default function () {
 
     xhtml.bind(menuClickItems, 'click', event => {
 
-        let node = event.target;
+        let node = getTargetNode(event);
 
         // 获取按钮类型
         let defType = node.getAttribute('def-type');
@@ -494,7 +495,7 @@ export default function () {
         xhtml.bind(colorClickItems, 'click', event => {
 
             let defType = colorItems[i].getAttribute('def-type');
-            let colorValue = event.target.style.background;
+            let colorValue = getTargetNode(event).style.background;
 
             // 设置
             this.$$setItemStyle({

@@ -1,4 +1,5 @@
 import xhtml from '@hai2007/tool/xhtml';
+import { removeNode } from '../tool/polyfill';
 
 export function deleteRow() {
 
@@ -75,7 +76,7 @@ export function deleteRow() {
     }
 
     // 删除当前行
-    rowNodes[this.__rowNum].remove();
+    removeNode(rowNodes[this.__rowNum]);
 
     // 删除数据
     this.__contentArray[this.__tableIndex].content.splice(this.__rowNum - 1, 1);
@@ -151,7 +152,7 @@ export function deleteCol() {
         }
 
         // 删除当前光标所在列
-        colNodes[this.__colNum].remove();
+        removeNode(colNodes[this.__colNum]);
 
         // 数据也要删除
         this.__contentArray[this.__tableIndex].content[row - 1].splice(this.__colNum - 1, 1);

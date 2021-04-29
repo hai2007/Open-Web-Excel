@@ -1,4 +1,5 @@
 import xhtml from '@hai2007/tool/xhtml';
+import { getTargetNode } from '../tool/polyfill';
 
 // 初始化结点
 
@@ -12,13 +13,17 @@ export function initDom() {
 
 };
 
+export function itemInputHandler(event) {
+    this.__contentArray[this.__tableIndex].content[+getTargetNode(event).getAttribute('row') - 1][+getTargetNode(event).getAttribute('col') - 1].value = getTargetNode(event).innerText;
+};
+
 export function itemClickHandler(event) {
     // 如果格式刷按下了
     if (this.__format == true) {
 
         let rowNodes = xhtml.find(this.__contentDom[this.__tableIndex], () => true, 'tr');
 
-        let targetStyle = this.__contentArray[this.__tableIndex].content[+event.target.getAttribute('row') - 1][+event.target.getAttribute('col') - 1].style;
+        let targetStyle = this.__contentArray[this.__tableIndex].content[+getTargetNode(event).getAttribute('row') - 1][+getTargetNode(event).getAttribute('col') - 1].style;
 
         for (let row = this.__region.info.row[0]; row <= this.__region.info.row[1]; row++) {
 
@@ -47,7 +52,7 @@ export function itemClickHandler(event) {
 
     }
 
-    this.$$moveCursorTo(event.target, +event.target.getAttribute('row'), +event.target.getAttribute('col'));
+    this.$$moveCursorTo(getTargetNode(event), +getTargetNode(event).getAttribute('row'), +getTargetNode(event).getAttribute('col'));
 };
 
 // 初始化视图
@@ -97,6 +102,12 @@ export function initTableView(itemTable, index, styleToString) {
     xhtml.bind(items, 'click', event => {
 
         this.$$itemClickHandler(event);
+
+    });
+
+    xhtml.bind(items, 'input', event => {
+
+        this.$$itemInputHandler(event);
 
     });
 

@@ -4,12 +4,12 @@
 *
 * author 你好2007
 *
-* version 0.2.0
+* version 0.2.1
 *
 * Copyright (c) 2021 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Wed Apr 28 2021 16:00:19 GMT+0800 (GMT+08:00)
+* Date:Thu Apr 29 2021 10:36:11 GMT+0800 (GMT+08:00)
 */
 
 "use strict";
@@ -351,7 +351,22 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       el.parentNode.insertBefore(node, el);
       return node;
     }
-  }; // 初始化结点
+  };
+
+  function getTargetNode(event) {
+    var _event = event || window.event;
+
+    return _event.target || _event.srcElement;
+  }
+
+  function removeNode(node) {
+    var pNode = node.parentNode;
+
+    if (pNode) {
+      pNode.removeChild(node);
+    }
+  } // 初始化结点
+
 
   function initDom() {
     this.__el.innerHTML = "";
@@ -361,13 +376,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     });
   }
 
+  function itemInputHandler(event) {
+    this.__contentArray[this.__tableIndex].content[+getTargetNode(event).getAttribute('row') - 1][+getTargetNode(event).getAttribute('col') - 1].value = getTargetNode(event).innerText;
+  }
+
   function itemClickHandler(event) {
     // 如果格式刷按下了
     if (this.__format == true) {
       var rowNodes = xhtml.find(this.__contentDom[this.__tableIndex], function () {
         return true;
       }, 'tr');
-      var targetStyle = this.__contentArray[this.__tableIndex].content[+event.target.getAttribute('row') - 1][+event.target.getAttribute('col') - 1].style;
+      var targetStyle = this.__contentArray[this.__tableIndex].content[+getTargetNode(event).getAttribute('row') - 1][+getTargetNode(event).getAttribute('col') - 1].style;
 
       for (var row = this.__region.info.row[0]; row <= this.__region.info.row[1]; row++) {
         var colNodes = xhtml.find(rowNodes[row], function () {
@@ -392,7 +411,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       }, 'span')[0], 'active');
     }
 
-    this.$$moveCursorTo(event.target, +event.target.getAttribute('row'), +event.target.getAttribute('col'));
+    this.$$moveCursorTo(getTargetNode(event), +getTargetNode(event).getAttribute('row'), +getTargetNode(event).getAttribute('col'));
   } // 初始化视图
 
 
@@ -428,6 +447,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }, 'th');
     xhtml.bind(items, 'click', function (event) {
       _this.$$itemClickHandler(event);
+    });
+    xhtml.bind(items, 'input', function (event) {
+      _this.$$itemInputHandler(event);
     });
   }
 
@@ -994,7 +1016,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return node.getAttribute('def-type');
     }, 'span');
     xhtml.bind(menuClickItems, 'click', function (event) {
-      var node = event.target; // 获取按钮类型
+      var node = getTargetNode(event); // 获取按钮类型
 
       var defType = node.getAttribute('def-type'); // 格式化
 
@@ -1126,7 +1148,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       xhtml.bind(colorClickItems, 'click', function (event) {
         var defType = colorItems[_i6].getAttribute('def-type');
 
-        var colorValue = event.target.style.background; // 设置
+        var colorValue = getTargetNode(event).style.background; // 设置
 
         _this4.$$setItemStyle({
           'background-color': 'background',
@@ -1317,6 +1339,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       xhtml.bind(newItemNode, 'click', function (event) {
         _this5.$$itemClickHandler(event);
       });
+      xhtml.bind(newItemNode, 'input', function (event) {
+        _this5.$$itemInputHandler(event);
+      });
     } // 最后标记下沉
 
 
@@ -1388,6 +1413,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       xhtml.bind(newItemNode, 'click', function (event) {
         _this6.$$itemClickHandler(event);
+      });
+      xhtml.bind(newItemNode, 'input', function (event) {
+        _this6.$$itemInputHandler(event);
       });
     }
   }
@@ -1465,6 +1493,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       xhtml.bind(newItemNode, 'click', function (event) {
         _this7.$$itemClickHandler(event);
       });
+      xhtml.bind(newItemNode, 'input', function (event) {
+        _this7.$$itemInputHandler(event);
+      });
     } // 最后标记右移
 
 
@@ -1528,6 +1559,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       xhtml.bind(newItemNode, 'click', function (event) {
         _this8.$$itemClickHandler(event);
+      });
+      xhtml.bind(newItemNode, 'input', function (event) {
+        _this8.$$itemInputHandler(event);
       });
     }
   }
@@ -1597,8 +1631,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     } // 删除当前行
 
 
-    rowNodes[this.__rowNum].remove(); // 删除数据
-
+    removeNode(rowNodes[this.__rowNum]); // 删除数据
 
     this.__contentArray[this.__tableIndex].content.splice(this.__rowNum - 1, 1); // 重置光标
 
@@ -1665,8 +1698,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       } // 删除当前光标所在列
 
 
-      colNodes[this.__colNum].remove(); // 数据也要删除
-
+      removeNode(colNodes[this.__colNum]); // 数据也要删除
 
       this.__contentArray[this.__tableIndex].content[_row - 1].splice(this.__colNum - 1, 1);
     } // 重置光标
@@ -1721,6 +1753,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   owe.prototype.$$styleToString = styleToString;
   owe.prototype.$$newItemData = newItemData;
   owe.prototype.$$itemClickHandler = itemClickHandler;
+  owe.prototype.$$itemInputHandler = itemInputHandler;
   owe.prototype.$$getLeftTop = getLeftTop; // 挂载核心方法
 
   owe.prototype.$$initDom = initDom;
