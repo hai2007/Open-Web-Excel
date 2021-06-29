@@ -31,7 +31,7 @@ npm install --save open-web-excel
 当然，你也可以通过CDN的方式引入：
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/open-web-excel"></script>
+<script src="https://cdn.jsdelivr.net/npm/open-web-excel@0"></script>
 ```
 
 ## 如何使用
