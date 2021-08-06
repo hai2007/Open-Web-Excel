@@ -200,7 +200,7 @@ export default function () {
 
     // 快捷菜单
     this.__menuQuickDom = xhtml.append(topDom, `<div class='quick-menu' open-web-excel>
-        <span class='item' def-type='format' open-web-excel>格式化</span>
+        <span class='item' def-type='format' open-web-excel>格式刷</span>
         <span class='line' open-web-excel></span>
         <span class='item color' def-type='font-color' open-web-excel>
             文字颜色：<i class='color' open-web-excel></i>
@@ -333,7 +333,7 @@ export default function () {
         // 获取按钮类型
         let defType = node.getAttribute('def-type');
 
-        // 格式化
+        // 格式刷
         if (defType == 'format') {
 
             // 首先需要确定选择区域，然后点击格式刷来同步格式
