@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>测试</title>
+    <script src="../dist/open-web-excel.js"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        div#owe {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="owe"></div>
+
+    <script>
+        window.owe = new OpenWebExcel({
+            el: document.getElementById('owe'),
+            content: {
+                version: "v1",
+                filename: "Open-Web-Excel",
+                contents: [{
+                    name: "一个例子",
+                    content: [
+                        [
+                            { colspan: 1, rowspan: 1, value: "类型" },
+                            { colspan: 1, rowspan: 1, value: "分类" },
+                            { colspan: 1, rowspan: 1, value: "评价" },
+                            { colspan: 1, rowspan: 1, value: "" },
+                            { colspan: 1, rowspan: 1, value: "" },
+                            { colspan: 1, rowspan: 1, value: "" },
+                            { colspan: 1, rowspan: 1, value: "" }
+                        ]
+                    ]
+                }]
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>

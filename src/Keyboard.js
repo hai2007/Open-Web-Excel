@@ -1,7 +1,7 @@
 // 键盘总控
 
-import getKeyString from '@hai2007/tool/getKeyString.js';
-import xhtml from '@hai2007/tool/xhtml';
+import getKeyString from '@hai2007/browser/getKeyString.js';
+import xhtml from '@hai2007/browser/xhtml';
 
 export default function () {
 

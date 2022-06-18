@@ -15,7 +15,7 @@ let banner = function (pkg) {
 *
 * version ${pkg.version}
 *
-* Copyright (c) 2021 hai2007 走一步，再走一步。
+* Copyright (c) 2021-2022 hai2007 走一步，再走一步。
 * Released under the ${pkg.license} license
 *
 * Date:${new Date()}

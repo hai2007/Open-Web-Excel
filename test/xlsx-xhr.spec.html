@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>测试</title>
+    <script src="../dist/open-web-excel.js"></script>
+    <script src="../node_modules/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="./xlsx-to-json.js"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        div#owe {
+            width: 700px;
+            height: 500px;
+            outline: 1px solid red;
+            margin: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="owe"></div>
+
+    <script>
+        var owe = new OpenWebExcel({
+            el: document.getElementById('owe')
+        });
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('get', "./sample.xlsx", true);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = function (e) {
+            if (xhr.status == 200) {
+                var data = new Uint8Array(xhr.response)
+                owe.valueOf(xlsxToJson(data, "array"));
+            }
+        };
+        xhr.send();
+
+    </script>
+
+</body>
+
+</html>

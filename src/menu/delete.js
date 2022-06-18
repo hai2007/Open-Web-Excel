@@ -1,4 +1,4 @@
-import xhtml from '@hai2007/tool/xhtml';
+import xhtml from '@hai2007/browser/xhtml';
 import { removeNode } from '../tool/polyfill';
 
 export function deleteRow() {

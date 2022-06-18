@@ -1,5 +1,6 @@
-import xhtml from '@hai2007/tool/xhtml';
+import xhtml from '@hai2007/browser/xhtml';
 import { getTargetNode } from '../tool/polyfill';
+import { defaultStyle } from '../config';
 
 // 初始化结点
 
@@ -16,6 +17,35 @@ export function initDom() {
 export function itemInputHandler(event) {
     this.__contentArray[this.__tableIndex].content[+getTargetNode(event).getAttribute('row') - 1][+getTargetNode(event).getAttribute('col') - 1].value = getTargetNode(event).innerText;
 };
+
+export function itemMoveHandler(event) {
+
+    if (this.__ismousedown) {
+
+        // 如果本来存在区域，应该取消
+        if (this.__region != null) {
+            this.$$cancelRegion();
+            this.__region = null;
+        }
+
+        // 记录下来区域信息
+        this.__region = this.$$calcRegionInfo({
+            row: this.__rowNum,
+            col: this.__colNum,
+            rowNum: +this.__target.getAttribute('rowspan'),
+            colNum: +this.__target.getAttribute('colspan')
+        }, {
+            row: +event.target.getAttribute('row'),
+            col: +event.target.getAttribute('col'),
+            rowNum: +event.target.getAttribute('rowspan'),
+            colNum: +event.target.getAttribute('colspan')
+        });
+
+        this.$$showRegion();
+
+    }
+
+}
 
 export function itemClickHandler(event) {
     // 如果格式刷按下了
@@ -99,9 +129,17 @@ export function initTableView(itemTable, index, styleToString) {
 
     let items = xhtml.find(this.__contentDom[index], node => xhtml.hasClass(node, 'item'), 'th');
 
-    xhtml.bind(items, 'click', event => {
+    xhtml.bind(items, 'mousedown', event => {
 
-        this.$$itemClickHandler(event);
+        setTimeout(() => {
+            if (!this.__isrightmenu) this.$$itemClickHandler(event);
+        });
+
+    });
+
+    xhtml.bind(items, 'mousemove', event => {
+
+        this.$$itemMoveHandler(event);
 
     });
 
@@ -133,6 +171,45 @@ let bottomClick = (target, index) => {
 };
 
 export function initView() {
+
+    // 对数据进行校对
+    for (let index = 0; index < this.__contentArray.length; index++) {
+
+        let maxColNum = 30;
+        for (let row = 0; row < this.__contentArray[index].content.length; row++) {
+            maxColNum = Math.max(maxColNum, this.__contentArray[index].content[row].length);
+        }
+
+        for (let row = 0; row < this.__contentArray[index].content.length; row++) {
+            for (let col = 0; col < maxColNum; col++) {
+
+                if (this.__contentArray[index].content[row][col]) {
+
+                    if (this.__contentArray[index].content[row][col].style) {
+
+                        for (let styleKey in defaultStyle) {
+                            if (styleKey in this.__contentArray[index].content[row][col].style) {
+                                // todo
+                            } else {
+                                this.__contentArray[index].content[row][col].style[styleKey] = defaultStyle[styleKey];
+                            }
+                        }
+                    } else {
+                        this.__contentArray[index].content[row][col].style = defaultStyle;
+                    }
+
+                } else {
+                    this.__contentArray[index].content[row][col] = {
+                        colspan: "1",
+                        rowspan: "1",
+                        value: "",
+                        style: defaultStyle
+                    };
+                }
+            }
+        }
+
+    }
 
     this.__contentDom = [];
     this.__tableFrame = xhtml.append(this.__el, "<div></div>");

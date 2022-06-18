@@ -4,12 +4,12 @@
 *
 * author 你好2007
 *
-* version 0.2.2
+* version 0.5.0
 *
-* Copyright (c) 2021 hai2007 走一步，再走一步。
+* Copyright (c) 2021-2022 hai2007 走一步，再走一步。
 * Released under the MIT license
 *
-* Date:Fri Aug 06 2021 18:43:14 GMT+0800 (GMT+08:00)
+* Date:Sat Jun 18 2022 09:05:56 GMT+0800 (中国标准时间)
 */
 
 "use strict";
@@ -83,8 +83,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     return domTypeHelp([1, 9, 11], input);
   };
   /*!
-   * 💡 - 提供常用的DOM操作方法
-   * https://github.com/hai2007/tool.js/blob/master/xhtml.js
+   * 🌐 - 提供常用的DOM操作方法
+   * https://github.com/hai2007/browser.js/blob/master/xhtml.js
    *
    * author hai2007 < https://hai2007.gitee.io/sweethome >
    *
@@ -365,8 +365,21 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     if (pNode) {
       pNode.removeChild(node);
     }
-  } // 初始化结点
+  }
 
+  var defaultStyle = {
+    display: "table-cell",
+    color: 'black',
+    background: 'white',
+    'vertical-align': 'top',
+    'text-align': 'left',
+    'font-weight': "normal",
+    // bold粗体
+    'font-style': 'normal',
+    // italic斜体
+    'text-decoration': 'none' // line-through中划线 underline下划线
+
+  }; // 初始化结点
 
   function initDom() {
     this.__el.innerHTML = "";
@@ -378,6 +391,30 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
   function itemInputHandler(event) {
     this.__contentArray[this.__tableIndex].content[+getTargetNode(event).getAttribute('row') - 1][+getTargetNode(event).getAttribute('col') - 1].value = getTargetNode(event).innerText;
+  }
+
+  function itemMoveHandler(event) {
+    if (this.__ismousedown) {
+      // 如果本来存在区域，应该取消
+      if (this.__region != null) {
+        this.$$cancelRegion();
+        this.__region = null;
+      } // 记录下来区域信息
+
+
+      this.__region = this.$$calcRegionInfo({
+        row: this.__rowNum,
+        col: this.__colNum,
+        rowNum: +this.__target.getAttribute('rowspan'),
+        colNum: +this.__target.getAttribute('colspan')
+      }, {
+        row: +event.target.getAttribute('row'),
+        col: +event.target.getAttribute('col'),
+        rowNum: +event.target.getAttribute('rowspan'),
+        colNum: +event.target.getAttribute('colspan')
+      });
+      this.$$showRegion();
+    }
   }
 
   function itemClickHandler(event) {
@@ -445,8 +482,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var items = xhtml.find(this.__contentDom[index], function (node) {
       return xhtml.hasClass(node, 'item');
     }, 'th');
-    xhtml.bind(items, 'click', function (event) {
-      _this.$$itemClickHandler(event);
+    xhtml.bind(items, 'mousedown', function (event) {
+      setTimeout(function () {
+        if (!_this.__isrightmenu) _this.$$itemClickHandler(event);
+      });
+    });
+    xhtml.bind(items, 'mousemove', function (event) {
+      _this.$$itemMoveHandler(event);
     });
     xhtml.bind(items, 'input', function (event) {
       _this.$$itemInputHandler(event);
@@ -477,6 +519,38 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   function initView() {
     var _this2 = this;
 
+    // 对数据进行校对
+    for (var index = 0; index < this.__contentArray.length; index++) {
+      var maxColNum = 30;
+
+      for (var row = 0; row < this.__contentArray[index].content.length; row++) {
+        maxColNum = Math.max(maxColNum, this.__contentArray[index].content[row].length);
+      }
+
+      for (var _row = 0; _row < this.__contentArray[index].content.length; _row++) {
+        for (var col = 0; col < maxColNum; col++) {
+          if (this.__contentArray[index].content[_row][col]) {
+            if (this.__contentArray[index].content[_row][col].style) {
+              for (var styleKey in defaultStyle) {
+                if (styleKey in this.__contentArray[index].content[_row][col].style) ;else {
+                  this.__contentArray[index].content[_row][col].style[styleKey] = defaultStyle[styleKey];
+                }
+              }
+            } else {
+              this.__contentArray[index].content[_row][col].style = defaultStyle;
+            }
+          } else {
+            this.__contentArray[index].content[_row][col] = {
+              colspan: "1",
+              rowspan: "1",
+              value: "",
+              style: defaultStyle
+            };
+          }
+        }
+      }
+    }
+
     this.__contentDom = [];
     this.__tableFrame = xhtml.append(this.__el, "<div></div>");
     xhtml.setStyles(this.__tableFrame, {
@@ -485,10 +559,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       "overflow": "auto"
     });
 
-    for (var index = 0; index < this.__contentArray.length; index++) {
-      this.$$initTableView(this.__contentArray[index], index, this.$$styleToString);
-      xhtml.setStyles(this.__contentDom[index], {
-        "display": index == 0 ? 'table' : "none"
+    for (var _index2 = 0; _index2 < this.__contentArray.length; _index2++) {
+      this.$$initTableView(this.__contentArray[_index2], _index2, this.$$styleToString);
+      xhtml.setStyles(this.__contentDom[_index2], {
+        "display": _index2 == 0 ? 'table' : "none"
       });
     }
 
@@ -515,25 +589,25 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     });
     this.__btnDom = [];
 
-    var _loop = function _loop(_index2) {
-      var bottomBtn = xhtml.append(bottomBtns, "<span class='name item' open-web-excel>" + _this2.__contentArray[_index2].name + "</span>"); // 点击切换显示的视图
+    var _loop = function _loop(_index3) {
+      var bottomBtn = xhtml.append(bottomBtns, "<span class='name item' open-web-excel>" + _this2.__contentArray[_index3].name + "</span>"); // 点击切换显示的视图
 
       xhtml.bind(bottomBtn, 'click', function () {
-        bottomClick(_this2, _index2);
+        bottomClick(_this2, _index3);
       }); // 双击可以修改名字
 
       xhtml.bind(bottomBtn, 'dblclick', function () {
-        _this2.__btnDom[_index2].setAttribute('contenteditable', 'true');
+        _this2.__btnDom[_index3].setAttribute('contenteditable', 'true');
       });
       xhtml.bind(bottomBtn, 'blur', function () {
-        _this2.__contentArray[_index2].name = bottomBtn.innerText;
+        _this2.__contentArray[_index3].name = bottomBtn.innerText;
       }); // 登记起来所有的按钮
 
       _this2.__btnDom.push(bottomBtn);
     };
 
-    for (var _index2 = 0; _index2 < this.__contentArray.length; _index2++) {
-      _loop(_index2);
+    for (var _index3 = 0; _index3 < this.__contentArray.length; _index3++) {
+      _loop(_index3);
     }
 
     this.$$addStyle('bottom-btn', "\n\n        .bottom-btn{\n            width: 100%;\n            height: 30px;\n            overflow: auto;\n            border-top: 1px solid #d6cccb;\n            box-sizing: border-box;\n        }\n\n        .bottom-btn .item{\n            line-height: 30px;\n            box-sizing: border-box;\n            vertical-align: top;\n            display: inline-block;\n            cursor: pointer;\n        }\n\n        .bottom-btn .add{\n            width: 30px;\n            text-align: center;\n            font-size: 18px;\n        }\n\n        .bottom-btn .name{\n            font-size: 12px;\n            padding: 0 10px;\n        }\n        .bottom-btn .name:focus{\n            outline:none;\n        }\n\n        .bottom-btn .name:hover{\n            background-color:#efe9e9;\n        }\n\n        .bottom-btn .name[active='yes']{\n            background-color:white;\n        }\n\n    "); // 初始化点击第一个
@@ -556,19 +630,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       value: " ",
       colspan: "1",
       rowspan: "1",
-      style: {
-        display: "table-cell",
-        color: 'black',
-        background: 'white',
-        'vertical-align': 'top',
-        'text-align': 'left',
-        'font-weight': "normal",
-        // bold粗体
-        'font-style': 'normal',
-        // italic斜体
-        'text-decoration': 'none' // line-through中划线 underline下划线
-
-      }
+      style: defaultStyle
     };
   }
 
@@ -810,8 +872,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }
   }
   /*!
-   * 💡 - 获取键盘此时按下的键的组合结果
-   * https://github.com/hai2007/tool.js/blob/master/getKeyString.js
+   * 🌐 - 获取键盘此时按下的键的组合结果
+   * https://github.com/hai2007/browser.js/blob/master/getKeyString.js
    *
    * author hai2007 < https://hai2007.gitee.io/sweethome >
    *
@@ -891,6 +953,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     91: "command",
     92: "command",
     93: "command",
+    224: "command",
     9: "tab",
     20: "caps lock",
     32: "spacebar",
@@ -1018,135 +1081,21 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     xhtml.bind(menuClickItems, 'click', function (event) {
       var node = getTargetNode(event); // 获取按钮类型
 
-      var defType = node.getAttribute('def-type'); // 格式刷
+      var defType = node.getAttribute('def-type');
 
-      if (defType == 'format') {
-        // 首先需要确定选择区域，然后点击格式刷来同步格式
-        if (_this4.__region != null) {
-          // 标记格式刷
-          _this4.__format = true;
-          xhtml.addClass(xhtml.find(_this4.__menuQuickDom, function (node) {
-            return node.getAttribute('def-type') == 'format';
-          }, 'span')[0], 'active');
-        }
-      } // 粗体
-      else if (defType == 'bold') {
-          _this4.$$setItemStyle('font-weight', xhtml.hasClass(node, 'active') ? 'normal' : 'bold');
-        } // 斜体
-        else if (defType == 'italic') {
-            _this4.$$setItemStyle('font-style', xhtml.hasClass(node, 'active') ? 'normal' : 'italic');
-          } // 中划线
-          else if (defType == 'line-through') {
-              _this4.$$setItemStyle('text-decoration', xhtml.hasClass(node, 'active') ? 'none' : 'line-through');
-            } // 下划线
-            else if (defType == 'underline') {
-                _this4.$$setItemStyle('text-decoration', xhtml.hasClass(node, 'active') ? 'none' : 'underline');
-              } // 水平对齐方式
-              else if (/^horizontal\-/.test(defType)) {
-                  _this4.$$setItemStyle('text-align', defType.replace('horizontal-', ''));
-                } // 垂直对齐方式
-                else if (/^vertical\-/.test(defType)) {
-                    _this4.$$setItemStyle('vertical-align', defType.replace('vertical-', ''));
-                  } // 合并单元格
-                  else if (/^merge\-/.test(defType)) {
-                      // 无选择区域，直接结束
-                      if (_this4.__region == null) return; // 全部合并
-
-                      if (defType == 'merge-all') {
-                        // 如果选择的区域就一个结点，不用额外的操作了
-                        if (_this4.__region.nodes.length <= 1) return; // 删除多余的结点并修改数据
-
-                        for (var _i = 1; _i < _this4.__region.nodes.length; _i++) {
-                          _this4.__contentArray[_this4.__tableIndex].content[_this4.__region.nodes[_i].getAttribute('row') - 1][_this4.__region.nodes[_i].getAttribute('col') - 1].style.display = 'none';
-                          _this4.__contentArray[_this4.__tableIndex].content[_this4.__region.nodes[_i].getAttribute('row') - 1][_this4.__region.nodes[_i].getAttribute('col') - 1].value = ' ';
-                          _this4.__region.nodes[_i].style.display = 'none';
-                        }
-
-                        _this4.__region.nodes = [_this4.__region.nodes[0]]; // 修改第一个结点的数据和占位
-
-                        _this4.__contentArray[_this4.__tableIndex].content[_this4.__region.nodes[0].getAttribute('row') - 1][_this4.__region.nodes[0].getAttribute('col') - 1].colspan = _this4.__region.info.col[1] - _this4.__region.info.col[0] + 1 + "";
-                        _this4.__contentArray[_this4.__tableIndex].content[_this4.__region.nodes[0].getAttribute('row') - 1][_this4.__region.nodes[0].getAttribute('col') - 1].rowspan = _this4.__region.info.row[1] - _this4.__region.info.row[0] + 1 + "";
-
-                        _this4.__region.nodes[0].setAttribute('colspan', _this4.__region.info.col[1] - _this4.__region.info.col[0] + 1 + "");
-
-                        _this4.__region.nodes[0].setAttribute('rowspan', _this4.__region.info.row[1] - _this4.__region.info.row[0] + 1 + "");
-
-                        _this4.__region.nodes[0].click();
-                      } // 取消合并
-                      else if (defType == 'merge-cancel') {
-                          var rowNodes = xhtml.find(_this4.__contentDom[_this4.__tableIndex], function () {
-                            return true;
-                          }, 'tr'); // 确保所有的格子都是 1*1 的
-
-                          for (var row = _this4.__region.info.row[0]; row <= _this4.__region.info.row[1]; row++) {
-                            var colNodes = xhtml.find(rowNodes[row], function () {
-                              return true;
-                            }, 'th');
-
-                            for (var col = _this4.__region.info.col[0]; col <= _this4.__region.info.col[1]; col++) {
-                              // 修改界面显示
-                              colNodes[col].style.display = 'table-cell';
-                              colNodes[col].setAttribute('colspan', '1');
-                              colNodes[col].setAttribute('rowspan', '1'); // 修改数据
-
-                              _this4.__contentArray[_this4.__tableIndex].content[row - 1][col - 1].style.display = 'table-cell';
-                              _this4.__contentArray[_this4.__tableIndex].content[row - 1][col - 1].colspan = '1';
-                              _this4.__contentArray[_this4.__tableIndex].content[row - 1][col - 1].rowspan = '1';
-                            }
-                          }
-
-                          _this4.$$cancelRegion();
-
-                          _this4.__region = null;
-                        }
-                    } // 插入
-                    else if (/^insert\-/.test(defType)) {
-                        var num = +xhtml.find(node.parentNode, function () {
-                          return true;
-                        }, 'input')[0].value; // 向上插入行
-
-                        if (defType == 'insert-up') {
-                          for (var _i2 = 0; _i2 < num; _i2++) {
-                            _this4.$$insertUpNewRow();
-                          }
-                        } // 向下插入行
-                        else if (defType == 'insert-down') {
-                            for (var _i3 = 0; _i3 < num; _i3++) {
-                              _this4.$$insertDownNewRow();
-                            }
-                          } // 向左插入列
-                          else if (defType == 'insert-left') {
-                              for (var _i4 = 0; _i4 < num; _i4++) {
-                                _this4.$$insertLeftNewCol();
-                              }
-                            } // 向右插入列
-                            else if (defType == 'insert-right') {
-                                for (var _i5 = 0; _i5 < num; _i5++) {
-                                  _this4.$$insertRightNewCol();
-                                }
-                              }
-                      } // 删除
-                      else if (/^delete\-/.test(defType)) {
-                          // 删除当前行
-                          if (defType == 'delete-row') {
-                            _this4.$$deleteCurrentRow();
-                          } // 删除当前列
-                          else if (defType == 'delete-col') {
-                              _this4.$$deleteCurrentCol();
-                            }
-                        }
+      _this4.$$menuHandler(defType, node);
     }); // 对选择颜色添加点击事件
 
     var colorItems = xhtml.find(topDom, function (node) {
       return xhtml.hasClass(node, 'color');
     }, 'span');
 
-    var _loop2 = function _loop2(_i6) {
-      var colorClickItems = xhtml.find(colorItems[_i6], function () {
+    var _loop2 = function _loop2(_i) {
+      var colorClickItems = xhtml.find(colorItems[_i], function () {
         return true;
       }, 'span');
       xhtml.bind(colorClickItems, 'click', function (event) {
-        var defType = colorItems[_i6].getAttribute('def-type');
+        var defType = colorItems[_i].getAttribute('def-type');
 
         var colorValue = getTargetNode(event).style.background; // 设置
 
@@ -1157,8 +1106,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       });
     };
 
-    for (var _i6 = 0; _i6 < colorItems.length; _i6++) {
-      _loop2(_i6);
+    for (var _i = 0; _i < colorItems.length; _i++) {
+      _loop2(_i);
     }
   }
 
@@ -1168,51 +1117,51 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return node.getAttribute('def-type');
     }, 'span');
 
-    for (var _i7 = 0; _i7 < menuItems.length; _i7++) {
+    for (var _i2 = 0; _i2 < menuItems.length; _i2++) {
       // 获取按钮类型
-      var defType = menuItems[_i7].getAttribute('def-type'); // 粗体
+      var defType = menuItems[_i2].getAttribute('def-type'); // 粗体
 
 
       if (defType == 'bold') {
         if (style['font-weight'] == 'bold') {
-          xhtml.addClass(menuItems[_i7], 'active');
+          xhtml.addClass(menuItems[_i2], 'active');
         } else {
-          xhtml.removeClass(menuItems[_i7], 'active');
+          xhtml.removeClass(menuItems[_i2], 'active');
         }
       } // 粗体
       else if (defType == 'italic') {
           if (style['font-style'] == 'italic') {
-            xhtml.addClass(menuItems[_i7], 'active');
+            xhtml.addClass(menuItems[_i2], 'active');
           } else {
-            xhtml.removeClass(menuItems[_i7], 'active');
+            xhtml.removeClass(menuItems[_i2], 'active');
           }
         } // 中划线
         else if (defType == 'underline') {
             if (style['text-decoration'] == 'underline') {
-              xhtml.addClass(menuItems[_i7], 'active');
+              xhtml.addClass(menuItems[_i2], 'active');
             } else {
-              xhtml.removeClass(menuItems[_i7], 'active');
+              xhtml.removeClass(menuItems[_i2], 'active');
             }
           } // 下划线
           else if (defType == 'line-through') {
               if (style['text-decoration'] == 'line-through') {
-                xhtml.addClass(menuItems[_i7], 'active');
+                xhtml.addClass(menuItems[_i2], 'active');
               } else {
-                xhtml.removeClass(menuItems[_i7], 'active');
+                xhtml.removeClass(menuItems[_i2], 'active');
               }
             } // 水平对齐方式
             else if (/^horizontal\-/.test(defType)) {
                 if (defType == 'horizontal-' + style['text-align']) {
-                  xhtml.addClass(menuItems[_i7], 'active');
+                  xhtml.addClass(menuItems[_i2], 'active');
                 } else {
-                  xhtml.removeClass(menuItems[_i7], 'active');
+                  xhtml.removeClass(menuItems[_i2], 'active');
                 }
               } // 垂直对齐方式
               else if (/^vertical\-/.test(defType)) {
                   if (defType == 'vertical-' + style['vertical-align']) {
-                    xhtml.addClass(menuItems[_i7], 'active');
+                    xhtml.addClass(menuItems[_i2], 'active');
                   } else {
-                    xhtml.removeClass(menuItems[_i7], 'active');
+                    xhtml.removeClass(menuItems[_i2], 'active');
                   }
                 }
     } // 更新快速使用菜单
@@ -1222,32 +1171,150 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return node.getAttribute('def-type');
     }, 'span');
 
-    for (var _i8 = 0; _i8 < quickItems.length; _i8++) {
+    for (var _i3 = 0; _i3 < quickItems.length; _i3++) {
       // 获取按钮类型
-      var _defType = quickItems[_i8].getAttribute('def-type'); // 文字颜色
+      var _defType = quickItems[_i3].getAttribute('def-type'); // 文字颜色
 
 
       if (_defType == 'font-color') {
-        quickItems[_i8].getElementsByTagName('i')[0].style.backgroundColor = style.color;
+        quickItems[_i3].getElementsByTagName('i')[0].style.backgroundColor = style.color;
       } // 填充色
       else if (_defType == 'background-color') {
-          quickItems[_i8].getElementsByTagName('i')[0].style.backgroundColor = style.background;
+          quickItems[_i3].getElementsByTagName('i')[0].style.backgroundColor = style.background;
         } // 水平对齐方式
         else if (/^horizontal\-/.test(_defType)) {
             if (_defType == 'horizontal-' + style['text-align']) {
-              xhtml.addClass(quickItems[_i8], 'active');
+              xhtml.addClass(quickItems[_i3], 'active');
             } else {
-              xhtml.removeClass(quickItems[_i8], 'active');
+              xhtml.removeClass(quickItems[_i3], 'active');
             }
           } // 垂直对齐方式
           else if (/^vertical\-/.test(_defType)) {
               if (_defType == 'vertical-' + style['vertical-align']) {
-                xhtml.addClass(quickItems[_i8], 'active');
+                xhtml.addClass(quickItems[_i3], 'active');
               } else {
-                xhtml.removeClass(quickItems[_i8], 'active');
+                xhtml.removeClass(quickItems[_i3], 'active');
               }
             }
     }
+  }
+
+  function menuHandler(defType, node) {
+    // 格式刷
+    if (defType == 'format') {
+      // 首先需要确定选择区域，然后点击格式刷来同步格式
+      if (this.__region != null) {
+        // 标记格式刷
+        this.__format = true;
+        xhtml.addClass(xhtml.find(this.__menuQuickDom, function (node) {
+          return node.getAttribute('def-type') == 'format';
+        }, 'span')[0], 'active');
+      }
+    } // 粗体
+    else if (defType == 'bold') {
+        this.$$setItemStyle('font-weight', xhtml.hasClass(node, 'active') ? 'normal' : 'bold');
+      } // 斜体
+      else if (defType == 'italic') {
+          this.$$setItemStyle('font-style', xhtml.hasClass(node, 'active') ? 'normal' : 'italic');
+        } // 中划线
+        else if (defType == 'line-through') {
+            this.$$setItemStyle('text-decoration', xhtml.hasClass(node, 'active') ? 'none' : 'line-through');
+          } // 下划线
+          else if (defType == 'underline') {
+              this.$$setItemStyle('text-decoration', xhtml.hasClass(node, 'active') ? 'none' : 'underline');
+            } // 水平对齐方式
+            else if (/^horizontal\-/.test(defType)) {
+                this.$$setItemStyle('text-align', defType.replace('horizontal-', ''));
+              } // 垂直对齐方式
+              else if (/^vertical\-/.test(defType)) {
+                  this.$$setItemStyle('vertical-align', defType.replace('vertical-', ''));
+                } // 合并单元格
+                else if (/^merge\-/.test(defType)) {
+                    // 无选择区域，直接结束
+                    if (this.__region == null) return; // 全部合并
+
+                    if (defType == 'merge-all') {
+                      // 如果选择的区域就一个结点，不用额外的操作了
+                      if (this.__region.nodes.length <= 1) return; // 删除多余的结点并修改数据
+
+                      for (var _i4 = 1; _i4 < this.__region.nodes.length; _i4++) {
+                        this.__contentArray[this.__tableIndex].content[this.__region.nodes[_i4].getAttribute('row') - 1][this.__region.nodes[_i4].getAttribute('col') - 1].style.display = 'none';
+                        this.__contentArray[this.__tableIndex].content[this.__region.nodes[_i4].getAttribute('row') - 1][this.__region.nodes[_i4].getAttribute('col') - 1].value = ' ';
+                        this.__region.nodes[_i4].style.display = 'none';
+                      }
+
+                      this.__region.nodes = [this.__region.nodes[0]]; // 修改第一个结点的数据和占位
+
+                      this.__contentArray[this.__tableIndex].content[this.__region.nodes[0].getAttribute('row') - 1][this.__region.nodes[0].getAttribute('col') - 1].colspan = this.__region.info.col[1] - this.__region.info.col[0] + 1 + "";
+                      this.__contentArray[this.__tableIndex].content[this.__region.nodes[0].getAttribute('row') - 1][this.__region.nodes[0].getAttribute('col') - 1].rowspan = this.__region.info.row[1] - this.__region.info.row[0] + 1 + "";
+
+                      this.__region.nodes[0].setAttribute('colspan', this.__region.info.col[1] - this.__region.info.col[0] + 1 + "");
+
+                      this.__region.nodes[0].setAttribute('rowspan', this.__region.info.row[1] - this.__region.info.row[0] + 1 + "");
+
+                      this.__region.nodes[0].click();
+                    } // 取消合并
+                    else if (defType == 'merge-cancel') {
+                        var rowNodes = xhtml.find(this.__contentDom[this.__tableIndex], function () {
+                          return true;
+                        }, 'tr'); // 确保所有的格子都是 1*1 的
+
+                        for (var row = this.__region.info.row[0]; row <= this.__region.info.row[1]; row++) {
+                          var colNodes = xhtml.find(rowNodes[row], function () {
+                            return true;
+                          }, 'th');
+
+                          for (var col = this.__region.info.col[0]; col <= this.__region.info.col[1]; col++) {
+                            // 修改界面显示
+                            colNodes[col].style.display = 'table-cell';
+                            colNodes[col].setAttribute('colspan', '1');
+                            colNodes[col].setAttribute('rowspan', '1'); // 修改数据
+
+                            this.__contentArray[this.__tableIndex].content[row - 1][col - 1].style.display = 'table-cell';
+                            this.__contentArray[this.__tableIndex].content[row - 1][col - 1].colspan = '1';
+                            this.__contentArray[this.__tableIndex].content[row - 1][col - 1].rowspan = '1';
+                          }
+                        }
+
+                        this.$$cancelRegion();
+                        this.__region = null;
+                      }
+                  } // 插入
+                  else if (/^insert\-/.test(defType)) {
+                      var num = +xhtml.find(node.parentNode, function () {
+                        return true;
+                      }, 'input')[0].value; // 向上插入行
+
+                      if (defType == 'insert-up') {
+                        for (var _i5 = 0; _i5 < num; _i5++) {
+                          this.$$insertUpNewRow();
+                        }
+                      } // 向下插入行
+                      else if (defType == 'insert-down') {
+                          for (var _i6 = 0; _i6 < num; _i6++) {
+                            this.$$insertDownNewRow();
+                          }
+                        } // 向左插入列
+                        else if (defType == 'insert-left') {
+                            for (var _i7 = 0; _i7 < num; _i7++) {
+                              this.$$insertLeftNewCol();
+                            }
+                          } // 向右插入列
+                          else if (defType == 'insert-right') {
+                              for (var _i8 = 0; _i8 < num; _i8++) {
+                                this.$$insertRightNewCol();
+                              }
+                            }
+                    } // 删除
+                    else if (/^delete\-/.test(defType)) {
+                        // 删除当前行
+                        if (defType == 'delete-row') {
+                          this.$$deleteCurrentRow();
+                        } // 删除当前列
+                        else if (defType == 'delete-col') {
+                            this.$$deleteCurrentCol();
+                          }
+                      }
   }
 
   function insertUp() {
@@ -1336,8 +1403,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       var newItemNode = xhtml.append(newRowNode, "<th row=\"".concat(this.__rowNum, "\" col=\"").concat(_col, "\" contenteditable=\"true\" class=\"item\" colspan=\"1\" rowspan=\"1\" style=\"").concat(this.$$styleToString(tempNewItemData.style), "\" open-web-excel></th>")); // 绑定事件
 
-      xhtml.bind(newItemNode, 'click', function (event) {
-        _this5.$$itemClickHandler(event);
+      xhtml.bind(newItemNode, 'mousedown', function (event) {
+        setTimeout(function () {
+          if (!_this5.__isrightmenu) _this5.$$itemClickHandler(event);
+        });
+      });
+      xhtml.bind(newItemNode, 'mousemove', function (event) {
+        _this5.$$itemMoveHandler(event);
       });
       xhtml.bind(newItemNode, 'input', function (event) {
         _this5.$$itemInputHandler(event);
@@ -1411,8 +1483,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       var newItemNode = xhtml.append(newRowNode, "<th row=\"".concat(this.__rowNum, "\" col=\"").concat(_col2, "\" contenteditable=\"true\" class=\"item\" colspan=\"1\" rowspan=\"1\" style=\"").concat(this.$$styleToString(tempNewItemData.style), "\" open-web-excel></th>")); // 绑定事件
 
-      xhtml.bind(newItemNode, 'click', function (event) {
-        _this6.$$itemClickHandler(event);
+      xhtml.bind(newItemNode, 'mousedown', function (event) {
+        setTimeout(function () {
+          if (!_this6.__isrightmenu) _this6.$$itemClickHandler(event);
+        });
+      });
+      xhtml.bind(newItemNode, 'mousemove', function (event) {
+        _this6.$$itemMoveHandler(event);
       });
       xhtml.bind(newItemNode, 'input', function (event) {
         _this6.$$itemInputHandler(event);
@@ -1490,8 +1567,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       var newItemNode = xhtml.before(colNodes[this.__colNum], "<th row=\"".concat(row, "\" col=\"").concat(this.__colNum, "\" contenteditable=\"true\" class=\"item\" colspan=\"1\" rowspan=\"1\" style=\"").concat(this.$$styleToString(tempNewItemData.style), "\" open-web-excel></th>")); // 绑定事件
 
-      xhtml.bind(newItemNode, 'click', function (event) {
-        _this7.$$itemClickHandler(event);
+      xhtml.bind(newItemNode, 'mousedown', function (event) {
+        setTimeout(function () {
+          if (!_this7.__isrightmenu) _this7.$$itemClickHandler(event);
+        });
+      });
+      xhtml.bind(newItemNode, 'mousemove', function (event) {
+        _this7.$$itemMoveHandler(event);
       });
       xhtml.bind(newItemNode, 'input', function (event) {
         _this7.$$itemInputHandler(event);
@@ -1557,8 +1639,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       var newItemNode = xhtml.after(colNodes[this.__colNum], "<th row=\"".concat(row, "\" col=\"").concat(this.__colNum + 1, "\" contenteditable=\"true\" class=\"item\" colspan=\"1\" rowspan=\"1\" style=\"").concat(this.$$styleToString(tempNewItemData.style), "\" open-web-excel></th>")); // 绑定事件
 
-      xhtml.bind(newItemNode, 'click', function (event) {
-        _this8.$$itemClickHandler(event);
+      xhtml.bind(newItemNode, 'mousedown', function (event) {
+        setTimeout(function () {
+          if (!_this8.__isrightmenu) _this8.$$itemClickHandler(event);
+        });
+      });
+      xhtml.bind(newItemNode, 'mousemove', function (event) {
+        _this8.$$itemMoveHandler(event);
       });
       xhtml.bind(newItemNode, 'input', function (event) {
         _this8.$$itemInputHandler(event);
@@ -1688,8 +1775,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return true;
     }, 'th')[this.__contentArray[this.__tableIndex].content[0].length].remove();
 
-    for (var _row = 1; _row < rowNodes.length; _row++) {
-      var colNodes = xhtml.find(rowNodes[_row], function () {
+    for (var _row2 = 1; _row2 < rowNodes.length; _row2++) {
+      var colNodes = xhtml.find(rowNodes[_row2], function () {
         return true;
       }, 'th'); // 校对列序号
 
@@ -1700,15 +1787,42 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       removeNode(colNodes[this.__colNum]); // 数据也要删除
 
-      this.__contentArray[this.__tableIndex].content[_row - 1].splice(this.__colNum - 1, 1);
+      this.__contentArray[this.__tableIndex].content[_row2 - 1].splice(this.__colNum - 1, 1);
     } // 重置光标
 
 
     this.__btnDom[this.__tableIndex].click();
   }
 
-  var owe = function owe(options) {
+  function rightMenu() {
     var _this9 = this;
+
+    var rightMenuFrame = xhtml.append(this.__el, "<div class='right-menu-frame' open-web-excel>\n        <span class='item' def-type='merge-all' open-web-excel>\n            \u5168\u90E8\u5408\u5E76\n        </span>\n        <span class='item' def-type='merge-cancel' open-web-excel>\n            \u53D6\u6D88\u5408\u5E76\n        </span>\n        <span class='line' open-web-excel></span>\n        <span class='item' def-type='delete-row' open-web-excel>\n            \u5220\u9664\u5F53\u524D\u884C\n        </span>\n        <span class='item' def-type='delete-col' open-web-excel>\n            \u5220\u9664\u5F53\u524D\u5217\n        </span>\n    </div>");
+    this.__rightMenuDom = rightMenuFrame; //  如果点击的是右键菜单，取消全局控制
+
+    xhtml.bind(rightMenuFrame, 'mousedown', function (event) {
+      xhtml.stopPropagation(event);
+    }); // 对菜单添加点击事件
+
+    var menuClickItems = xhtml.find(rightMenuFrame, function (node) {
+      return node.getAttribute('def-type');
+    }, 'span');
+    xhtml.bind(menuClickItems, 'click', function (event) {
+      var node = getTargetNode(event); // 获取按钮类型
+
+      var defType = node.getAttribute('def-type');
+
+      _this9.$$menuHandler(defType, node); // 关闭右键菜单
+
+
+      _this9.__isrightmenu = false;
+      _this9.__rightMenuDom.style.display = 'none';
+    });
+    this.$$addStyle('right-menu-frame', "\n    .right-menu-frame{\n        position:fixed;\n        width:120px;\n        background-color: white;\n        left: 100px;\n        top: 100px;\n        box-shadow: 0 0 9px 0px #bab2b2;\n        font-size: 14px;\n        padding:0 5px;\n    }\n    .right-menu-frame span{\n        display: block;\n    }\n    .right-menu-frame .item{\n        padding: 5px 0;\n        cursor: pointer;\n    }\n    .right-menu-frame .item:hover{\n        font-weight: 800;\n        text-decoration: underline;\n    }\n    .right-menu-frame .line{\n        height: 1px;\n        background-color: black;\n    }\n    ");
+  }
+
+  var owe = function owe(options) {
+    var _this10 = this;
 
     if (!(this instanceof owe)) {
       throw new Error('Open-Web-Excel is a constructor and should be called with the `new` keyword');
@@ -1722,7 +1836,27 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       this.__region = null; // 用于记录是否按下了格式刷按钮
 
-      this.__format = false;
+      this.__format = false; // 记录鼠标是否按下
+
+      this.__ismousedown = false; // 记录鼠标右键菜单是否打开
+
+      this.__isrightmenu = false;
+      xhtml.bind(options.el, 'mousedown', function () {
+        _this10.__ismousedown = true;
+        _this10.__isrightmenu = false;
+        _this10.__rightMenuDom.style.display = 'none';
+      });
+      xhtml.bind(options.el, 'mouseup', function () {
+        _this10.__ismousedown = false;
+      });
+      xhtml.bind(options.el, 'contextmenu', function (event) {
+        event.preventDefault();
+        _this10.__rightMenuDom.style.left = event.clientX + "px";
+        _this10.__rightMenuDom.style.top = event.clientY + "px"; // 标记鼠标右键菜单被打开
+
+        _this10.__isrightmenu = true;
+        _this10.__rightMenuDom.style.display = 'block';
+      });
     } else {
       // 挂载点是必须的，一定要有
       throw new Error('options.el is not a element!');
@@ -1733,15 +1867,30 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     this.$$initDom(); // 挂载菜单
 
-    this.$$createdMenu(); // 初始化视图
+    this.$$createdMenu(); // 挂载右键菜单
+
+    this.$$createRightMenu();
+    this.__rightMenuDom.style.display = 'none'; // 初始化视图
 
     this.$$initView(); // 获取当前Excel内容
 
-    this.valueOf = function () {
+    this.valueOf = function (content) {
+      // 如果有值，就是设置
+      if (content) {
+        _this10.__contentArray = _this10.$$formatContent(content);
+        var els = _this10.__el.children;
+        els[2].parentNode.removeChild(els[2]);
+        els[1].parentNode.removeChild(els[1]);
+
+        _this10.$$initView();
+
+        return _this10;
+      }
+
       return {
         version: "v1",
         filename: "Open-Web-Excel",
-        contents: _this9.__contentArray
+        contents: _this10.__contentArray
       };
     };
   }; // 挂载辅助方法
@@ -1754,6 +1903,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   owe.prototype.$$newItemData = newItemData;
   owe.prototype.$$itemClickHandler = itemClickHandler;
   owe.prototype.$$itemInputHandler = itemInputHandler;
+  owe.prototype.$$itemMoveHandler = itemMoveHandler;
   owe.prototype.$$getLeftTop = getLeftTop; // 挂载核心方法
 
   owe.prototype.$$initDom = initDom;
@@ -1761,6 +1911,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   owe.prototype.$$initTableView = initTableView;
   owe.prototype.$$createdMenu = menu;
   owe.prototype.$$updateMenu = updateMenu;
+  owe.prototype.$$menuHandler = menuHandler;
   owe.prototype.$$moveCursorTo = moveCursorTo;
   owe.prototype.$$setItemStyle = setItemStyle;
   owe.prototype.$$calcRegionInfo = calcRegionInfo;
@@ -1771,7 +1922,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   owe.prototype.$$insertLeftNewCol = insertLeft;
   owe.prototype.$$insertRightNewCol = insertRight;
   owe.prototype.$$deleteCurrentRow = deleteRow;
-  owe.prototype.$$deleteCurrentCol = deleteCol; // 挂载键盘交互总控
+  owe.prototype.$$deleteCurrentCol = deleteCol;
+  owe.prototype.$$createRightMenu = rightMenu; // 挂载键盘交互总控
 
   owe.prototype.$$renderKeyboard = renderKeyboard;
 

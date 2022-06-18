@@ -1,4 +1,4 @@
-import xhtml from '@hai2007/tool/xhtml';
+import xhtml from '@hai2007/browser/xhtml';
 
 export function insertUp() {
 
@@ -102,10 +102,14 @@ export function insertUp() {
         );
 
         // 绑定事件
-        xhtml.bind(newItemNode, 'click', event => {
-            this.$$itemClickHandler(event);
+        xhtml.bind(newItemNode, 'mousedown', event => {
+            setTimeout(() => {
+                if (!this.__isrightmenu) this.$$itemClickHandler(event);
+            });
         });
-
+        xhtml.bind(newItemNode, 'mousemove', event => {
+            this.$$itemMoveHandler(event);
+        });
         xhtml.bind(newItemNode, 'input', event => {
             this.$$itemInputHandler(event);
         });
@@ -190,8 +194,13 @@ export function insertDown() {
         );
 
         // 绑定事件
-        xhtml.bind(newItemNode, 'click', event => {
-            this.$$itemClickHandler(event);
+        xhtml.bind(newItemNode, 'mousedown', event => {
+            setTimeout(() => {
+                if (!this.__isrightmenu) this.$$itemClickHandler(event);
+            });
+        });
+        xhtml.bind(newItemNode, 'mousemove', event => {
+            this.$$itemMoveHandler(event);
         });
         xhtml.bind(newItemNode, 'input', event => {
             this.$$itemInputHandler(event);
@@ -283,8 +292,13 @@ export function insertLeft() {
         );
 
         // 绑定事件
-        xhtml.bind(newItemNode, 'click', event => {
-            this.$$itemClickHandler(event);
+        xhtml.bind(newItemNode, 'mousedown', event => {
+            setTimeout(() => {
+                if (!this.__isrightmenu) this.$$itemClickHandler(event);
+            });
+        });
+        xhtml.bind(newItemNode, 'mousemove', event => {
+            this.$$itemMoveHandler(event);
         });
         xhtml.bind(newItemNode, 'input', event => {
             this.$$itemInputHandler(event);
@@ -361,8 +375,13 @@ export function insertRight() {
         );
 
         // 绑定事件
-        xhtml.bind(newItemNode, 'click', event => {
-            this.$$itemClickHandler(event);
+        xhtml.bind(newItemNode, 'mousedown', event => {
+            setTimeout(() => {
+                if (!this.__isrightmenu) this.$$itemClickHandler(event);
+            });
+        });
+        xhtml.bind(newItemNode, 'mousemove', event => {
+            this.$$itemMoveHandler(event);
         });
         xhtml.bind(newItemNode, 'input', event => {
             this.$$itemInputHandler(event);

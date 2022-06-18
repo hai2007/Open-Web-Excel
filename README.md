@@ -31,7 +31,7 @@ npm install --save open-web-excel
 当然，你也可以通过CDN的方式引入：
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/open-web-excel@0"></script>
+<script src="https://unpkg.com/open-web-excel@0"></script>
 ```
 
 ## 如何使用
@@ -48,21 +48,23 @@ var owe = new OpenWebExcel({
 
     // 初始化文本（可选）
     // 此内容一般由程序生成（也就是下面的 ```owe.valueOf``` 方法返回的值），初始化的时候不传递即可
-    file: json
+    content: json
 
 });
 ```
 
 返回的owe里面挂载着后续可控方法：
 
-- 获取当前Excel内容
+- 获取或设置当前Excel内容
 
 ```js
-owe.valueOf();
+owe.valueOf(content);
 ```
+
+content可选，如果传递就是设置。
 
 开源协议
 ---------------------------------------
 [MIT](https://github.com/hai2007/Open-Web-Excel/blob/master/LICENSE)
 
-Copyright (c) 2021 [hai2007](https://hai2007.gitee.io/sweethome/) 走一步，再走一步。
+Copyright (c) 2021-2022 [hai2007](https://hai2007.gitee.io/sweethome/) 走一步，再走一步。
